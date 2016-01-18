@@ -29,7 +29,15 @@ with open(sys.argv[1],"rb") as csvfileEntree:
 ######################
 ##########Obtention de la position du SNP dans genome de ref (galGal4 puis galGal5)
 ######################
-#marche pas
+#marche pas (KeyError)
+#regarder comment prendre qu'une partie de la sequence. av [.../...]
+#regarder pour faire la même chose avec les 2 sequences de references NC_006103.3 et .4
+#regarder si on peut avoir la taille de la querry à la sortie
+#regarder le brin plus ou minus du sbject
+#faire l'opération +n ou -n pour obtenir la position exacte
+#ajout de commentaire auto
+# ajout de la position dans le dico en fonction de la querry utilisee
+#creer les fichiers de sorties
 for seq_SNP in  dicoSNP.values():
 	alignments = pairwise2.align.globalxx("ACCGT", dicoSNP[seq_SNP])	
 	print alignments
