@@ -27,7 +27,10 @@ with open(sys.argv[1],"rb") as csvfileEntree:
 		#attention dico ne concerve pas l'ordre de la liste du .csv
 
 
-
+def getHelp():
+	"""Fonction d'aide"""
+	#a elaborer une fois fini
+	pass
 
 
 ######################
@@ -94,6 +97,10 @@ def makeBlast():
 	fin1=time.time()
 	print "le temps total est de :", fin1-debut1
 	save_file.close()
+#Voir pour faire la boucle sur le dicoSNP hors de la fonction
+
+
+
 
 #fichier de sortie de l alignement (format text)
 #reste a choisir 
@@ -104,7 +111,29 @@ def makeBlast():
 
 
 
+def getPos5():
+	"""Recupere la position pour sequence flanquante 5'"""
+	pass
 
+def getPos3():
+	"""Idem mais avec la sequence flanquante 3'"""
+	pass
+
+
+
+
+def getNewSNPpos ():
+	"""Genere les dictionnaires avec les nouvelles positions de SNP dans
+
+	"""
+	pass
+
+
+
+def CompareGetPos():
+	"""Permet de comparer les positions des SNP, recuperer avec les 2 sequences flanquantes
+	Si =0 meme position trouvee"""
+	pass
 
 
 
