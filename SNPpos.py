@@ -24,7 +24,10 @@ with open(sys.argv[1],"rb") as csvfileEntree:
 	for row in cr:
 		dicoSNP[row[0]]= row[1]
 	print dicoSNP
-		#attention pas le meme ordre que dans table csv
+		#attention dico ne concerve pas l'ordre de la liste du .csv
+
+
+
 
 
 ######################
@@ -32,9 +35,11 @@ with open(sys.argv[1],"rb") as csvfileEntree:
 ######################
 
 #A faire
-#regarder comment prendre qu'une partie de la sequence. av [.../...]
-#regarder pour faire la meme chose avec les 2 sequences de references NC_006103.3 et .4
+#OK <== regarder comment prendre qu'une partie de la sequence. av [.../...]
+#OK <== regarder pour faire la meme chose avec les 2 sequences de references NC_006103.3 et .4
+	#marche pas avec .3 (gg4)
 #regarder si on peut avoir la taille de la querry a la sortie
+	#normalement de la meme taille qu'a l'entree
 #regarder le brin plus ou minus du sbject
 #faire loperation +n ou -n pour obtenir la position exacte
 #ajout de commentaire auto
@@ -45,25 +50,88 @@ with open(sys.argv[1],"rb") as csvfileEntree:
 
 #Boucler avec les 96 SNP
 	#faire une fonction pour selectionner juste la seq flanquante gauche ou droite
+def getSeqFlan5(n):
+	"""Permet de recuperer la sequence flanquante en 5' d'un SNP
+	n est la position dans le dictionnaire du SNP"""
+	return dicoSNP.get(dicoSNP.keys()[n])[0:100]
+	#[0:100]
+	#Attention la taille des seq flanquante peut etre diff de 100
+	#trouver moyen de l'arreter avant [
 
-#trop long (11min/seq) mais marche avec la derniere version dassemblage
-#fichier de sortie de l alignement
+
+def getSeqFlan3(n):
+	"""Permet de recuperer la sequence flanquante en 3' d'un SNP
+	n est la position dans le dictionnaire du SNP"""
+	return dicoSNP.get(dicoSNP.keys()[n])[105:205]
+	#[105:205]
+	#Attention la taille des seq flanquante peut etre diff de 100
+	#trouver moyen de le demarrer apres ]
+
+
+#verification du fonctionnement des 2 fonctions ci-dessus
+for cle, valeur in dicoSNP.items():
+	print ("La clef {} contient la valeur 5' {} et la valeur 3' {}.".format(cle, getSeqFlan5(dicoSNP.keys().index(cle)), getSeqFlan3(dicoSNP.keys().index(cle))))
+
+
+def makeBlast():
+	"""La fonction makeBlast effectue un blast des sequences flanquantes des SNP contre NC_006103.4 
+	...
+	...
+	...
+
+	"""
+	debut1=time.time()
+	save_file = open("my_blast_all", "w")
+	for cle, valeur in dicoSNP.items():
+		print "lance blast {} du {}:".format(dicoSNP.keys().index(cle), cle)
+		debut = time.time()
+		result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='Text')
+		print "blast fini \t"
+		fin = time.time()
+		print "il a mis :", fin-debut
+		save_file.write(result_handle.read())
+		save_file.write("\n\n\n\t\t\t ###################Alignement suivant###################  \n\n\n")
+	fin1=time.time()
+	print "le temps total est de :", fin1-debut1
+	save_file.close()
+
+#fichier de sortie de l alignement (format text)
 #reste a choisir 
-	#le bon alignement
-	#la position du SNP en fonction de la sequence flanquante choisie
-print "lance blast :"
-debut = time.time()
-result_handle = NCBIWWW.qblast("blastn", "refseq_genomic",sequence="TTGGGTGTTTTGACCCAAAACCTATTCATGGTGAAGACACCTTTGGAGGAACTGATGCAGTCGGGTGGGGACACACAGAGGGATTCACCCCACATTTCCC", entrez_query="NC_006103.3[RefSeq]", format_type='Text')
-#(plus lente)result_handle = NCBIWWW.qblast("blastn", "refseq_genomic",sequence="TTGGGTGTTTTGACCCAAAACCTATTCATGGTGAAGACACCTTTGGAGGAACTGATGCAGTCGGGTGGGGACACACAGAGGGATTCACCCCACATTTCCC", entrez_query="GCF_000002315.4[assembly]", format_type='Text')
-print "blast fini \t"
-fin = time.time()
-print "il a mis :", fin-debut
-save_file = open("my_blast", "w")
-print "write in .txt file"
-save_file.write(result_handle.read())
-save_file.close()
+	#le bon alignement (avec la e-value la plus basse)
+	#le strand (savoir si plus ou moins pour retrouver la position du SNP)
+	#la position du SNP en fonction de la sequence flanquante (5' ou 3')
 
-""" c est nul ce truc/marche pas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+#methode de recuperation des donnees
+
 result_handle.close()
 result_handle = open("my_blast.xml")
 records = NCBIXML.parse(result_handle)
@@ -100,28 +168,6 @@ for alignment in blast_record.alignments:
 
 
 
-"""
-#Avec la commande pairewise2 de biopython
-
-#test N1
-def alignementSeq(dicoRef, dicoSNP):
-	for seq_ref in dicoRef.value() :
-		for seq_SNP in dicoSNP.value :
-			alignments = pairwise2.align.globalxx("TTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGATTGGGTGTTTTGA", "TTGGGTGTTTTGACCCAAAACCTATTCATGGTGAAGACACCTTTGGAGGAACTGATGCAGTCGGGTGGGGACACACAGAGGGATTCACCCCACATTTCCC")
-	return alignments
-	#faire en sorte qu'il me boucle sur les bonnes sequences, face mes fichiers de sortie
-
-#test N2
-#marche pas (KeyError)
-#surrement pas cette fonction ????
-for seq_SNP in  dicoSNP.values():
-	alignments = pairwise2.align.globalxx("ACCGT", dicoSNP[seq_SNP])	
-	print alignments
-		#for a in alignments:
-		#print format_alignnment(*a)
-
-#Ce n'est pas la solution
-"""
 
 
 
