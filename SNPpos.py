@@ -40,7 +40,8 @@ def getHelp():
 #A faire
 #OK <== regarder comment prendre qu'une partie de la sequence. av [.../...]
 #OK <== regarder pour faire la meme chose avec les 2 sequences de references NC_006103.3 et .4
-	#marche pas avec .3 (gg4)
+	#marche pas avec .3 (gg4) --> trouver une solution
+	#voir comment reduire le temps et faire comme sur site avec deux sequences
 #regarder si on peut avoir la taille de la querry a la sortie
 	#normalement de la meme taille qu'a l'entree
 #regarder le brin plus ou minus du sbject
@@ -73,7 +74,7 @@ def getSeqFlan3(n):
 
 #verification du fonctionnement des 2 fonctions ci-dessus
 for cle, valeur in dicoSNP.items():
-	print ("La clef {} contient la valeur 5' {} et la valeur 3' {}.".format(cle, getSeqFlan5(dicoSNP.keys().index(cle)), getSeqFlan3(dicoSNP.keys().index(cle))))
+	print ("La clef : {} \ncontient la valeur 5' : {} \net la valeur 3' : {}. \n".format(cle, getSeqFlan5(dicoSNP.keys().index(cle)), getSeqFlan3(dicoSNP.keys().index(cle))))
 
 
 def makeBlast():
@@ -88,7 +89,9 @@ def makeBlast():
 	for cle, valeur in dicoSNP.items():
 		print "lance blast {} du {}:".format(dicoSNP.keys().index(cle), cle)
 		debut = time.time()
-		result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='Text')
+		#result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='Text')
+		#marche aussi comme ca
+		result_handle= NCBIWWW.qblast("blastn", "nt",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[accession]", format_type='Text')
 		print "blast fini \t"
 		fin = time.time()
 		print "il a mis :", fin-debut
