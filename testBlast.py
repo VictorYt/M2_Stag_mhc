@@ -31,20 +31,21 @@ def getSeqFlan3(n):
 
 def makeBlast():
 	debut1=time.time()
-	save_file = open("my_blast_all.xml", "w")
+	save_file = open("my_blast_all", "w")
 	for cle, valeur in dicoSNP.items():
 		print "lance blast {} du {}:".format(dicoSNP.keys().index(cle), cle)
 		debut = time.time()
-		result_handle= NCBIWWW.qblast("blastn", "GCF_000000185.2",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), format_type='xml', megablast= 'TRUE')
+		#trop long de cette maniere
+		#result_handle= NCBIWWW.qblast("blastn", "refseq_genomic", sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[ACCN]", format_type='Text', megablast= 'TRUE')
 		#result_handle= NCBIWWW.qblast("blastn", "Gallus_gallus-5.0 reference Annotation Release 103",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='xml', megablast= 'TRUE')
-		#result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='xml', megablast= 'TRUE')
+		result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[ACCN]", format_type='xml', megablast= 'TRUE')
 		#result_handle= NCBIWWW.qblast("blastn", "refseq_genomic",sequence="{}".format(getSeqFlan5(dicoSNP.keys().index(cle))), entrez_query="NC_006103.4[RefSeq]", format_type='xml', megablast= 'TRUE')
 		print "blast fini \t"
 		fin = time.time()
 		print "il a mis :", fin-debut
 		#save_file = open("my_blast", "w")#pb j'ecrit un fichier a chaque fois / but : mettre tout dans le meme 
 		save_file.write(result_handle.read())
-		save_file.write("\n\n\n\t\t\t ###################Alignement suivant###################  \n\n\n")
+		#save_file.write("\n\n\n\t\t\t ###################Alignement suivant###################  \n\n\n")
 		#save_file.close()
 	fin1=time.time()
 	print "le temps total est de :", fin1-debut1

@@ -78,11 +78,15 @@ def getBlastInfo ():
 					print('e-value :' hsp.expect)
 					print('strand :' hsp.strand)
 					print('debut query:' hsp.query_start)
+					print('fin query:' hsp.query_end)
 					print('debut sbjct:' hsp.sbjct_start)
+					print('fin sbjct:' hsp.sbjct_end)
 					print(hsp.query[0:alignment.length])
 					print(hsp.match[0:alignment.length])
 					print(hsp.sbjct[0:alignment.length])
 
+
+getBlastInfo()
 
 
 
