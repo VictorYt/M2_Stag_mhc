@@ -14,6 +14,8 @@ from Bio import SeqIO
 à un multi-format fasta qui contient pour chaque SNP les 2 séquences flanquantes seules"""
 
 
+
+
 def getSeqFlanq5(seq):
 	"""n la séquence avec les 2 sequences flanquantes et le polymorphuisme [A/B]
 	getSeqFlanq5 renvoie le string avant le caractère '[' """
@@ -32,8 +34,9 @@ def TransformeInput(inpt, outp, delimit = "\t"):
 		my_reader = reader(src, delimiter = delimit)
 		my_writer = writer(otp, delimiter = "\t")
 		for rows in my_reader :
-			my_writer.writerow(("%s 5'" %(rows[0]), getSeqFlanq5(rows[1])))
-			my_writer.writerow(("%s 3'" %(rows[0]), getSeqFlanq3(rows[1])))
+			my_writer.writerow(("%s_5'" %(rows[0]), getSeqFlanq5(rows[1])))
+			my_writer.writerow(("%s_3'" %(rows[0]), getSeqFlanq3(rows[1])))
+
 
 
 
@@ -54,3 +57,7 @@ if __name__ == '__main__':
 #custumisation
 	#gérer les input (pas normal que l'on donne le nom de l'intermédiaire et pas le final)
 	#gérer l'odre des arguments (styme -i -o -d -f(lui trouver une lettre qui convient))
+	# faire les 2 blast
+		#blastall -i
+		#
+	#gérer la sortie (Taille query/taille sbjct/sens sbjct/Comparaison 5' et 3'/Commentaire a chaque étape)
