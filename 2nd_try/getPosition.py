@@ -5,9 +5,14 @@ import sys
 import csv
 
 
+#Penser a mettre les commentaire en anglais
 
-"""Programme permettant de récupérer les positions des SNP si changement 
-d'assemblage de référence"""
+#Variables (listes ou dico?) pour comparer position retrouvée entre les 2 séquences flanquante
+InfoList = []
+
+
+
+"""Program that give us SNP position if we have a new reference assembly for chicken"""
 
 
 def getStrand():
@@ -15,58 +20,110 @@ def getStrand():
 	5' ou 3'.
 	Information contenue par la 1er colonne du fichier de sortie du blastall
 	row[0]"""
-	pass
-	#utilisation d'un parseur surement
+	return row[0].rsplit("_", 1)[1]
 
-def getQueryLength():
-	"""Fonction permettant de récupérer la taille de notre query aprés le blast"""
-	return row[4]
+def getSNPName():
+	"""Fonction permettant de retourner le SNP étudié"""
+	return row[0].rsplit("_", 1)[0]
+
+def getAlignmentLength():#Taille de la query ou de l'alignement?
+	"""Fonction permettant de récupérer la taille de notre alignement aprés le blast"""
+	return int(row[4]) 
+	#Depende de comment je vais parcourir mon csv (filedname ou row)
 	#soit juste regarder si row[4] différent de 100 et retourner longueure
 	#soit différence entre row[6] et row[7]
 
-def getQueryMissingPieces():
-	"""Fonction permettant de retourner la partie de la query manquante
-	start row[6]
-	end row[7]
-	ou les deux"""
-	pass
+def getMissingPiecesLength():
+	"""Fonction permettant de retourner la taille manquante jusqu'au SNP"""
+	if getStrand() == "5'" and getQueryPosition() != 100 :
+		return (100 - getQueryPosition() +1)
+	elif getStrand() == "3'" and getQueryPosition() != 1 :
+		return (getQueryPosition())
+	else:
+		return 1
 
-def getSbjctMissingPieces():
-	"""Fonction permettant de retourner la partie de la séquence sbjct manquante
+def getSbjctOrientation():
+	"""Fonction permettant de repérer le sens de la séquence subject
+	True si sbjct start < sbjct end (sens identique à la séquence query)
+	et False si inversement (sens inverse à la séquence query)"""
+	if int(row[8]) < int(row[9]) :
+		return True
+	else:
+		return False 
+
+def getSbjctPosition(): 
+	"""Fonction permettant de retourner la position avant sur la sbjct avant le SNP
 	start row[8]
-	end row[9]
-	ou les deux"""
-	pass
+	end row[9]"""
+	if getStrand() == "5'" :
+		return int(row[9])
+	else :
+		return int(row[8])
 
-def getPositin():
+def getQueryPosition():
+	"""Fonction permettant de retourner la position avant sur la query avant le SNP
+	start row[6]
+	end row[7]"""
+	if getStrand() == "5'" :
+		return int(row[7])
+	else :
+		return int(row[6])
+
+
+def getEValue():
+	"""Fonction permettant de retourner la valeur de la e-value de l'alignement
+	permet sélection du meilleur alignement pour une même séquence"""
+	return float(row[10])
+	#Avoir un commentaire quand c'est le cas.
+
+def getSNPPositin():
 	"""Fonction permettant de récupérer la position du SNP dans l'assemblage
-	à partir de la position de la sbjct
-	start si on travail la séquence 3' --> row[8]
-	end si on travail avec la ésquence 5' --> row[9]"""
-	pass
+	à partir de la position de la sbjct"""
+	if getStrand() == "5'" and getSbjctOrientation == True :
+		return getSbjctPosition() + getMissingPiecesLength()
+	elif getStrand() == "5'" and getSbjctOrientation == False :
+		return getSbjctPosition() - getMissingPiecesLength()
+	elif getStrand() == "3'" and getSbjctOrientation == True :
+		return getSbjctPosition() - getMissingPiecesLength()
+	elif getStrand() == "3'" and getSbjctOrientation == False :
+		return getSbjctPosition() + getMissingPiecesLength()
 	#necesite peut-être fonction qui récupére info des colonnes 8 et 9 (avec fonction précédente)
 	#puis calcule des positions
 	#Ne pas oublier ici condition du strand (5 ou 3)
+
+def getComment():
+	"""Fonction permettant d'avoir un retour sur l'alignement
+	Est-ce qu'il y a plusieur alignement sous notre seuil de e-value?
+	Si le pourcentage d'identité n'est pas de 100, retourner le pourquoi
+	Si l'alignement observer n'est pas de la longueur de la query introduit"""
+	pass
+	#retourne une liste de commentaires
 
 def comparePosition():
 	"""Une comparaison entre la position obtenue avec la séquence flanquante en 3'
 	et la séquence flanquante en 5'"""
 	pass
+	#vérifier si 1 position dans 2 listes différentes sont les même ou pas.
 	#soit vérifier si = 
 	#soit vérifier si la soustraction =0
 
 
 
 if __name__ == '__main__':
+	with open(argv[1], 'r') as src, open(argv[2], 'w') as otp :
+		my_reader = reader(src, delimiter = delimit)
+		my_writer = writer(otp, delimiter = "\t")
+		for rows in my_reader :
+			#ici je rempli une liste en fonction de la strand 5 ou 3
+			#je compare les 2 positions trouvée
+			#print InfoList
+
+
+#Ne pas oublier de comparer le nom des séquences
+	# et si même nom (row[0] identique, faire une comparaison des e-values et sélectionner la plus basse)
+	# attention est ce que la séquence flanquante 3' correspondante est également la séquence avec la e-value la plus basse
+	#Si c'est pas le cas la comparaison des positions sera toujours fausse.
+			
 #mettre ici le déroulement du programme
 #1 utilisation de getStrand
-#2 vérifier taille de la query
-	#si 100 : +1 ou -1
-	#si différent de 100 +ou- la différence ATTENTION dépend du Strand
-#3 vérifier la taille de la sbjct
-	#si = séquence query --> ok
-	#si différent --> indication du problème
-#4 Récuération des positions ou comparaison
-#5 Comparaison des position
-	#Si = pas de soucis
-	#Si différentes indixation du problème
+#2 remplisage d'une liste avec les valeurs que je veux
