@@ -8,8 +8,10 @@ import csv
 #Penser a mettre les commentaire en anglais
 
 #Variables (listes ou dico?) pour comparer position retrouvée entre les 2 séquences flanquante
-InfoList = []
-
+# Dans les listes :
+	#[SNPname, 5' or 3', position find, comment]
+infoList5 = list()
+infoList3 = list()
 
 
 """Program that give us SNP position if we have a new reference assembly for chicken"""
@@ -91,6 +93,20 @@ def getSNPPositin():
 	#puis calcule des positions
 	#Ne pas oublier ici condition du strand (5 ou 3)
 
+def comparePosition():
+	"""Une comparaison entre la position obtenue avec la séquence flanquante en 3'
+	et la séquence flanquante en 5'"""
+	if infoList5[0] == infoList3[0] and infoList5[1] == "5'" and infoList3[1] == "3'" :
+		if infoList5[2] == infoList3[2] :
+			print("Même position trouvé avec les 2 séquences flanquantes ;) bien joué")
+		else :
+			print ("Il y a un problème dans tes calculs de position ou comparaison de listes")
+	
+	
+	#vérifier si 1 position dans 2 listes différentes sont les même ou pas.
+	#soit vérifier si = 
+	#soit vérifier si la soustraction =0
+
 def getComment():
 	"""Fonction permettant d'avoir un retour sur l'alignement
 	Est-ce qu'il y a plusieur alignement sous notre seuil de e-value?
@@ -98,14 +114,6 @@ def getComment():
 	Si l'alignement observer n'est pas de la longueur de la query introduit"""
 	pass
 	#retourne une liste de commentaires
-
-def comparePosition():
-	"""Une comparaison entre la position obtenue avec la séquence flanquante en 3'
-	et la séquence flanquante en 5'"""
-	pass
-	#vérifier si 1 position dans 2 listes différentes sont les même ou pas.
-	#soit vérifier si = 
-	#soit vérifier si la soustraction =0
 
 
 
