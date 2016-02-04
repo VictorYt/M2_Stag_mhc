@@ -157,22 +157,59 @@ if __name__ == '__main__':
 			infoList.append(getStrand(rows[0]))
 			infoList.append(getEValue(rows[10]))
 			infoList.append(getSNPPositin(rows[0], rows[6], rows[7], rows[8], rows[9]))
-			print count, infoList
-			my_writer.writerow(infoListOutput)
-			
-			#print count, infoList3
+			print "\n"
+			print count, "##################", infoList
 
-			if count == 1 : 
-				if infoList[1] == "5'" :
+			#Si pas d'info dans infoList3 ou 5 je remplie avec celle que j'ai pour cette ligne
+			if infoList[1] == "3'" and infoList3 == [] :
+				infoList3 = infoList
+				print "La liste d'info 3 concervée est : ",  infoList3
+			else :
+				pass
+			
+			if infoList[1] == "5'" and infoList5 == [] :
+				infoList5 = infoList
+				print "La liste d'info 5 concervée est : ",  infoList5
+			else :
+				pass
+
+
+
+			#Si plusieurs alignements pour la même séquence (5')
+			#Ou si changement de SNP
+			if infoList5 != [] and infoList[0] == infoList5[0] :
+				if infoList[1] == infoList5[1] and infoList[2] < infoList5[2] :
 					infoList5 = infoList
-					print count,"La liste d'info 5 concervée est : ",  infoList5
+					print "Chagement de référence pour cet alignement : ",  infoList5
 				else :
+					pass
+			else :
+				#faire la comparaison ici?
+				infoList5 = infoList
+				print "Pas le même SNP"
+				print "La liste d'info 3 concervée est : ", infoList5
+				
+			#Si plusieurs alignements pour la même séquence (3')
+			#Ou si changement de SNP
+			if infoList3 != [] and infoList[0] == infoList3[0] :
+				if infoList[1] == infoList3[1] and infoList[2] < infoList3[2] :
 					infoList3 = infoList
+					print "Chagement de référence pour cet alignement: ",  infoList3
+				else :
+					pass
+			else :
+				#faire la comparaison ici? 
+				infoList3 = infoList
+				print "pas le même SNP"
+				print "La liste d'info 3 concervée est : ", infoList3
 
-			
-			#gérer le problème du infoList3 vide
-			#1 remplir infoList5 et infoList3 correctement
+
+
+
+
+
 """
+			
 			#gérer 
 			if infoList[0] == infoList5[0] :
 				if infoList[1] == infoList5[1] and infoList[2] < infoList5[2] :
@@ -185,7 +222,7 @@ if __name__ == '__main__':
 			elif infoList[0] == infoList5[0] and infoList[1] == "3'" :
 				infoList3 = infoList
 								
-			"""
+			
 
 			#Attention il faut avoir infoList5 et 3 rempli (si 1 vide index ouit of range)
 			#Attention gérer le faite que l'on peut avoir que infoList5 ou 3 pour un SNP donnée						
@@ -194,4 +231,4 @@ if __name__ == '__main__':
 				infoListOutput.append(comparePosition())
 				infoListOutput.append(getComment())
 				my_writer.writerow(infoListOutput)
-				infoListOutput = list()
+				infoListOutput = list()"""
