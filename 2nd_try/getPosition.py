@@ -115,7 +115,7 @@ def comparePosition():
 			#print ("Il y a un problème dans tes calculs de position ou comparaison de listes")
 			return "NA"
 	else :
-		pass
+		return "pas mmeme SNP comparé"
 	#vérifier si 1 position dans 2 listes différentes sont les même ou pas.
 	#soit vérifier si = 
 	#soit vérifier si la soustraction =0
@@ -142,6 +142,7 @@ if __name__ == '__main__':
 	delimit = "\t"
 	infoList5 = list()
 	infoList3 = list()
+	infoListOut = list()
 	infoListOutput = list()
 	#infoList, infoList3 and infoList5 structure --> [SNPname, 5' or 3', position find, %id, e-value comment]
 	#infoList, allows comparison of the e-value if multiple alignment returned by the blast
@@ -160,19 +161,23 @@ if __name__ == '__main__':
 			print "\n"
 			print count, "##################", infoList
 
+
+
 			#Si pas d'info dans infoList3 ou 5 je remplie avec celle que j'ai pour cette ligne
-			if infoList[1] == "3'" and infoList3 == [] :
-				infoList3 = infoList
-				print "La liste d'info 3 concervée est : ",  infoList3
-			else :
-				pass
-			
 			if infoList[1] == "5'" and infoList5 == [] :
 				infoList5 = infoList
 				print "La liste d'info 5 concervée est : ",  infoList5
 			else :
 				pass
 
+			if infoList[1] == "3'" and infoList3 == [] :
+				infoList3 = infoList
+				print "La liste d'info 3 concervée est : ",  infoList3
+			else :
+				pass
+			
+
+			
 
 
 			#Si plusieurs alignements pour la même séquence (5')
@@ -180,55 +185,66 @@ if __name__ == '__main__':
 			if infoList5 != [] and infoList[0] == infoList5[0] :
 				if infoList[1] == infoList5[1] and infoList[2] < infoList5[2] :
 					infoList5 = infoList
-					print "Chagement de référence pour cet alignement : ",  infoList5
+					print "Chagement de référence pour cet alignement meilleur eval que précédente: ",  infoList5
+				else :
+					print "evalue plus élever pas de changement pour cet autre alignement"
+			else :
+				if infoList5 != [] and infoList3 != [] : #cas ou il n'y a que 1 sequence?
+					if infoList3[0] == infoList5[0] :
+						infoListOut = list()
+						infoListOut.append(infoList3[0])
+						infoListOut.append(comparePosition())
+						infoListOut.append(getComment())
+						if infoListOut != infoListOutput:
+							infoListOutput = infoListOut
+							my_writer.writerow(infoListOutput)
+						else :
+							print "nos 2 output sont identiques"
+						print "Apres comparaison entre position 3 et 5 et avant de changer 5", infoListOutput
+					else :
+						print "Mes SNP 5 et 3 ne sommes pas les même"
+				else :
+					print "l'une des 2 listes est vide pas de comparaison avant changement de liste 5 "
+				if infoList[1] == "5'" :
+					infoList5 = infoList
+					print "Pas le même SNP"
+					print "On change pour: ", infoList5
 				else :
 					pass
-			else :
-				#faire la comparaison ici?
-				infoList5 = infoList
-				print "Pas le même SNP"
-				print "La liste d'info 3 concervée est : ", infoList5
-				
+	
 			#Si plusieurs alignements pour la même séquence (3')
 			#Ou si changement de SNP
 			if infoList3 != [] and infoList[0] == infoList3[0] :
 				if infoList[1] == infoList3[1] and infoList[2] < infoList3[2] :
 					infoList3 = infoList
-					print "Chagement de référence pour cet alignement: ",  infoList3
+					print "Chagement de référence 3' pour cet alignement meilleur eval que 3' précédent: ",  infoList3
+				else :
+					print "pas meilleur alignment que précédent pour 3'"
+			else :
+				if infoList5 != [] and infoList3 != [] : #cas ou il n'y a que 1 sequence?
+					if infoList3[0] == infoList5[0] :
+						infoListOut = list()
+						infoListOut.append(infoList3[0])
+						infoListOut.append(comparePosition())
+						infoListOut.append(getComment())
+						if infoListOut != infoListOutput:
+							infoListOutput = infoListOut
+							my_writer.writerow(infoListOutput)
+						else :
+							print "nos 2 output sont identiques"
+						print "Apres comparaison entre position 3 et 5 et avant de changer 5", infoListOutput
+					else :
+						print "Mes SNP 5 et 3 ne sommes pas les même"
+				else :
+					print "l'une des 2 listes est vide pas de comparaison avant changement de liste 5 "
+				
+				if infoList[1] == "3'": 
+					infoList3 = infoList
+					print "pas le même SNP"
+					print "La liste d'info prout 3 concervée est : ", infoList3
 				else :
 					pass
-			else :
-				#faire la comparaison ici? 
-				infoList3 = infoList
-				print "pas le même SNP"
-				print "La liste d'info 3 concervée est : ", infoList3
 
+#Pb si que 1 SNP 5 ou 3
+#Pas de commentaires
 
-
-
-
-
-"""
-			
-			#gérer 
-			if infoList[0] == infoList5[0] :
-				if infoList[1] == infoList5[1] and infoList[2] < infoList5[2] :
-					infoList5 = infoList
-					print count, infoList5
-				elif infoList[1] == infoList3[1] and infoList[2] < infoList3[2] :
-					infoList3 = infoList
-				else : 
-					pass
-			elif infoList[0] == infoList5[0] and infoList[1] == "3'" :
-				infoList3 = infoList
-								
-			
-
-			#Attention il faut avoir infoList5 et 3 rempli (si 1 vide index ouit of range)
-			#Attention gérer le faite que l'on peut avoir que infoList5 ou 3 pour un SNP donnée						
-			if infoList5[0] == infoList3[0] :
-				infoListOutput.append(infoList3[0])
-				infoListOutput.append(comparePosition())
-				infoListOutput.append(getComment())
-				my_writer.writerow(infoListOutput)
-				infoListOutput = list()"""
