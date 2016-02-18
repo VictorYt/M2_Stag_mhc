@@ -246,6 +246,24 @@ class Genotype(Haplotype):
 		return self._nbmarkers - self._nb_htz_markers
 
 
+	def have_commun_haplotype(self):
+		"""Permet de récupérer la 1ère sortie que je veux
+		0 match
+		1 missmatch
+		sum des missmatch
+		sélection des haplotyê where sum =0"""
+		#me retroune la ligne de sortie voulu
+		pass
+
+
+
+
+
+	def screening(self):
+		"""Permet de vérifier parmi les autres objets Genotype s'il y a des
+		sequence identique à l'object geno que je manipule."""
+		#Dans la class ou a l'exterieur? surement a l'exterieur
+		pass
 
 
 
@@ -259,7 +277,9 @@ if __name__ == '__main__':
 	print (haplo1)
 	print (haplo2)
 	print (geno1)
+	#ligne pour avoir une liste des positions de mes marqueurs Htz dans la séquence d'un objet geno
 	geno1.index_htz_markers_in_seq = (geno1.position_htz_markers())
+	#ligne pour set le nombre de marqueures htz
 	geno1.nb_htz_markers = geno1.have_nb_htz_markers()
 	print (haplo1.name)
 	print (haplo2.sequence)
@@ -268,14 +288,15 @@ if __name__ == '__main__':
 	print (geno1.nbmarkers)
 	print (geno1.nb_htz_markers)
 	print (len(geno1.index_htz_markers_in_seq))
+	#ligne pour set le nombre de marqueures hmz
 	geno1.nb_hmz_markers = geno1.have_nb_hmz_markers()
+	#boucler sur les tous les objets géno.. dans ma liste de géno (voir comment traiter le cas des géno redondants)
 	print (geno1._nb_hmz_markers)
-
-	#Pour le moment pas besoin de mes accesseurs et mutateurs
 
 
 
 #Créer une liste d'haplotype comme ceci en lisant mon input haplotype
+	#créer les input
 #parcourir ensuite cette liste juste sur l'attribut seq (Tout en connaissance l'attribut name pour le retourner quand la seq est très suimilaire à notre Haplotype)
 # voir https://openclassrooms.com/courses/apprenez-a-programmer-en-python/parenthese-sur-le-tri-en-python
 
