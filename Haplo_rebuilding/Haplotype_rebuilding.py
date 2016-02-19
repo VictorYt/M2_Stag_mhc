@@ -27,7 +27,7 @@ class Haplotype(object):
 	def __init__(self, name, sequence, markers):
 		self._name = name 
 		self._sequence = sequence 
-		self._nbmarkers = len(self._sequence) #0 à création puis modif ou directe len(sequence)
+		self._nbmarkers = len(self._sequence) #0 à création puis modif avec len(self.markers) ou directe len(sequence)
 		self._markers = markers #en-tête du fichier en input
 		#Faire attention au fichier : utilisation du fichier d'haplotype pour les haplotypes et idem pour génotype
 		#ça nous permettra de vérifier qu'on a bien les même SNP avant comparaison
@@ -110,11 +110,15 @@ class Haplotype(object):
 		#pas a mettre dans la classe
 		pass
 
-	def compare_markers_size(self):
+	def compare_markers_and_sequence_size(self):
 		"""Permet de vérifier que tous les haplotypes ont le même nombre de markers
 		Normalement pas de problème"""
-		#pas a mettre dans la classe
-		pass
+		if len(self._sequence) == self._nbmarkers :
+			return True 
+		else :
+			return False
+		#Voir comment la coder autrement
+		#
 
 
 
@@ -243,7 +247,7 @@ class Genotype(Haplotype):
 	def have_nb_hmz_markers(self):
 		"""Permet d'avoir le nombre de marqueurs Hmz en faisant 
 		la soustraction du nombre de markers moins le nombre de htz trouvé"""
-		return self._nbmarkers - self._nb_htz_markers
+		return self._nbmarkers - self._nb_htz_markers #créer une branche pour gérer les -- (pas Htz mais markers non connu)
 
 
 	def have_commun_haplotype(self):
@@ -255,10 +259,6 @@ class Genotype(Haplotype):
 		#me retroune la ligne de sortie voulu
 		pass
 
-
-
-
-
 	def screening(self):
 		"""Permet de vérifier parmi les autres objets Genotype s'il y a des
 		sequence identique à l'object geno que je manipule."""
@@ -268,6 +268,72 @@ class Genotype(Haplotype):
 
 
 
+
+
+
+"""Création de 2 listes d'objets
+La premire, lst_of_haplo_object, contient les n objets Haplotype
+La seconde, lst_of_geno_object, contient les n objets Genotype"""
+
+if __name__ == '__main__':
+	print ("\nLes histoire commence  :")
+	lst_of_haplo_object = []
+	lst_of_geno_object = []
+	lst_markers_haplo = None
+	lst_markers_geno = None
+	delimit = "\t"
+	haplotype = argv[1]
+	genotype = argv[2]
+
+	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno:
+			my_haplo_reader = reader(src_haplo, delimiter = delimit)
+			my_geno_reader = reader(src_geno, delimiter = delimit)
+
+			count1 = 0
+			count2 = 0
+
+			#Construction de ma lst_of_haplo_object
+			for rows in my_haplo_reader :
+				count1 += 1
+				if count1 == 1 :
+					lst_markers_haplo = rows[1:80]
+				else :
+					A = Haplotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_haplo)
+					lst_of_haplo_object.append(A)
+			print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
+
+			#print ("Les marqueurs des haplotypes sont {}:".format(lst_of_haplo_object[1].markers))
+			#for haplo in lst_of_haplo_object :
+			#	print ("L'haplotype {}, constitué de {} marqueurs, à pour sequence {}".format(haplo.name, haplo.nbmarkers, haplo.sequence))
+
+
+			# Construction de ma lst_of_geno_object
+			for rows in my_geno_reader :
+				count2 +=1
+				if count2 == 1 :
+					lst_markers_geno = rows[1:80]
+					#print (lst_markers_geno)
+					#print (len(lst_markers_geno))
+				else :
+					B = Genotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_geno)
+					lst_of_geno_object.append(B)
+			print ("Nombre d'objet geno :",len(lst_of_geno_object))
+
+
+			print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+			for geno in lst_of_geno_object :
+				print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
+				geno.index_htz_markers_in_seq = (geno.position_htz_markers())
+				geno.nb_htz_markers = geno.have_nb_htz_markers()
+				geno.nb_hmz_markers = geno.have_nb_hmz_markers()
+				print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
+
+
+
+
+
+
+"""
 
 #main test
 if __name__ == '__main__':
@@ -292,21 +358,4 @@ if __name__ == '__main__':
 	geno1.nb_hmz_markers = geno1.have_nb_hmz_markers()
 	#boucler sur les tous les objets géno.. dans ma liste de géno (voir comment traiter le cas des géno redondants)
 	print (geno1._nb_hmz_markers)
-
-
-
-#Créer une liste d'haplotype comme ceci en lisant mon input haplotype
-	#créer les input
-#parcourir ensuite cette liste juste sur l'attribut seq (Tout en connaissance l'attribut name pour le retourner quand la seq est très suimilaire à notre Haplotype)
-# voir https://openclassrooms.com/courses/apprenez-a-programmer-en-python/parenthese-sur-le-tri-en-python
-
-
 """
-with open(halpotype, 'r') as src :
-		my_reader = reader(src, delimiter = delimit)
-		
-		for rows in my_reader :
-			#Enregistrer les haplotypes dans des listes utilisées par la suite pour les comparaisons
-
-			"""
-#voir comment gérer un header
