@@ -249,15 +249,12 @@ class Genotype(Haplotype):
 		la soustraction du nombre de markers moins le nombre de htz trouvé"""
 		return self._nbmarkers - self._nb_htz_markers #créer une branche pour gérer les -- (pas Htz mais markers non connu)
 
-	#Faire ici la méthodes de comparaison de séquence
 	def compare_geno_and_haplo_seq(self, geno, haplo):
 		"""Permet de comparer une sequence d'un genotype avec la séquence d'un halpotype
 		Return une liste contenant le nom du genotype, le nom de l'haplotype, une séquence où : 
 		0 = match entre génotype et haplotype
 		1 = missmatch
-		Et la dernière valeur étant un SUM des missmatch
-
-		sélection des haplotypes, where sum =0 for each genotype (voir si directement fait ici ou dans une fonction a part)"""
+		Et la dernière valeur étant un SUM des missmatch"""
 		ligne_de_sortie = []
 		count_erreur = 0
 		ligne_de_sortie.append(geno.name)
@@ -288,11 +285,45 @@ class Genotype(Haplotype):
 		return ligne_de_sortie
 
 	def select_similar_haplotype(self, geno, haplo):
-		"""Permet de récupérer l'objet haplotype qui est parfaitement similaire au génotype"""
+		"""Permet de récupérer l'objet haplotype qui est parfaitement similaire au génotype
+		Dont la somme des erreurs réaliser avec la méthode compare_geno_and_haplo_seq = 0 """
 		if geno.compare_geno_and_haplo_seq(geno, haplo)[81] == 0 :
 			geno.similar_haplotype.append(haplo)
 		else :
 			pass
+
+	def combianaison_between_similar_haplotype_in_geno(self):
+		"""Permet de combiner 1 à 1 les haplotypes précédemment trouvé pour vérifier
+		si notre génotype est issu de la combinaison d'haplotyes déjà connu"""
+		#utilisation de la liste d'index des marqueurs Htz chez le génotype
+		#faire attention ... pour le moment -- concidéré comme Htz dans le nb Htz/Hmz donc certain index pointe vers --
+		for seq_haplo in self.similar_haplotype :
+			lst_zip = list(zip(self.sequences))
+			if self.number_of_similar_haplotype == 0 :
+				pass
+			elif self.number_of_similar_haplotype == 1 :
+				pass
+			elif self.number_of_similar_haplotype > 1 :
+				for val_index in self.index_htz_markers_in_seq :
+					if len(self.sequence[val_index]) == 3 :
+						#ma magouille
+					else : #il s'agit de cas ou j'ai -- base calling a pas fonctionné
+						#je concidère que c'est bon
+#un truc du style 
+"""test = list(zip(lst1, lst2, lst3))
+print (test)
+for val_index in lst4 :
+	if len(test[val_index][2]) == 3 :
+		tmp = test[val_index][0]+"/"+test[val_index][1]
+		tmp2 = test[val_index][1]+"/"+test[val_index][0]
+		print (tmp, tmp2, test[val_index][2])
+		if tmp  == test[val_index][2] or tmp2 == test[val_index][2] :
+			lst5.append(0)
+		else :
+			lst5.append(1)
+print (lst5)
+"""
+
 
 
 
@@ -358,11 +389,6 @@ if __name__ == '__main__':
 
 
 
-
-
-#Au lieu d'avoir 2 truc qui font quasiment la même chose, fait une fonction qui rempli tes objects.
-
-
 		"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
 		print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
 		for geno in lst_of_geno_object :
@@ -373,13 +399,17 @@ if __name__ == '__main__':
 			#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
 
+
+#Au lieu d'avoir 2 truc qui font quasiment la même chose, fait une fonction qui rempli tes objects.
+
+
 		src_haplo.close()
 		src_geno.close()
 
 
 
 #A partir d'ici j'ai Ma liste d'Haplo et de Geno
-	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0
+	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0 ici tout le temps =0
 	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
 	count_geno = 0
 	count_haplo = 0
@@ -388,7 +418,8 @@ if __name__ == '__main__':
 		for haplo in lst_of_haplo_object :
 			count_haplo += 1
 			#print ("\nComparaison entre {} et {}".format(count_geno, count_haplo))
-			#print (geno.compare_geno_and_haplo_seq(geno, haplo)) #ligne necessaire pour ma sortie ma pas pour remplir mon objet geno
+		#ligne necessaire pour ma sortie ma pas pour remplir mon objet geno
+			#print (geno.compare_geno_and_haplo_seq(geno, haplo)) 
 			geno.select_similar_haplotype(geno, haplo)
 			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 			#ici parcourir les 2 markers 1 par 1 et faire mon premier fichier de sortie (tableau geno/haplo/0_1 & sum)
@@ -396,7 +427,15 @@ if __name__ == '__main__':
 		print ("Le nombre d'haplotype simailaire trouvé est : {}".format(geno.number_of_similar_haplotype))
 		print (geno.similar_haplotype)
 
+	#Gérer l'output pour la 1ere sortie
+
 	#parcourir la premierès sortie (ou peut être le faire directement avant) et récupérer dans une liste les haplo 100% similaire
+	
+
+
+
+
+#petite manip pour voir combien d'haplotype en moyenne je retrouve /genotype
 	count_geno_with_0_haplo = 0
 	count_geno_with_1_haplo = 0
 	count_geno_with_2_haplo = 0
