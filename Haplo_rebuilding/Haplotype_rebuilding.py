@@ -144,7 +144,7 @@ class Genotype(Haplotype):
 
 
 	def __str__(self):
-		return "L'haplotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Le Genotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
 
 
 	############
@@ -249,16 +249,54 @@ class Genotype(Haplotype):
 		la soustraction du nombre de markers moins le nombre de htz trouvé"""
 		return self._nbmarkers - self._nb_htz_markers #créer une branche pour gérer les -- (pas Htz mais markers non connu)
 
+	#Faire ici la méthodes de comparaison de séquence
+	def compare_geno_and_haplo_seq(self, geno, haplo):
+		"""Permet de comparer une sequence d'un genotype avec la séquence d'un halpotype
+		Return une liste contenant le nom du genotype, le nom de l'haplotype, une séquence où : 
+		0 = match entre génotype et haplotype
+		1 = missmatch
+		Et la dernière valeur étant un SUM des missmatch
 
-	def have_commun_haplotype(self):
-		"""Permet de récupérer la 1ère sortie que je veux
-		0 match
-		1 missmatch
-		sum des missmatch
-		sélection des haplotyê where sum =0"""
-		#me retroune la ligne de sortie voulu
-		pass
+		sélection des haplotypes, where sum =0 for each genotype (voir si directement fait ici ou dans une fonction a part)"""
+		ligne_de_sortie = []
+		count_erreur = 0
+		ligne_de_sortie.append(geno.name)
+		ligne_de_sortie.append(haplo.name)
+		for i in range(len(geno.sequence)) :
+			#traitment of Hmz Markers
+			if len(geno.sequence[i]) == 1 :
+				if geno.sequence[i] == haplo.sequence[i] :
+					ligne_de_sortie.append(0)
+				else :
+					ligne_de_sortie.append(1)
+					count_erreur += 1
+			#traitment of unknowing base for markers
+			elif len(geno.sequence[i]) == 2 :
+				ligne_de_sortie.append(0)
+			#traitment of Htz markers
+			elif len(geno.sequence[i]) == 3 :
+				if geno.sequence[i].rsplit("/", 1)[0] != haplo.sequence[i] :
+					if geno.sequence[i].rsplit("/", 1)[1] != haplo.sequence[i] :
+						ligne_de_sortie.append(1)
+						count_erreur += 1
+					else :
+						ligne_de_sortie.append(0)
+				else :
+					ligne_de_sortie.append(0)
+		ligne_de_sortie.append(count_erreur)
+		#print (len(ligne_de_sortie)) #--> need be equal to 82 (=79 markers + geno.name + heplo.name + sum(count_erreur))
+		return ligne_de_sortie
 
+	def select_similar_haplotype(self, geno, haplo):
+		"""Permet de récupérer l'objet haplotype qui est parfaitement similaire au génotype"""
+		if geno.compare_geno_and_haplo_seq(geno, haplo)[81] == 0 :
+			geno.similar_haplotype.append(haplo)
+		else :
+			pass
+
+
+
+	#Penser à une étape de "filtrage" vérifier si séquence génomique pas redondante
 	def screening(self):
 		"""Permet de vérifier parmi les autres objets Genotype s'il y a des
 		sequence identique à l'object geno que je manipule."""
@@ -286,76 +324,125 @@ if __name__ == '__main__':
 	genotype = argv[2]
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno:
-			my_haplo_reader = reader(src_haplo, delimiter = delimit)
-			my_geno_reader = reader(src_geno, delimiter = delimit)
+		my_haplo_reader = reader(src_haplo, delimiter = delimit)
+		my_geno_reader = reader(src_geno, delimiter = delimit)
 
-			count1 = 0
-			count2 = 0
+		#Compteur utilisé pour la récupération du header
+		count1 = 0
+		count2 = 0
 
-			#Construction de ma lst_of_haplo_object
-			for rows in my_haplo_reader :
-				count1 += 1
-				if count1 == 1 :
-					lst_markers_haplo = rows[1:80]
-				else :
-					A = Haplotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_haplo)
-					lst_of_haplo_object.append(A)
-			print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
+		"""Construction de ma lst_of_haplo_object"""
+		for rows in my_haplo_reader :
+			count1 += 1
+			if count1 == 1 :
+				lst_markers_haplo = rows[1:80]
+			else :
+				A = Haplotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_haplo)
+				lst_of_haplo_object.append(A)
+		print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
 
-			#print ("Les marqueurs des haplotypes sont {}:".format(lst_of_haplo_object[1].markers))
-			#for haplo in lst_of_haplo_object :
-			#	print ("L'haplotype {}, constitué de {} marqueurs, à pour sequence {}".format(haplo.name, haplo.nbmarkers, haplo.sequence))
-
-
-			# Construction de ma lst_of_geno_object
-			for rows in my_geno_reader :
-				count2 +=1
-				if count2 == 1 :
-					lst_markers_geno = rows[1:80]
-					#print (lst_markers_geno)
-					#print (len(lst_markers_geno))
-				else :
-					B = Genotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_geno)
-					lst_of_geno_object.append(B)
-			print ("Nombre d'objet geno :",len(lst_of_geno_object))
+		#print ("Les marqueurs des haplotypes sont {}:".format(lst_of_haplo_object[1].markers))
+		#for haplo in lst_of_haplo_object :
+		#	print ("L'haplotype {}, constitué de {} marqueurs, à pour sequence {}".format(haplo.name, haplo.nbmarkers, haplo.sequence))
 
 
-			print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
-			for geno in lst_of_geno_object :
-				print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
-				geno.index_htz_markers_in_seq = (geno.position_htz_markers())
-				geno.nb_htz_markers = geno.have_nb_htz_markers()
-				geno.nb_hmz_markers = geno.have_nb_hmz_markers()
-				print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
+		""" Construction de ma lst_of_geno_object"""
+		for rows in my_geno_reader :
+			count2 +=1
+			if count2 == 1 :
+				lst_markers_geno = rows[1:80]
+			else :
+				B = Genotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_geno)
+				lst_of_geno_object.append(B)
+		print ("Nombre d'objet geno :",len(lst_of_geno_object))
 
 
 
 
 
+#Au lieu d'avoir 2 truc qui font quasiment la même chose, fait une fonction qui rempli tes objects.
 
-"""
 
-#main test
-if __name__ == '__main__':
-	haplo1 = Haplotype("Hmz1", ["A","T","G","C"], ["SNP2","SNP7", "SNP88", "SNP178"])
-	haplo2 = Haplotype("Hmz2", ["C","T","A","G"], ["SNP2","SNP7", "SNP88", "SNP178"])
-	geno1 = Genotype("Geno1", ["C/A","T","A/G","C/G"], ["SNP2","SNP7", "SNP88", "SNP178"])
-	print (haplo1)
-	print (haplo2)
-	print (geno1)
-	#ligne pour avoir une liste des positions de mes marqueurs Htz dans la séquence d'un objet geno
-	geno1.index_htz_markers_in_seq = (geno1.position_htz_markers())
-	#ligne pour set le nombre de marqueures htz
-	geno1.nb_htz_markers = geno1.have_nb_htz_markers()
-	print (haplo1.name)
-	print (haplo2.sequence)
-	print (geno1.sequence)
-	print (geno1.index_htz_markers_in_seq)
-	print (geno1.nbmarkers)
-	print (geno1.nb_htz_markers)
-	print (len(geno1.index_htz_markers_in_seq))
-	#ligne pour set le nombre de marqueures hmz
-	geno1.nb_hmz_markers = geno1.have_nb_hmz_markers()
-	#boucler sur les tous les objets géno.. dans ma liste de géno (voir comment traiter le cas des géno redondants)
-	print (geno1._nb_hmz_markers)
-"""
+		"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
+		print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+		for geno in lst_of_geno_object :
+			#print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
+			geno.index_htz_markers_in_seq = (geno.position_htz_markers())
+			geno.nb_htz_markers = geno.have_nb_htz_markers()
+			geno.nb_hmz_markers = geno.have_nb_hmz_markers()
+			#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
+
+
+		src_haplo.close()
+		src_geno.close()
+
+
+
+#A partir d'ici j'ai Ma liste d'Haplo et de Geno
+	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0
+	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
+	count_geno = 0
+	count_haplo = 0
+	for geno in lst_of_geno_object :
+		count_geno += 1
+		for haplo in lst_of_haplo_object :
+			count_haplo += 1
+			#print ("\nComparaison entre {} et {}".format(count_geno, count_haplo))
+			#print (geno.compare_geno_and_haplo_seq(geno, haplo)) #ligne necessaire pour ma sortie ma pas pour remplir mon objet geno
+			geno.select_similar_haplotype(geno, haplo)
+			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
+			#ici parcourir les 2 markers 1 par 1 et faire mon premier fichier de sortie (tableau geno/haplo/0_1 & sum)
+		count_haplo = 0
+		print ("Le nombre d'haplotype simailaire trouvé est : {}".format(geno.number_of_similar_haplotype))
+		print (geno.similar_haplotype)
+
+	#parcourir la premierès sortie (ou peut être le faire directement avant) et récupérer dans une liste les haplo 100% similaire
+	count_geno_with_0_haplo = 0
+	count_geno_with_1_haplo = 0
+	count_geno_with_2_haplo = 0
+	count_geno_with_3_haplo = 0
+	count_geno_with_4_haplo = 0
+	count_geno_with_5_haplo = 0
+	count_geno_with_6_haplo = 0
+	count_geno_with_7more_haplo = 0
+
+
+	for geno in lst_of_geno_object :
+		if geno.number_of_similar_haplotype == 0 :
+			count_geno_with_0_haplo += 1
+		elif geno.number_of_similar_haplotype == 1 :
+			count_geno_with_1_haplo += 1
+		elif geno.number_of_similar_haplotype == 2 :
+			count_geno_with_2_haplo += 1
+		elif geno.number_of_similar_haplotype == 3 :
+			count_geno_with_3_haplo += 1
+		elif geno.number_of_similar_haplotype == 4 :
+			count_geno_with_4_haplo += 1
+		elif geno.number_of_similar_haplotype == 5 :
+			count_geno_with_5_haplo += 1
+		elif geno.number_of_similar_haplotype == 6 :
+			count_geno_with_6_haplo += 1
+		elif geno.number_of_similar_haplotype > 6 :
+			count_geno_with_7more_haplo += 1
+
+
+
+print ("Les genotypes avec aucun haplotype commun sont au nombre de {}".format(count_geno_with_0_haplo))
+print ("Les genotypes avec 1 haplotype commun sont au nombre de {}".format(count_geno_with_1_haplo))
+print ("Les genotypes avec 2 haplotype commun sont au nombre de {}".format(count_geno_with_2_haplo))
+print ("Les genotypes avec 3 haplotype commun sont au nombre de {}".format(count_geno_with_3_haplo))
+print ("Les genotypes avec 4 haplotype commun sont au nombre de {}".format(count_geno_with_4_haplo))
+print ("Les genotypes avec 5 haplotype commun sont au nombre de {}".format(count_geno_with_5_haplo))
+print ("Les genotypes avec 6 haplotype commun sont au nombre de {}".format(count_geno_with_6_haplo))
+print ("Les genotypes avec >7 haplotype commun sont au nombre de {}".format(count_geno_with_7more_haplo))
+
+
+
+
+
+
+
+#A partir d'ici il faudra combiné les haplo entre eux pour vérifier s'ils nous donne le genotype
+	#tenir compte de nombre d'haplo récupéré
+	#du résultat des combinaisons
+#penser au 2ème fichier de sortie
