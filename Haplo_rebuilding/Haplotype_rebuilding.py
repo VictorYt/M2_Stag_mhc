@@ -230,6 +230,7 @@ class Genotype(Haplotype):
 	#OTHER METHODES#
 	################
 
+	#attention je prend en compte les erreur de calling (--) dans le compte des Htz
 	def position_htz_markers(self):
 		"""Permet de retourner une liste de position (index pour lesquels le markers est Htz)"""
 		position_htz_markers = []
@@ -292,38 +293,42 @@ class Genotype(Haplotype):
 		else :
 			pass
 
-	def combianaison_between_similar_haplotype_in_geno(self):
+	def combinaison_between_similar_haplotype_in_geno(self):
 		"""Permet de combiner 1 à 1 les haplotypes précédemment trouvé pour vérifier
 		si notre génotype est issu de la combinaison d'haplotyes déjà connu"""
 		#utilisation de la liste d'index des marqueurs Htz chez le génotype
 		#faire attention ... pour le moment -- concidéré comme Htz dans le nb Htz/Hmz donc certain index pointe vers --
-		for seq_haplo in self.similar_haplotype :
-			lst_zip = list(zip(self.sequences))
-			if self.number_of_similar_haplotype == 0 :
-				pass
-			elif self.number_of_similar_haplotype == 1 :
-				pass
-			elif self.number_of_similar_haplotype > 1 :
-				for val_index in self.index_htz_markers_in_seq :
-					if len(self.sequence[val_index]) == 3 :
-						#ma magouille
-					else : #il s'agit de cas ou j'ai -- base calling a pas fonctionné
-						#je concidère que c'est bon
-#un truc du style 
-"""test = list(zip(lst1, lst2, lst3))
-print (test)
-for val_index in lst4 :
-	if len(test[val_index][2]) == 3 :
-		tmp = test[val_index][0]+"/"+test[val_index][1]
-		tmp2 = test[val_index][1]+"/"+test[val_index][0]
-		print (tmp, tmp2, test[val_index][2])
-		if tmp  == test[val_index][2] or tmp2 == test[val_index][2] :
-			lst5.append(0)
-		else :
-			lst5.append(1)
-print (lst5)
-"""
+		lstZip = []
+		lst_good_combinaison = []
+		if self.number_of_similar_haplotype > 1 :
+			for haplo1 in range(len(self.similar_haplotype)-1) :
+				for haplo2 in range((haplo1+1),len(self.similar_haplotype)) :
+					lst_combinaison = []
+					lstZip = list(zip((self.similar_haplotype[haplo1]).sequence, (self.similar_haplotype[haplo2]).sequence, self.sequence))
+					count_bad_combinaison = 0
+					for val_index in self.index_htz_markers_in_seq :
+						if len(lstZip[val_index][2]) == 3 :
+							tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
+							tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
+							if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
+								lst_combinaison.append(0)
+							else :
+								lst_combinaison.append(1)
+								count_bad_combinaison += 1
+					if count_bad_combinaison == 0 :
+						lst_good_combinaison.append([self.similar_haplotype[haplo1].name, self.similar_haplotype[haplo2].name])		
+		return lst_good_combinaison
+		#Cette liste peut être vide
+		#Prendre en compte ce cas
+		#Ainsi que les haplotype qui combiné ne donne rien (len(self.similar_haplotype) - len(lst_good_combinaison))
 
+	def create_haplotype(self):
+		"""Permet, dans le cas ou 1 seul haplotype connu est trouvé compatible à notre génotype,
+		de créer l'haplotype qui combiné a celui trouvé donne notre génotype """
+		new_hapltype = []
+		#if self.number_of_similar_haplotype == 1 :
+			#un peu comme au dessus mais cette fois ci je créer l'haplotype qui combiné au mien donne le génotype observé
+		return new_hapltype
 
 
 
@@ -345,7 +350,7 @@ La premire, lst_of_haplo_object, contient les n objets Haplotype
 La seconde, lst_of_geno_object, contient les n objets Genotype"""
 
 if __name__ == '__main__':
-	print ("\nLes histoire commence  :")
+	print ("\nLes histoires commencent  :")
 	lst_of_haplo_object = []
 	lst_of_geno_object = []
 	lst_markers_haplo = None
@@ -356,7 +361,7 @@ if __name__ == '__main__':
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno:
 		my_haplo_reader = reader(src_haplo, delimiter = delimit)
-		my_geno_reader = reader(src_geno, delimiter = delimit)
+		my_geno_reader = reader(src_geno, delimiter = ",")
 
 		#Compteur utilisé pour la récupération du header
 		count1 = 0
@@ -424,17 +429,16 @@ if __name__ == '__main__':
 			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 			#ici parcourir les 2 markers 1 par 1 et faire mon premier fichier de sortie (tableau geno/haplo/0_1 & sum)
 		count_haplo = 0
-		print ("Le nombre d'haplotype simailaire trouvé est : {}".format(geno.number_of_similar_haplotype))
-		print (geno.similar_haplotype)
+		#print ("Le nombre d'haplotype simailaire trouvé est : {}".format(geno.number_of_similar_haplotype))
+		#print (geno.similar_haplotype)
 
 	#Gérer l'output pour la 1ere sortie
-
 	#parcourir la premierès sortie (ou peut être le faire directement avant) et récupérer dans une liste les haplo 100% similaire
 	
 
 
 
-
+"""Manip permettant de savoir combien d'haplotypes par géno en moyenne"""
 #petite manip pour voir combien d'haplotype en moyenne je retrouve /genotype
 	count_geno_with_0_haplo = 0
 	count_geno_with_1_haplo = 0
@@ -481,7 +485,79 @@ print ("Les genotypes avec >7 haplotype commun sont au nombre de {}".format(coun
 
 
 
+"""Manip permettant da'voir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
 #A partir d'ici il faudra combiné les haplo entre eux pour vérifier s'ils nous donne le genotype
 	#tenir compte de nombre d'haplo récupéré
 	#du résultat des combinaisons
+
+for geno in lst_of_geno_object :
+	print ("Pour le genotype {}".format(geno.name))
+	print ("Le nombre d'haplotype similaire a notre génotype est au nombre de : {}".format(geno.number_of_similar_haplotype))
+	#print ("{}".format(geno.probable_haplotypes_combinaison))
+	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
+	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
+	print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
+	print (geno.number_of_probable_haplotypes_combinaison)
+
+count_2_0 = 0
+count_2_1 = 0
+
+count_3_0 = 0
+count_3_1 = 0
+count_3_2 = 0
+count_3_3 = 0
+
+count_4_0 = 0
+count_4_1 = 0
+count_4_2 = 0
+
+count_5_0 = 0
+count_5_1 = 0
+
+count_6_0 = 0
+count_6_3 = 0
+
+
+for geno in lst_of_geno_object :
+	if geno.number_of_similar_haplotype == 2 : 
+		if geno.number_of_probable_haplotypes_combinaison == 0 :
+			count_2_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 1 :
+			count_2_1 +=1
+	
+	elif geno.number_of_similar_haplotype == 3 :
+		if geno.number_of_probable_haplotypes_combinaison == 0 :
+			count_3_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 1 :
+			count_3_1 +=1
+		elif geno.number_of_probable_haplotypes_combinaison == 2 :
+			count_3_2 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 3 :
+			count_3_3 += 1
+	
+	elif geno.number_of_similar_haplotype == 4 :
+		if geno.number_of_probable_haplotypes_combinaison == 0 :
+			count_4_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 1 :
+			count_4_1 +=1
+		elif geno.number_of_probable_haplotypes_combinaison == 2 :
+			count_4_2 += 1
+
+	elif geno.number_of_similar_haplotype == 5 :
+		if geno.number_of_probable_haplotypes_combinaison == 0 :
+			count_5_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 1 :
+			count_5_1 +=1
+
+	elif geno.number_of_similar_haplotype == 6 :
+		if geno.number_of_probable_haplotypes_combinaison == 0 :
+			count_6_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 3 :
+			count_6_3 += 1
+
+print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
+print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison \n{} on 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
+print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison \n{} on 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
+print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison ".format(count_5_0, count_5_1))
+print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} on 3 combinaison ".format(count_6_0, count_6_3))
 #penser au 2ème fichier de sortie
