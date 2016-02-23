@@ -326,10 +326,19 @@ class Genotype(Haplotype):
 		"""Permet, dans le cas ou 1 seul haplotype connu est trouvé compatible à notre génotype,
 		de créer l'haplotype qui combiné a celui trouvé donne notre génotype """
 		new_hapltype = []
-		#if self.number_of_similar_haplotype == 1 :
-			#un peu comme au dessus mais cette fois ci je créer l'haplotype qui combiné au mien donne le génotype observé
+		lstZip = []
+		for nt in range(len(self.sequence)) :
+			lstZip = list(zip((self.similar_haplotype)[0].sequence, self.sequence)) #pb d'attribu ici
+			if len(lstZip[nt][1]) == 1 :
+				new_hapltype.append(lstZip[nt][0])
+			if len(lstZip[nt][1]) == 2 :
+				new_hapltype.append("--")
+			if len(lstZip[nt][1]) == 3 :
+				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[0]:
+					new_hapltype.append(lstZip[nt][1].rsplit("/",1)[1])
+				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
+					new_hapltype.append(lstZip[nt][1].rsplit("/",1)[0])
 		return new_hapltype
-
 
 
 	#Penser à une étape de "filtrage" vérifier si séquence génomique pas redondante
@@ -440,33 +449,33 @@ if __name__ == '__main__':
 
 """Manip permettant de savoir combien d'haplotypes par géno en moyenne"""
 #petite manip pour voir combien d'haplotype en moyenne je retrouve /genotype
-	count_geno_with_0_haplo = 0
-	count_geno_with_1_haplo = 0
-	count_geno_with_2_haplo = 0
-	count_geno_with_3_haplo = 0
-	count_geno_with_4_haplo = 0
-	count_geno_with_5_haplo = 0
-	count_geno_with_6_haplo = 0
-	count_geno_with_7more_haplo = 0
+count_geno_with_0_haplo = 0
+count_geno_with_1_haplo = 0
+count_geno_with_2_haplo = 0
+count_geno_with_3_haplo = 0
+count_geno_with_4_haplo = 0
+count_geno_with_5_haplo = 0
+count_geno_with_6_haplo = 0
+count_geno_with_7more_haplo = 0
 
 
-	for geno in lst_of_geno_object :
-		if geno.number_of_similar_haplotype == 0 :
-			count_geno_with_0_haplo += 1
-		elif geno.number_of_similar_haplotype == 1 :
-			count_geno_with_1_haplo += 1
-		elif geno.number_of_similar_haplotype == 2 :
-			count_geno_with_2_haplo += 1
-		elif geno.number_of_similar_haplotype == 3 :
-			count_geno_with_3_haplo += 1
-		elif geno.number_of_similar_haplotype == 4 :
-			count_geno_with_4_haplo += 1
-		elif geno.number_of_similar_haplotype == 5 :
-			count_geno_with_5_haplo += 1
-		elif geno.number_of_similar_haplotype == 6 :
-			count_geno_with_6_haplo += 1
-		elif geno.number_of_similar_haplotype > 6 :
-			count_geno_with_7more_haplo += 1
+for geno in lst_of_geno_object :
+	if geno.number_of_similar_haplotype == 0 :
+		count_geno_with_0_haplo += 1
+	elif geno.number_of_similar_haplotype == 1 :
+		count_geno_with_1_haplo += 1
+	elif geno.number_of_similar_haplotype == 2 :
+		count_geno_with_2_haplo += 1
+	elif geno.number_of_similar_haplotype == 3 :
+		count_geno_with_3_haplo += 1
+	elif geno.number_of_similar_haplotype == 4 :
+		count_geno_with_4_haplo += 1
+	elif geno.number_of_similar_haplotype == 5 :
+		count_geno_with_5_haplo += 1
+	elif geno.number_of_similar_haplotype == 6 :
+		count_geno_with_6_haplo += 1
+	elif geno.number_of_similar_haplotype > 6 :
+		count_geno_with_7more_haplo += 1
 
 
 
@@ -496,8 +505,10 @@ for geno in lst_of_geno_object :
 	#print ("{}".format(geno.probable_haplotypes_combinaison))
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
+	if geno.number_of_similar_haplotype == 1 :
+		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
 	print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
-	print (geno.number_of_probable_haplotypes_combinaison)
+	print (geno.number_of_probable_haplotypes_combinaison, "\n")
 
 count_2_0 = 0
 count_2_1 = 0
