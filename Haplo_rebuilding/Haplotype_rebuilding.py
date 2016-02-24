@@ -104,12 +104,6 @@ class Haplotype(object):
 		return len(self._markers)
 		#pas utile ici si je fais directement un len de ma variable dès le début
 
-	def markers_lst(self):
-		"""Permet de récupérer le header de nos fichiers d'INPUT qui contient
-		le nom de chacun des marqueurs"""
-		#pas a mettre dans la classe
-		pass
-
 	def compare_markers_and_sequence_size(self):
 		"""Permet de vérifier que tous les haplotypes ont le même nombre de markers
 		Normalement pas de problème"""
@@ -339,13 +333,14 @@ class Genotype(Haplotype):
 				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
 					new_hapltype.append(lstZip[nt][1].rsplit("/",1)[0])
 		return new_hapltype
+		#Penser a conserver ce retour dans un attribut
 
 
 	#Penser à une étape de "filtrage" vérifier si séquence génomique pas redondante
 	def screening(self):
 		"""Permet de vérifier parmi les autres objets Genotype s'il y a des
 		sequence identique à l'object geno que je manipule."""
-		#Dans la class ou a l'exterieur? surement a l'exterieur
+		#Dans la classe ou à l'exterieur? surement a l'exterieur (sort -u)
 		pass
 
 
@@ -370,7 +365,7 @@ if __name__ == '__main__':
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno:
 		my_haplo_reader = reader(src_haplo, delimiter = delimit)
-		my_geno_reader = reader(src_geno, delimiter = ",")
+		my_geno_reader = reader(src_geno, delimiter = delimit)
 
 		#Compteur utilisé pour la récupération du header
 		count1 = 0
@@ -449,6 +444,7 @@ if __name__ == '__main__':
 
 """Manip permettant de savoir combien d'haplotypes par géno en moyenne"""
 #petite manip pour voir combien d'haplotype en moyenne je retrouve /genotype
+#Penser à une fonction si je veux avoir ces résultats en output quelquepart
 count_geno_with_0_haplo = 0
 count_geno_with_1_haplo = 0
 count_geno_with_2_haplo = 0
@@ -489,7 +485,21 @@ print ("Les genotypes avec 6 haplotype commun sont au nombre de {}".format(count
 print ("Les genotypes avec >7 haplotype commun sont au nombre de {}".format(count_geno_with_7more_haplo))
 
 
+#Même chose qu'au dessus et marche
+def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
+	"""theNumber a int between 0 to len(list_of_genotype_object)
+	count is a counter that will be retrun"""
+	if genotype.number_of_similar_haplotype == theNumber:
+		count = 1
+	else :
+		count = 0
+	return count
 
+for i in range((len(lst_of_haplo_object)+1)) :
+	count = 0
+	for geno in lst_of_geno_object :
+		count += count_genotype_with_same_number_of_similar_haplotype(genotype =geno, theNumber =i)
+	print ("Les genotypes avec {} haplotype commun sont au nombre de {}".format(i, count))
 
 
 
@@ -506,10 +516,16 @@ for geno in lst_of_geno_object :
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
 	if geno.number_of_similar_haplotype == 1 :
+		#Penser a créer un attribut pour concervé les haplotypes créé
 		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
 	print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
 	print (geno.number_of_probable_haplotypes_combinaison, "\n")
 
+
+
+
+
+#Penser a faire une fonction qui pourrait me donner ces résultats
 count_2_0 = 0
 count_2_1 = 0
 
@@ -567,8 +583,8 @@ for geno in lst_of_geno_object :
 			count_6_3 += 1
 
 print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
-print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison \n{} on 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
-print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison \n{} on 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
-print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} on 1 combinaison ".format(count_5_0, count_5_1))
-print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} on 3 combinaison ".format(count_6_0, count_6_3))
-#penser au 2ème fichier de sortie
+print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
+print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
+print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
+print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 3 combinaison ".format(count_6_0, count_6_3))
+#penser aux fichiers de sortie
