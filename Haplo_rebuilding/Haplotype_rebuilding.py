@@ -367,7 +367,7 @@ if __name__ == '__main__':
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno :
 		my_haplo_reader = reader(src_haplo, delimiter = delimit)
-		my_geno_reader = reader(src_geno, delimiter = delimit)
+		my_geno_reader = reader(src_geno, delimiter = ",")
 		#my_otp1_writer = writer(otp1, delimiter = delimit)
 
 		#Compteur utilisé pour la récupération du header
@@ -429,7 +429,7 @@ if __name__ == '__main__':
 		my_otp1_writer = writer(otp1, delimiter = delimit)
 		my_otp2_writer = writer(otp2, delimiter = delimit)
 
-		#my_otp1_writer.writerow("Genotype", "Haplotype", lstmarkers, "Number of error")
+		
 
 		for geno in lst_of_geno_object :
 			for haplo in lst_of_haplo_object :
@@ -438,9 +438,6 @@ if __name__ == '__main__':
 
 				#écriture de la première sortie
 				my_otp1_writer.writerow(geno.compare_geno_and_haplo_seq(geno, haplo))
-
-			#print ("Le nombre d'haplotype simailaire trouvé est : {}".format(geno.number_of_similar_haplotype))
-			#print (geno.similar_haplotype)
 
 		otp1.close()
 
@@ -466,19 +463,22 @@ if __name__ == '__main__':
 			
 			if geno.number_of_similar_haplotype > 0 :
 				for similar_haplo in geno.similar_haplotype :
+					#print ("test ")
+					#print (similar_haplo.name)
+					#print (similar_haplo.sequence)
 					haplo_second_sortie = []
 					haplo_second_sortie.append(".")
 					haplo_second_sortie.append(similar_haplo.name)
 					for values in similar_haplo.sequence :
 						haplo_second_sortie.append(values)
-			my_otp2_writer.writerow(haplo_second_sortie)
+					my_otp2_writer.writerow(haplo_second_sortie)
 			
 		otp2.close()
 
 
 
 
-#Même chose qu'au dessus et marche
+#fonction a décrire
 def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 	"""theNumber a int between 0 to len(list_of_genotype_object)
 	count is a counter that will be retrun"""
@@ -492,7 +492,8 @@ for i in range((len(lst_of_haplo_object)+1)) :
 	count = 0
 	for geno in lst_of_geno_object :
 		count += count_genotype_with_same_number_of_similar_haplotype(genotype =geno, theNumber =i)
-	print ("Les genotypes avec {} haplotype commun sont au nombre de {}".format(i, count))
+	#print ("Les genotypes avec {} haplotype commun sont au nombre de {}".format(i, count))
+
 
 
 
@@ -508,9 +509,9 @@ for geno in lst_of_geno_object :
 	#print ("{}".format(geno.probable_haplotypes_combinaison))
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
-	if geno.number_of_similar_haplotype == 1 :
+	#if geno.number_of_similar_haplotype == 1 :
 		#Penser a créer un attribut pour concervé les haplotypes créé
-		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
+	#	print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
 	#print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
 	#print (geno.number_of_probable_haplotypes_combinaison, "\n")
 
