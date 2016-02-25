@@ -455,7 +455,7 @@ if __name__ == '__main__':
 		for geno in lst_of_geno_object:
 			geno_second_sortie = []
 			geno_second_sortie.append(geno.name)
-			geno_second_sortie.append(".")
+			geno_second_sortie.append(geno.number_of_similar_haplotype)
 			for values in geno.sequence :
 				geno_second_sortie.append(values)
 			my_otp2_writer.writerow(geno_second_sortie)
@@ -463,19 +463,17 @@ if __name__ == '__main__':
 			
 			if geno.number_of_similar_haplotype > 0 :
 				for similar_haplo in geno.similar_haplotype :
-					#print ("test ")
-					#print (similar_haplo.name)
-					#print (similar_haplo.sequence)
 					haplo_second_sortie = []
-					haplo_second_sortie.append(".")
+					haplo_second_sortie.append(geno.name)
 					haplo_second_sortie.append(similar_haplo.name)
 					for values in similar_haplo.sequence :
 						haplo_second_sortie.append(values)
 					my_otp2_writer.writerow(haplo_second_sortie)
+				my_otp2_writer.writerow("\n")
+			else : 
+				my_otp2_writer.writerow("\n")
 			
 		otp2.close()
-
-
 
 
 #fonction a décrire
@@ -492,7 +490,7 @@ for i in range((len(lst_of_haplo_object)+1)) :
 	count = 0
 	for geno in lst_of_geno_object :
 		count += count_genotype_with_same_number_of_similar_haplotype(genotype =geno, theNumber =i)
-	#print ("Les genotypes avec {} haplotype commun sont au nombre de {}".format(i, count))
+	print ("Les genotypes avec {} haplotype(s) commun(s) sont au nombre de {}".format(i, count))
 
 
 
@@ -504,16 +502,16 @@ for i in range((len(lst_of_haplo_object)+1)) :
 	#du résultat des combinaisons
 
 for geno in lst_of_geno_object :
-	#print ("Pour le genotype {}".format(geno.name))
-	#print ("Le nombre d'haplotype similaire a notre génotype est au nombre de : {}".format(geno.number_of_similar_haplotype))
-	#print ("{}".format(geno.probable_haplotypes_combinaison))
+	print ("Pour le genotype {}".format(geno.name))
+	print ("Le nombre d'haplotype similaire a notre génotype est au nombre de : {}".format(geno.number_of_similar_haplotype))
+	print ("{}".format(geno.probable_haplotypes_combinaison))
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
-	#if geno.number_of_similar_haplotype == 1 :
+	if geno.number_of_similar_haplotype == 1 :
 		#Penser a créer un attribut pour concervé les haplotypes créé
-	#	print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
-	#print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
-	#print (geno.number_of_probable_haplotypes_combinaison, "\n")
+		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
+	print  ("Liste des combinaisons possible {}:".format(geno.probable_haplotypes_combinaison))
+	print (geno.number_of_probable_haplotypes_combinaison, "\n")
 
 
 
