@@ -322,9 +322,9 @@ class Genotype(Haplotype):
 		"""Permet, dans le cas ou 1 seul haplotype connu est trouvé compatible à notre génotype,
 		de créer l'haplotype qui combiné a celui trouvé donne notre génotype """
 		new_hapltype = []
-		lstZip = []
+		lstZip = list(zip((self.similar_haplotype)[0].sequence, self.sequence)) #pb d'attribu ici
+		print (lstZip)
 		for nt in range(len(self.sequence)) :
-			lstZip = list(zip((self.similar_haplotype)[0].sequence, self.sequence)) #pb d'attribu ici
 			if len(lstZip[nt][1]) == 1 :
 				new_hapltype.append(lstZip[nt][0])
 			if len(lstZip[nt][1]) == 2 :
@@ -643,3 +643,130 @@ with open(first_txt_output,'w') as txt_otp1 :
 	txt_otp1.write("\nSi 4 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
 	txt_otp1.write("\nSi 5 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
 	txt_otp1.write("\nSi 6 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 3 combinaisons ".format(count_6_0, count_6_3))
+
+
+
+
+#Create a READme !!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""Reconstruction d'haplotype a partir d'un haplotype et 1 génotype"""
+print ("\nDébut de reconstruction d'haplotype")
+
+
+lst3 = ["A", "G/C", "G", "--", "T", "A", "C/T"]
+
+lst4 = [1, 3, 6]
+
+lst_ha1 = ["A","C","G","T","T","A", "C"]
+lst_ha2 = ["A","G","G","T","T","A", "T"]
+lst_ha3 = ["A","G","G","T","T","A", "C"]
+lst_ha4 = ["A","C","G","A","T","A", "C"]
+
+lst_hap_comp = [lst_ha1, lst_ha2, lst_ha3, lst_ha4]
+lst_hap_who_not_combi = []
+
+number_of_ha_sim = 3 
+lst_combi = [[lst_ha1, lst_ha2], [lst_ha1, lst_ha4]]
+print (len(lst_combi))
+
+#l'attribut a remplir avec les nouveaux haplo
+lst_new_haplo = []
+
+#j'y ai ajouter les 2 arguments que sont l'haplo et le geno
+def new_hap(haplo, geno):
+	new_haplo = []
+	test = list(zip(haplo, geno))
+	for base in range(len(geno)) :
+		if len(test[base][1]) == 1 :
+			new_haplo.append(test[base][0])
+		if len(test[base][1]) == 2 :
+			new_haplo.append("--")
+		if len(test[base][1]) == 3 :
+			if test[base][0] == test[base][1].rsplit("/",1)[0] :
+				new_haplo.append(test[base][1].rsplit("/",1)[1])
+			if test[base][0] == test[base][1].rsplit("/",1)[1] :
+				new_haplo.append(test[base][1].rsplit("/",1)[0])
+	return new_haplo
+
+def create_hap(): #self
+	if number_of_ha_sim == 0 :
+		pass
+	if number_of_ha_sim == 1 :
+		new_hap(lst_ha1,lst3)
+	if number_of_ha_sim > 1 :
+		if len(lst_combi) == 0 :
+			for haplo in lst_hap_comp :
+				lst_new_haplo.append(new_hap(haplo, lst3)) #ici .append l'attribut contenant la liste des nvx haplo
+		if len(lst_combi) > 0 :
+			lst_test = []
+			for combi in lst_combi :
+				for haplo_combi in combi :
+					lst_test.append(haplo_combi)
+				print ("prout {}".format(lst_test))
+			for haplo in lst_hap_comp :
+				if haplo not in lst_test :
+					lst_hap_who_not_combi.append(haplo)
+				else :
+					pass
+			print ("haplo sans combi {}".format(lst_hap_who_not_combi))
+
+			for i in lst_hap_who_not_combi :
+				lst_new_haplo.append(new_hap(i, lst3)) #ici .append l'attribut contenant la liste des nvx haplo
+
+	return lst_new_haplo
+
+
+
+print ("ma liste de new haplo {}".format(create_hap()))
+
+#A partir de la il faut
+	#Pour chaque new haplo de la liste retourné faire un objet Haplotype avec 
+	#ajouter cette liste (de nouveau(x) Haplo objet) dans un attribut de la class Genotype
+	#Reparcourir lst_geno_objet
+		#faire un
+
+
+
+
