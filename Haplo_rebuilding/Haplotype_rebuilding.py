@@ -124,10 +124,12 @@ class Haplotype(object):
 class Genotype(Haplotype):
 	"""docstring for Genotype"""
 	def __init__(self, name, sequence, markers):
+		#héritage de la classe Haplotype
 		self._name = name 
 		self._sequence = sequence 
 		self._nbmarkers = len(self._sequence) #0 à création puis modif ou directe len(sequence)
 		self._markers = markers
+		#Propre à la classe Génotype
 		self._nb_hmz_markers = 0
 		self._nb_htz_markers = 0
 		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
@@ -135,7 +137,8 @@ class Genotype(Haplotype):
 		self._number_of_similar_haplotype = 0 #taille de la liste obtenue ci-dessus
 		self._probable_haplotypes_combinaison = [] #liste de liste (ex: [[haplo1, haplo4], [haplo20, haplo79]])
 		self._number_of_probable_haplotypes_combinaison = 0
-
+		self._lst_of_new_haplotype = [] #une liste de nouveau(x) (pour le moment liste de la séqeunce seul) haplotype(s) créé à partir de l'objet Génotype en question
+		self._number_of_new_created_haplotype = 0 #taille de la liste obtenue ci-dessus
 
 	def __str__(self):
 		"""Like str Haplotype"""
@@ -175,6 +178,14 @@ class Genotype(Haplotype):
 		"""Permet d'avoir le nombre de combinaison contenu dans la liste de combinaison probable"""
 		return self._number_of_probable_haplotypes_combinaison		
 
+	def _get_lst_of_new_haplotype(self):
+		"""Permet d'avoir la liste des nouveaux haplotypes créés"""
+		return self._lst_of_new_haplotype
+
+	def _get_number_of_new_created_haplotype(self):
+		"""Permet d'avoir le nombre de nouveaux haplotypes créés"""
+		return self._number_of_new_created_haplotype
+
 	###########
 	#MUTATEURS#
 	###########
@@ -208,6 +219,16 @@ class Genotype(Haplotype):
 		"""Permet de changer le nombre de combinaison contenu dans la liste de combinaison probable"""
 		self._number_of_probable_haplotypes_combinaison = nb_haplo_combinaison
 
+	def _set_lst_of_new_haplotype(self, new_haplotype):
+		"""Permet de changer la liste des haplotypes créé, qui est initialement vide, 
+		par celle générée par la méthode create_haplotype()"""
+		self._lst_of_new_haplotype = new_haplotype
+
+	def _set_number_of_new_created_haplotype(self, new_number):
+		"""Permet de changer le nombre de nouveau(x) haplotype(s), qui est initialement
+		de zéro, au nombre réel de nouveau(x) haplotype(s) créé(s)"""
+		self._number_of_new_created_haplotype = new_number
+
 	############
 	#PROPERTIES#
 	############
@@ -219,7 +240,8 @@ class Genotype(Haplotype):
 	number_of_similar_haplotype = property(_get_number_of_similar_haplotype, _set_number_of_similar_haplotype)
 	probable_haplotypes_combinaison = property(_get_probable_haplotypes_combinaison, _set_probable_haplotypes_combinaison)
 	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison)
-
+	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype)
+	number_of_new_created_haplotype = property(_get_number_of_new_created_haplotype, _set_number_of_new_created_haplotype)
 
 	################
 	#OTHER METHODES#
@@ -317,25 +339,65 @@ class Genotype(Haplotype):
 		#Prendre en compte ce cas
 		#Ainsi que les haplotype qui combiné ne donne rien (len(self.similar_haplotype) - len(lst_good_combinaison))
 
-	#A modifier légèrement si creation d'haplotype réaliser aussi sur autres que les génotypes avec 1 génotype similaire
-	def create_haplotype(self):
-		"""Permet, dans le cas ou 1 seul haplotype connu est trouvé compatible à notre génotype,
-		de créer l'haplotype qui combiné a celui trouvé donne notre génotype """
-		new_hapltype = []
-		lstZip = list(zip((self.similar_haplotype)[0].sequence, self.sequence)) #pb d'attribu ici
+
+
+	#Les arguments (haplotype et genotype ici) sont des objets
+	def create_haplotype(self, haplotype, genotype):
+		"""Permet, à partir d'un génotype et d'un haplotype de reconstruire l'haplotype manquant,
+		qui combiné à celui connu donne le génotype connu """
+		new_haplotype = []
+		lstZip = list(zip(haplotype.sequence, genotype.sequence)) #comme les arguments sont des objets on peut utiliser la méthode .sequence pour avoir la séquence
 		print (lstZip)
-		for nt in range(len(self.sequence)) :
+		for nt in range(len(genotype.sequence)) :
 			if len(lstZip[nt][1]) == 1 :
-				new_hapltype.append(lstZip[nt][0])
+				new_haplotype.append(lstZip[nt][0])
 			if len(lstZip[nt][1]) == 2 :
-				new_hapltype.append("--")
+				new_haplotype.append("--")
 			if len(lstZip[nt][1]) == 3 :
 				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[0]:
-					new_hapltype.append(lstZip[nt][1].rsplit("/",1)[1])
+					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[1])
 				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
-					new_hapltype.append(lstZip[nt][1].rsplit("/",1)[0])
-		return new_hapltype
-		#Penser a conserver ce retour dans un attribut
+					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
+		return new_haplotype
+
+
+
+	#trouver un autre nom a cette fonction
+	def create_hap(self):
+		"""Permet, de créer un nouvel haplotype avec tous les génotypes ayant au moins 1 haplotype similaire
+		,lequel ne combinant pas avec un autre halpotype similaire, pour donner le génotype observé"""
+		lst_of_haplotype_who_is_not_combine = []
+		lst_new_haplo = []
+		if self.number_of_similar_haplotype == 0 :
+			pass
+		if self.number_of_similar_haplotype == 1 :
+			create_haplotype(haplotype, genotype) #voir ici les bon argument a mettre (car haplotype = (self.similar_haplotype)[0] et genotype = self)
+		if self.number_of_similar_haplotype > 1 :
+			if self.number_of_probable_haplotypes_combinaison == 0 :
+				for haplo in self.similar_haplotype : 
+					lst_new_haplo.append(create_haplotype(haplo, genotype)) #voir ici les bon argument a mettre (car haplotype = haplo et genotype = self)
+			
+			# Ce cas là n'est pas a prendre en compte car on a déjà une autre combinaison et avec des haplotypes connu en plus donc plus sûre
+			#Il consistait, à partir d
+			"""if self.number_of_probable_haplotypes_combinaison > 0 :
+				lst_simplifie = []
+				for combi in self.probable_haplotypes_combinaison : # ex : [haplo1, haplo3] in [[haplo1,haplo3],[haplo1,haplo6]] ...
+					for haplo_combi in combi : #pour haplo1 in [haplo1, haplo3] ...
+						lst_simplifie.append(haplo_combi) #ce sont des objets ou des séquences directement?
+					#Permet de passer de ce format ex: [[haplo1,haplo3],[haplo1,haplo6]] --> [haplo1, haplo3, haplo1, haplo6] (Plus facile ensuite pour récupérer les haplotypes qui ne combine pas)
+				for haplo in self.similar_haplotype :
+					if haplo not in lst_simplifie :
+						lst_of_haplotype_who_is_not_combine.append(haplo)
+					else :
+						pass
+				#print ("haplo sans combi {}".format(lst_of_haplotype_who_not_combine))
+
+				for i in lst_of_haplotype_who_is_not_combine :
+					lst_new_haplo.append(create_haplotype(i, lst3))""" #ici .append l'attribut contenant la liste des nvx haplo
+
+		return lst_new_haplo
+
+
 
 
 	#Penser à une étape de "filtrage" vérifier si séquence génomique pas redondante
@@ -527,16 +589,32 @@ for i in range((len(lst_of_haplo_object)+1)) :
 """Manip permettant d'avoir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
 
 #Création de nouveaux haplotypes a partir des génotypes ayant qu'un haplotypes simailaire
-	#penser a créer un attribut pour stocker la séquqence, voir de créer un nouveau objet Haplotype (plus clair et sérieux)
-	#Voir pour le faire avec les génotypes avec plusieurs haplotypes similaires dont aucune combinaison fonctionne.
 for geno in lst_of_geno_object :
+	print (geno.similar_haplotype)
+
 	print ("Pour le genotype {}".format(geno.name))
 	print ("Le nombre d'haplotype similaire a notre génotype est au nombre de : {}".format(geno.number_of_similar_haplotype))
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
+	
+
+
+	# Début de l'étape de création des nouveaux haplotypes
 	if geno.number_of_similar_haplotype == 1 :
-		#Penser a créer un attribut pour concervé les haplotypes créé
-		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype()))
+		print ("L'haplotype manquant pour avoir le génotype serait :\n{}".format(geno.create_haplotype((geno.similar_haplotype)[0], geno)))
+		#a construire ici avec les nouvelles méthode
+		#penser a faire la 3ème sortie en même temps
+		#Regarder la frequence des nouveaux haplotypes (voir s'il y en a plus frequent que d'autre)
+		
+
+
+
+
+
+
+
+
+
 
 
 
@@ -691,75 +769,6 @@ with open(first_txt_output,'w') as txt_otp1 :
 
 
 
-"""Reconstruction d'haplotype a partir d'un haplotype et 1 génotype"""
-print ("\nDébut de reconstruction d'haplotype")
-
-
-lst3 = ["A", "G/C", "G", "--", "T", "A", "C/T"]
-
-lst4 = [1, 3, 6]
-
-lst_ha1 = ["A","C","G","T","T","A", "C"]
-lst_ha2 = ["A","G","G","T","T","A", "T"]
-lst_ha3 = ["A","G","G","T","T","A", "C"]
-lst_ha4 = ["A","C","G","A","T","A", "C"]
-
-lst_hap_comp = [lst_ha1, lst_ha2, lst_ha3, lst_ha4]
-lst_hap_who_not_combi = []
-
-number_of_ha_sim = 3 
-lst_combi = [[lst_ha1, lst_ha2], [lst_ha1, lst_ha4]]
-print (len(lst_combi))
-
-#l'attribut a remplir avec les nouveaux haplo
-lst_new_haplo = []
-
-#j'y ai ajouter les 2 arguments que sont l'haplo et le geno
-def new_hap(haplo, geno):
-	new_haplo = []
-	test = list(zip(haplo, geno))
-	for base in range(len(geno)) :
-		if len(test[base][1]) == 1 :
-			new_haplo.append(test[base][0])
-		if len(test[base][1]) == 2 :
-			new_haplo.append("--")
-		if len(test[base][1]) == 3 :
-			if test[base][0] == test[base][1].rsplit("/",1)[0] :
-				new_haplo.append(test[base][1].rsplit("/",1)[1])
-			if test[base][0] == test[base][1].rsplit("/",1)[1] :
-				new_haplo.append(test[base][1].rsplit("/",1)[0])
-	return new_haplo
-
-def create_hap(): #self
-	if number_of_ha_sim == 0 :
-		pass
-	if number_of_ha_sim == 1 :
-		new_hap(lst_ha1,lst3)
-	if number_of_ha_sim > 1 :
-		if len(lst_combi) == 0 :
-			for haplo in lst_hap_comp :
-				lst_new_haplo.append(new_hap(haplo, lst3)) #ici .append l'attribut contenant la liste des nvx haplo
-		if len(lst_combi) > 0 :
-			lst_test = []
-			for combi in lst_combi :
-				for haplo_combi in combi :
-					lst_test.append(haplo_combi)
-				print ("prout {}".format(lst_test))
-			for haplo in lst_hap_comp :
-				if haplo not in lst_test :
-					lst_hap_who_not_combi.append(haplo)
-				else :
-					pass
-			print ("haplo sans combi {}".format(lst_hap_who_not_combi))
-
-			for i in lst_hap_who_not_combi :
-				lst_new_haplo.append(new_hap(i, lst3)) #ici .append l'attribut contenant la liste des nvx haplo
-
-	return lst_new_haplo
-
-
-
-print ("ma liste de new haplo {}".format(create_hap()))
 
 #A partir de la il faut
 	#Pour chaque new haplo de la liste retourné faire un objet Haplotype avec 
