@@ -439,14 +439,14 @@ if __name__ == '__main__':
 		#my_otp1_writer = writer(otp1, delimiter = delimit)
 
 		#Compteur utilisé pour la récupération du header
-		count1 = 0
-		count2 = 0
+		count1 = True
+		count2 = True
 
 		"""Construction de ma lst_of_haplo_object"""
 		for rows in my_haplo_reader :
-			count1 += 1
-			if count1 == 1 :
+			if count1 == True :
 				lst_markers_haplo = rows[1:80]
+				count1 = False
 			else :
 				A = Haplotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_haplo)
 				lst_of_haplo_object.append(A)
@@ -455,9 +455,9 @@ if __name__ == '__main__':
 
 		""" Construction de ma lst_of_geno_object"""
 		for rows in my_geno_reader :
-			count2 +=1
-			if count2 == 1 :
+			if count2 == True :
 				lst_markers_geno = rows[1:80]
+				count2 = False
 			else :
 				B = Genotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_geno)
 				lst_of_geno_object.append(B)
@@ -476,9 +476,6 @@ if __name__ == '__main__':
 
 
 
-#Au lieu d'avoir 2 truc qui font quasiment la même chose, fait une fonction qui rempli tes objects.
-
-
 		src_haplo.close()
 		src_geno.close()
 
@@ -489,28 +486,26 @@ if __name__ == '__main__':
 	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
 
 
-
-
 	#ouverture des fichiers pour les 2 premières sorties
 	with open(first_output, 'w') as otp1, open(second_output, 'w') as otp2 :
 		my_otp1_writer = writer(otp1, delimiter = delimit)
 		my_otp2_writer = writer(otp2, delimiter = delimit)
 
 		
-
+	#écriture de la première sortie
 		for geno in lst_of_geno_object :
 			for haplo in lst_of_haplo_object :
 				geno.select_similar_haplotype(geno, haplo)
 				geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
-				#écriture de la première sortie
+				
 				my_otp1_writer.writerow(geno.compare_geno_and_haplo_seq(geno, haplo))
 
 		otp1.close()
 
 
 
-		#écriture de la seconde sortie (à revoir pas clair à la lecture)
+	#écriture de la seconde sortie (à revoir pas clair à la lecture)
 		lst_header =[]
 		lst_header.append("Genotype")
 		lst_header.append("Haplotype")	
@@ -567,54 +562,23 @@ for i in range((len(lst_of_haplo_object)+1)) :
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 """Manip permettant d'avoir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
-
-#Création de nouveaux haplotypes a partir des génotypes ayant qu'un haplotypes simailaire
-prout = 0
+#Création de nouveaux haplotypes à partir des génotypes et un haplotypes simailaire
+nb_total_new_h = 0 #compteur pour avoir le nombre total d'haplotype construit
 for geno in lst_of_geno_object :
-	#print (geno.similar_haplotype)
-
-	#print ("Pour le genotype {}".format(geno.name))
-	#print ("Le nombre d'haplotype similaire a notre génotype est au nombre de : {}".format(geno.number_of_similar_haplotype))
+	#Parmi les haplotype similaire à notre génotype, lesquels combiné l'un avec l'autre redonne le génotype
 	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
+	#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
 	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
-	
 	#création des nouveaux haplotypes à l'aide de la méthode .have_new_haplotype()
 	#et stockage dans l'attribut lst_of_new_haplotype
 	geno.lst_of_new_haplotype = geno.have_new_haplotype() 
 	geno.number_of_new_created_haplotype = len(geno._lst_of_new_haplotype)
-	#print ("Le ou les haplotype(s) manquant pour avoir le génotype serai(en)t :\n{}".format(geno.lst_of_new_haplotype))
-	#print ("soit {} créé".format(geno.number_of_new_created_haplotype))
+
+
+	nb_total_new_h += geno.number_of_new_created_haplotype
+print ("le nombre total d'haplo créé est de  : {}".format(nb_total_new_h))	
 	
-
-
-	prout += geno.number_of_new_created_haplotype
-print ("le nombre total d'haplo créé est de  : {}".format(prout))	
-	#penser a faire la 3ème sortie en même temps (il me faut le nom du geno, de l'haplo, du nouvelle haplo et la séquence du nouvel haplotype)
-	#Regarder la frequence des nouveaux haplotypes (voir s'il y en a plus frequent que d'autre)
-		
 
 
 
@@ -646,7 +610,7 @@ with open(third_output, 'w') as otp3 :
 				my_otp3_writer.writerow(third_sortie)
 #Sur les 274 nouveaux haplotypes généré il y a 246 réellement différents
 
-
+#Faire une 4ème sortie qui sera utilisé pour compléter le nombre d'haplotype connu pour
 
 
 
