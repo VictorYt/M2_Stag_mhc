@@ -7,19 +7,24 @@
 
 
 #A faire
-	#Gérer les options -i -o etc ...
-	#Etape de filtrage (par défaut pas présente, ou si présente savoir quels individus on quel haplotype)
-	#Script d'analyse des géno sur la base des Hmz (methodes dans objet geno)
+	#Gérer les options -i -o etc ... (docpot)
+	#vérifier les combinaisons haplo/haplo pour obtenir notre geno
 	#Sorties (brut/rangée/comme on souhaite les avoir/...)
 
 
 #Nécessite de décrire le format d'input des 2 entrées.
-#1 ouverture des fichiers et enregistrement dans des listes des objets haplo et génotype.
 
 from csv import reader, writer
 from sys import argv
-#voir le module imap interateur pour combinaison de liste
 
+
+
+
+	#############################################################
+	#############################################################
+	#######################CLASS HAPLOTYPE#######################
+	#############################################################
+	#############################################################W
 
 class Haplotype(object):
 	"""Classe définissant un Haplotype.
@@ -27,10 +32,8 @@ class Haplotype(object):
 	def __init__(self, name, sequence, markers):
 		self._name = name 
 		self._sequence = sequence 
-		self._nbmarkers = len(self._sequence) #0 à création puis modif avec len(self.markers) ou directe len(sequence)
-		self._markers = markers #en-tête du fichier en input
-		#Faire attention au fichier : utilisation du fichier d'haplotype pour les haplotypes et idem pour génotype
-		#ça nous permettra de vérifier qu'on a bien les même SNP avant comparaison
+		self._nbmarkers = len(self._sequence)
+		self._markers = markers 
 
 
 	def __str__(self):
@@ -97,29 +100,32 @@ class Haplotype(object):
 	#OTHER METHODES#
 	################
 
-	def sequence_size(self):
-		"""Permet de récupérer la taille de notre séquence 
-		(cf. le nombre de marqueurs ayant servis pour le génotypage
-		pour vérifier s'il est égale à notre nombre de marqueurs"""
-		return len(self._markers)
-		#pas utile ici si je fais directement un len de ma variable dès le début
-
-	def compare_markers_and_sequence_size(self):
-		"""Permet de vérifier que tous les haplotypes ont le même nombre de markers
-		Normalement pas de problème"""
-		if len(self._sequence) == self._nbmarkers :
-			return True 
-		else :
-			return False
-		#Voir comment la coder autrement
-		#
-
-
+	def compare_haplo_and_haplo_seq(self, haplo1, haplo2):
+		"""Méthode pour faire la comparaison entre haplo et avoir la distribution générale entre eux"""
+		ligne_de_sortie = []
+		count_erreur = 0
+		ligne_de_sortie.append(haplo1.name)
+		ligne_de_sortie.append(haplo2.name)
+		for i in range(len(haplo1.sequence)) :
+			#traitment of Hmz Markers
+			if len(haplo1.sequence[i]) == 1 :
+				if haplo1.sequence[i] == haplo2.sequence[i] :
+					ligne_de_sortie.append(0)
+				else :
+					ligne_de_sortie.append(1)
+					count_erreur += 1
+		ligne_de_sortie.append(count_erreur)
+		return ligne_de_sortie
 
 
 
 
 
+	#############################################################
+	#############################################################
+	########################CLASS GENOTYPE#######################
+	#############################################################
+	#############################################################
 
 class Genotype(Haplotype):
 	"""docstring for Genotype"""
@@ -248,12 +254,13 @@ class Genotype(Haplotype):
 	################
 
 	#attention je prend en compte les erreur de calling (--) dans le compte des Htz
+	#erreur d'indexation ===> a corriger
 	def position_htz_markers(self):
 		"""Permet de retourner une liste de position (index pour lesquels le markers est Htz)"""
 		position_htz_markers = []
-		for nt in self._sequence : 
-			if len(nt) > 1 :
-				position_htz_markers.append(self.sequence.index(nt))
+		for nt in range(len(self.sequence)) : 
+			if len(self.sequence[nt]) > 1 :
+				position_htz_markers.append(nt)
 			else :
 				pass
 		return position_htz_markers
@@ -324,7 +331,7 @@ class Genotype(Haplotype):
 					lstZip = list(zip((self.similar_haplotype[haplo1]).sequence, (self.similar_haplotype[haplo2]).sequence, self.sequence))
 					count_bad_combinaison = 0
 					for val_index in self.index_htz_markers_in_seq :
-						if len(lstZip[val_index][2]) == 3 :
+						if len(lstZip[val_index][2]) == 3 : 
 							tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
 							tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
 							if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
@@ -338,8 +345,6 @@ class Genotype(Haplotype):
 		#Cette liste peut être vide
 		#Prendre en compte ce cas
 		#Ainsi que les haplotype qui combiné ne donne rien (len(self.similar_haplotype) - len(lst_good_combinaison))
-
-
 
 	#Les arguments (haplotype et genotype ici) sont des objets
 	def create_haplotype(self, haplotype, genotype):
@@ -359,8 +364,6 @@ class Genotype(Haplotype):
 				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
 					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
 		return new_haplotype
-
-
 
 	#trouver un autre nom a cette fonction
 	def have_new_haplotype(self):
@@ -402,12 +405,11 @@ class Genotype(Haplotype):
 
 
 
-	#Penser à une étape de "filtrage" vérifier si séquence génomique pas redondante
-	def screening(self):
-		"""Permet de vérifier parmi les autres objets Genotype s'il y a des
-		sequence identique à l'object geno que je manipule."""
-		#Dans la classe ou à l'exterieur? surement a l'exterieur (sort -u)
-		pass
+
+
+
+
+
 
 
 
@@ -431,7 +433,8 @@ if __name__ == '__main__':
 	first_output = argv[3]
 	second_output = argv[4]
 	third_output = argv[5]
-	first_txt_output = argv[6]
+	fourst_output = argv[6]
+	first_txt_output = argv[7]
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno :
 		my_haplo_reader = reader(src_haplo, delimiter = delimit)
@@ -481,7 +484,7 @@ if __name__ == '__main__':
 
 
 
-#A partir d'ici j'ai Ma liste d'Haplo et de Geno
+	#A partir d'ici j'ai Ma liste d'Haplo et de Geno
 	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0 ici tout le temps =0
 	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
 
@@ -615,6 +618,20 @@ with open(third_output, 'w') as otp3 :
 
 
 
+"""Comparaison des haplotypes les uns par rapport aux autres 
+pour pouvoir comparer leur distribution avec celle des génotypes"""
+
+#ouverture et écriture du quatrième fichier 
+with open(fourst_output, 'w') as otp4 :
+	my_otp4_writer = writer(otp4, delimiter = delimit)
+
+#écriture de la quatrième sortie
+	#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
+	for haplo1 in range(len(lst_of_haplo_object)-1) :
+		for haplo2 in range((haplo1+1),len(lst_of_haplo_object)) :
+			my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_haplo_and_haplo_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
+
+	otp4.close()
 
 
 
@@ -663,6 +680,8 @@ count_5_0 = 0
 count_5_1 = 0
 
 count_6_0 = 0
+count_6_1 = 0
+count_6_2 = 0
 count_6_3 = 0
 
 
@@ -700,6 +719,10 @@ for geno in lst_of_geno_object :
 	elif geno.number_of_similar_haplotype == 6 :
 		if geno.number_of_probable_haplotypes_combinaison == 0 :
 			count_6_0 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 1 :
+			count_6_1 += 1
+		elif geno.number_of_probable_haplotypes_combinaison == 2 :
+			count_6_2 += 1
 		elif geno.number_of_probable_haplotypes_combinaison == 3 :
 			count_6_3 += 1
 
@@ -707,7 +730,7 @@ print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combine
 print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
 print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
 print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
-print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 3 combinaison ".format(count_6_0, count_6_3))
+print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaison ".format(count_6_0,count_6_1, count_6_2, count_6_3))
 
 
 
@@ -739,30 +762,8 @@ with open(first_txt_output,'w') as txt_otp1 :
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			
+				
 
 
 
