@@ -16,431 +16,30 @@
 
 from csv import reader, writer
 from sys import argv
+from Haplotype import Haplotype
+from Genotype import Genotype
 
 
 
 
-	#############################################################
-	#############################################################
-	#######################CLASS HAPLOTYPE#######################
-	#############################################################
-	#############################################################W
-
-class Haplotype(object):
-	def __init__(self, name, sequence, markers):
-		"""Class constructor Haplotype
-
-		Haplotype Class is characterized by :
-		A name, a sequence, a size who is the length of markers and
-		the list of there markers
-
-		"""
-		self._name = name 
-		self._sequence = sequence 
-		self._nbmarkers = len(self._sequence)
-		self._markers = markers 
+################
+#SOME FONCTIONS#
+################
 
 
-	def __str__(self):
-		"""Return a description of the created Haplotype object"""
-		return "L'haplotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
+def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
+	"""Use for count the number of génotypes with the same number of similar haplotypes
 
-	############
-	#ACCESSEURS#
-	############
-
-	def _get_name(self):
-		"""Return the attribut name of the Haplotype class"""
-		return self._name
-
-	def _get_sequence(self):
-		"""Return the attribut sequence of the Haplotype class"""
-		return self._sequence
-
-	def _get_nbmarkers(self):
-		"""Return the attribut nbmarkers of the Haplotype class which is 
-		the sequence size
-		
-		"""
-		return self._nbmarkers
-
-	def _get_markers(self):
-		"""Return the attribut markers of the Haplotype class which is
-		a list of the markers name used for genotyping 
-		
-		"""
-		return self._markers
-
-	###########
-	#MUTATEURS#
-	###########
-
-	def _set_name (self, newname):
-		"""Change the name of our Haplotype object by a new one
-
-		Named parameters :
-		newname -- the new name selected (here first row of the input)
-		
-		"""
-		self._name = newname
-
-	def _set_sequence(self, newsequence):
-		"""Change the sequence list of our Haplotype object by a new one
-
-		Named parameters :
-		newsequence -- the new sequence list selected (here the end of the row in our input)
-		
-		"""
-		self._sequence = sequence
-
-	def _set_nbmarkers(self, newnbmarkers):
-		"""Change the sequence size of our Haplotype object by a new one
-
-		Named parameters :
-		newnbmarkers -- the new sequence size selected (here the length of markers)
-		
-		"""
-		self._nbmarkers = newnbmarkers
-
-	def _set_markers(self, lstmarkers):
-		"""Change the markers list of our Haplotype object by a new one
-
-		Named parameters :
-		lstmarkers -- the new markers list selected (here the header of the input)
-		
-		"""
-		self._markers = lstmarkers 
-
-	############
-	#PROPERTIES#
-	############
-
-	name = property(_get_name, _set_name)
-	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
-	sequence = property(_get_sequence, _set_sequence)
-	markers = property(_get_markers, _set_markers)
-
-	################
-	#OTHER METHODES#
-	################
-
-	#polymorphisme avec la fonction compare_geno_and_haplo_seq(self, geno, haplo) ==> voir comment ça marche
-	def compare_two_seq(self, haplo1, haplo2):
-		"""Return a list with the name of the 2 Haplotypes objects,
-		a sequence with booleen (0, 1) and a int
-
-		0 means no differences between the 2 haplotypes sequence for the selected markers 
-		1 means that there is a difference
-		The int in the end of the returned list is the sum of 1 in the sequence.
-
-		Named parameters :
-		haplo1 -- The fisrt Haplotype object to compare
-		haplo2 -- The second Haplotype object to compare
-
-		"""
-		ligne_de_sortie = []
-		count_erreur = 0
-		ligne_de_sortie.append(haplo1.name)
-		ligne_de_sortie.append(haplo2.name)
-		for i in range(len(haplo1.sequence)) :
-			#Equal to 1 in the case of fail or impossible calling for some markers
-			if len(haplo1.sequence[i]) == 1 :
-				if haplo1.sequence[i] == haplo2.sequence[i] :
-					ligne_de_sortie.append(0)
-				else :
-					ligne_de_sortie.append(1)
-					count_erreur += 1
-			#If we have one of them ('--') we concidere there are no differrence 
-			else :
-				ligne_de_sortie.append(0)
-		ligne_de_sortie.append(count_erreur)
-		return ligne_de_sortie
-
-
-
-
-
-	#############################################################
-	#############################################################
-	########################CLASS GENOTYPE#######################
-	#############################################################
-	#############################################################
-
-class Genotype(Haplotype):
-	"""docstring for Genotype"""
-	def __init__(self, name, sequence, markers):
-		#héritage de la classe Haplotype
-		Haplotype.__init__(self, name, sequence, markers)
-		#Propre à la classe Génotype
-		self._nb_hmz_markers = 0
-		self._nb_htz_markers = 0
-		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
-		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)
-		self._number_of_similar_haplotype = 0 #taille de la liste obtenue ci-dessus
-		self._probable_haplotypes_combinaison = [] #liste de liste (ex: [[haplo1, haplo4], [haplo20, haplo79]])
-		self._number_of_probable_haplotypes_combinaison = 0
-		self._lst_of_new_haplotype = [] #une liste de nouveau(x) (pour le moment liste de la séqeunce seul) haplotype(s) créé à partir de l'objet Génotype en question
-		self._number_of_new_created_haplotype = 0 #taille de la liste obtenue ci-dessus
-
-	def __str__(self):
-		"""Like str Haplotype"""
-		return "Le Genotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
-
-
-	############
-	#ACCESSEURS#
-	############
-
-	def _get_nb_hmz_markers(self):
-		"""Permet d'avoir accès au nombre de markers Hmz dans le génotype"""
-		return self._nb_hmz_markers
-
-	def _get_nb_htz_markers(self):
-		"""Permet d'avoir accès au nombre de markers Htz dans le génotype"""
-		return self._nb_htz_markers
-
-	def _get_index_htz_markers_in_seq(self):
-		"""Permet d'avoir les indexes des positions ou le markers génotypique est Htz"""
-		return self._index_htz_markers_in_seq
+	Named parameters :
+	genotype -- a Genotype object
+	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
 	
-	def _get_similar_haplotype(self):
-		"""Permet d'avoir la liste des objets Hapltype qui ont une séquence
-		compatible avec notre génotype"""
-		return self._similar_haplotype
-
-	def _get_number_of_similar_haplotype(self):
-		"""Permet d'avoir le nombre d'hapltype contenu dans la liste d'haplotype similaire"""
-		return self._number_of_similar_haplotype
-
-	def _get_probable_haplotypes_combinaison(self):
-		"""Permet d'avoir une liste de combinaison de 2 haplotypes donnant le génotype observé"""
-		return self._probable_haplotypes_combinaison
-
-	def _get_number_of_probable_haplotypes_combinaison(self):
-		"""Permet d'avoir le nombre de combinaison contenu dans la liste de combinaison probable"""
-		return self._number_of_probable_haplotypes_combinaison		
-
-	def _get_lst_of_new_haplotype(self):
-		"""Permet d'avoir la liste des nouveaux haplotypes créés"""
-		return self._lst_of_new_haplotype
-
-	def _get_number_of_new_created_haplotype(self):
-		"""Permet d'avoir le nombre de nouveaux haplotypes créés"""
-		return self._number_of_new_created_haplotype
-
-	###########
-	#MUTATEURS#
-	###########
-
-	def _set_nb_hmz_markers(self, nb_hmz_markers):
-		"""Permet de changer accès au nombre de markers Hmz dans le génotype"""
-		self._nb_hmz_markers = nb_hmz_markers
-
-	def _set_nb_htz_markers(self, nb_htz_markers):
-		"""Permet de changer accès au nombre de markers Htz dans le génotype"""
-		self._nb_htz_markers = nb_htz_markers
-
-	def _set_index_htz_markers_in_seq(self, index_htz_markers):
-		"""Permet de changer les indexes des positions ou le markers génotypique est Htz"""
-		self._index_htz_markers_in_seq = index_htz_markers
-	
-	def _set_similar_haplotype(self, similar_haplotype):
-		"""Permet de changer la liste des objets Hapltype qui ont une séquence
-		compatible avec notre génotype"""
-		self._similar_haplotype = similar_haplotype
-
-	def _set_number_of_similar_haplotype(self, nb_similar_haplotype):
-		"""Permet de changer le nombre d'hapltype contenu dans la liste d'haplotype similaire"""
-		self._number_of_similar_haplotype = nb_similar_haplotype
-
-	def _set_probable_haplotypes_combinaison(self, haplo_combinaison):
-		"""Permet de changer une liste de combinaison de 2 haplotypes donnant le génotype observé"""
-		self._probable_haplotypes_combinaison = haplo_combinaison
-
-	def _set_number_of_probable_haplotypes_combinaison(self, nb_haplo_combinaison):
-		"""Permet de changer le nombre de combinaison contenu dans la liste de combinaison probable"""
-		self._number_of_probable_haplotypes_combinaison = nb_haplo_combinaison
-
-	def _set_lst_of_new_haplotype(self, new_haplotype):
-		"""Permet de changer la liste des haplotypes créé, qui est initialement vide, 
-		par celle générée par la méthode create_haplotype()"""
-		self._lst_of_new_haplotype = new_haplotype
-
-	def _set_number_of_new_created_haplotype(self, new_number):
-		"""Permet de changer le nombre de nouveau(x) haplotype(s), qui est initialement
-		de zéro, au nombre réel de nouveau(x) haplotype(s) créé(s)"""
-		self._number_of_new_created_haplotype = new_number
-
-	############
-	#PROPERTIES#
-	############
-
-	nb_hmz_markers = property(_get_nb_hmz_markers, _set_nb_hmz_markers)
-	nb_htz_markers = property(_get_nb_htz_markers, _set_nb_htz_markers)
-	index_htz_markers_in_seq = property(_get_index_htz_markers_in_seq, _set_index_htz_markers_in_seq)
-	similar_haplotype = property(_get_similar_haplotype, _set_similar_haplotype)
-	number_of_similar_haplotype = property(_get_number_of_similar_haplotype, _set_number_of_similar_haplotype)
-	probable_haplotypes_combinaison = property(_get_probable_haplotypes_combinaison, _set_probable_haplotypes_combinaison)
-	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison)
-	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype)
-	number_of_new_created_haplotype = property(_get_number_of_new_created_haplotype, _set_number_of_new_created_haplotype)
-
-	################
-	#OTHER METHODES#
-	################
-
-	#attention je prend en compte les erreur de calling (--) dans le compte des Htz
-	#erreur d'indexation ===> a corriger
-	def position_htz_markers(self):
-		"""Permet de retourner une liste de position (index pour lesquels le markers est Htz)"""
-		position_htz_markers = []
-		for nt in range(len(self.sequence)) : 
-			if len(self.sequence[nt]) > 1 :
-				position_htz_markers.append(nt)
-			else :
-				pass
-		return position_htz_markers
-
-	def have_nb_htz_markers(self):
-		"""Permet d'avoir le nombre de markers Htz"""
-		return len(self._index_htz_markers_in_seq)
-
-	def have_nb_hmz_markers(self):
-		"""Permet d'avoir le nombre de marqueurs Hmz en faisant 
-		la soustraction du nombre de markers moins le nombre de htz trouvé"""
-		return self._nbmarkers - self._nb_htz_markers #créer une branche pour gérer les -- (pas Htz mais markers non connu)
-
-	def compare_geno_and_haplo_seq(self, geno, haplo):
-		"""Permet de comparer une sequence d'un genotype avec la séquence d'un halpotype
-		Return une liste contenant le nom du genotype, le nom de l'haplotype, une séquence où : 
-		0 = match entre génotype et haplotype
-		1 = missmatch
-		Et la dernière valeur étant un SUM des missmatch"""
-		ligne_de_sortie = []
-		count_erreur = 0
-		ligne_de_sortie.append(geno.name)
-		ligne_de_sortie.append(haplo.name)
-		for i in range(len(geno.sequence)) :
-			#traitment of Hmz Markers
-			if len(geno.sequence[i]) == 1 :
-				if geno.sequence[i] == haplo.sequence[i] :
-					ligne_de_sortie.append(0)
-				else :
-					ligne_de_sortie.append(1)
-					count_erreur += 1
-			#traitment of unknowing base for markers
-			elif len(geno.sequence[i]) == 2 :
-				ligne_de_sortie.append(0)
-			#traitment of Htz markers
-			elif len(geno.sequence[i]) == 3 :
-				if geno.sequence[i].rsplit("/", 1)[0] != haplo.sequence[i] :
-					if geno.sequence[i].rsplit("/", 1)[1] != haplo.sequence[i] :
-						ligne_de_sortie.append(1)
-						count_erreur += 1
-					else :
-						ligne_de_sortie.append(0)
-				else :
-					ligne_de_sortie.append(0)
-		ligne_de_sortie.append(count_erreur)
-		#print (len(ligne_de_sortie)) #--> need be equal to 82 (=79 markers + geno.name + heplo.name + sum(count_erreur))
-		return ligne_de_sortie
-
-	def select_similar_haplotype(self, geno, haplo):
-		"""Permet de récupérer l'objet haplotype qui est parfaitement similaire au génotype
-		Dont la somme des erreurs réaliser avec la méthode compare_geno_and_haplo_seq = 0 """
-		if geno.compare_geno_and_haplo_seq(geno, haplo)[81] == 0 :
-			geno.similar_haplotype.append(haplo)
-		else :
-			pass
-
-	def combinaison_between_similar_haplotype_in_geno(self):
-		"""Permet de combiner 1 à 1 les haplotypes précédemment trouvé pour vérifier
-		si notre génotype est issu de la combinaison d'haplotyes déjà connu"""
-		#utilisation de la liste d'index des marqueurs Htz chez le génotype
-		#faire attention ... pour le moment -- concidéré comme Htz dans le nb Htz/Hmz donc certain index pointe vers --
-		lstZip = []
-		lst_good_combinaison = []
-		if self.number_of_similar_haplotype > 1 :
-			for haplo1 in range(len(self.similar_haplotype)-1) :
-				for haplo2 in range((haplo1+1),len(self.similar_haplotype)) :
-					lst_combinaison = []
-					lstZip = list(zip((self.similar_haplotype[haplo1]).sequence, (self.similar_haplotype[haplo2]).sequence, self.sequence))
-					count_bad_combinaison = 0
-					for val_index in self.index_htz_markers_in_seq :
-						if len(lstZip[val_index][2]) == 3 : 
-							tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
-							tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
-							if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
-								lst_combinaison.append(0)
-							else :
-								lst_combinaison.append(1)
-								count_bad_combinaison += 1
-					if count_bad_combinaison == 0 :
-						lst_good_combinaison.append([self.similar_haplotype[haplo1].name, self.similar_haplotype[haplo2].name])		
-		return lst_good_combinaison
-		#Cette liste peut être vide
-		#Prendre en compte ce cas
-		#Ainsi que les haplotype qui combiné ne donne rien (len(self.similar_haplotype) - len(lst_good_combinaison))
-
-	#Les arguments (haplotype et genotype ici) sont des objets
-	def create_haplotype(self, haplotype, genotype):
-		"""Permet, à partir d'un génotype et d'un haplotype de reconstruire l'haplotype manquant,
-		qui combiné à celui connu donne le génotype connu """
-		new_haplotype = []
-		#comme les arguments sont des objets on peut utiliser la méthode .sequence pour avoir la séquence
-		lstZip = list(zip(haplotype.sequence, genotype.sequence)) 
-		for nt in range(len(genotype.sequence)) :
-			if len(lstZip[nt][1]) == 1 :
-				new_haplotype.append(lstZip[nt][0])
-			if len(lstZip[nt][1]) == 2 :
-				new_haplotype.append("--")
-			if len(lstZip[nt][1]) == 3 :
-				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[0]:
-					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[1])
-				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
-					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
-		return new_haplotype
-
-	#trouver un autre nom a cette fonction
-	def have_new_haplotype(self):
-		"""Permet, de créer un nouvel haplotype avec tous les génotypes ayant au moins 1 haplotype similaire
-		,lequel ne combinant pas avec un autre halpotype similaire, pour donner le génotype observé"""
-		lst_new_haplo = []
-		if self.number_of_similar_haplotype == 0 :
-			pass
-		#creattion d'un nouveau haplotype si 1 seul haplotype connu retrouvé comme commun à notre génotype
-		if self.number_of_similar_haplotype == 1 :
-			lst_new_haplo.append(self.create_haplotype(self.similar_haplotype[0], self))
-		if self.number_of_similar_haplotype > 1 :
-			if self.number_of_probable_haplotypes_combinaison == 0 :
-				for haplo in self.similar_haplotype : 
-					lst_new_haplo.append(self.create_haplotype(haplo, self)) #voir ici les bon argument a mettre (car haplotype = haplo et genotype = self)
-			else : 
-				pass
-
-			# Le cas ci-dessous n'est pas a prendre en compte car on obtient déjà une autre combinaison (avec des haplotypes connu), donc plus sûre
-			#Il consistait, à partir de cronstruire les haplotypes
-			"""if self.number_of_probable_haplotypes_combinaison > 0 :
-				lst_simplifie = []
-				for combi in self.probable_haplotypes_combinaison : # ex : [haplo1, haplo3] in [[haplo1,haplo3],[haplo1,haplo6]] ...
-					for haplo_combi in combi : #pour haplo1 in [haplo1, haplo3] ...
-						lst_simplifie.append(haplo_combi) #ce sont des objets ou des séquences directement?
-					#Permet de passer de ce format ex: [[haplo1,haplo3],[haplo1,haplo6]] --> [haplo1, haplo3, haplo1, haplo6] (Plus facile ensuite pour récupérer les haplotypes qui ne combine pas)
-				for haplo in self.similar_haplotype :
-					if haplo not in lst_simplifie :
-						lst_of_haplotype_who_is_not_combine.append(haplo)
-					else :
-						pass
-				#print ("haplo sans combi {}".format(lst_of_haplotype_who_not_combine))
-
-				for i in lst_of_haplotype_who_is_not_combine :
-					lst_new_haplo.append(create_haplotype(i, lst3))""" #ici .append l'attribut contenant la liste des nvx haplo
-
-		return lst_new_haplo
-
-
-
-
+	"""
+	if genotype.number_of_similar_haplotype == theNumber:
+		count = 1
+	else :
+		count = 0
+	return count
 
 
 
@@ -576,221 +175,208 @@ if __name__ == '__main__':
 		otp2.close()
 
 
-#fonction a décrire
-#Voir pour inteégré dans la sortie txt
-def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
-	"""Use for count the number of génotypes with the same number of similar haplotypes
-
-	Named parameters :
-	genotype -- a Genotype object
-	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
-	
-	"""
-	if genotype.number_of_similar_haplotype == theNumber:
-		count = 1
-	else :
-		count = 0
-	return count
 
 
-count_geno = 0
-count = 0
-for i in range((len(lst_of_haplo_object)+1)) :
-	count_geno += count
+
+	#Utilisation de la fonction créer au dessus
+	count_geno = 0
 	count = 0
+	for i in range((len(lst_of_haplo_object)+1)) :
+		count_geno += count
+		count = 0
+		for geno in lst_of_geno_object :
+			count += count_genotype_with_same_number_of_similar_haplotype(genotype=geno, theNumber=i)
+		if count_geno < len(lst_of_geno_object) :		
+			print ("Les genotypes avec {} haplotype(s) commun(s) sont au nombre de {}".format(i, count))
+
+
+
+	"""Manip permettant d'avoir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
+	#Création de nouveaux haplotypes à partir des génotypes et un haplotypes simailaire
+
+	nb_total_new_h = 0 #compteur pour avoir le nombre total d'haplotype construit
 	for geno in lst_of_geno_object :
-		count += count_genotype_with_same_number_of_similar_haplotype(genotype=geno, theNumber=i)
-	if count_geno < len(lst_of_geno_object) :		
-		print ("Les genotypes avec {} haplotype(s) commun(s) sont au nombre de {}".format(i, count))
+		#Parmi les haplotype similaire à notre génotype, lesquels combiné l'un avec l'autre redonne le génotype
+		geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
+		#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
+		geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
+		#création des nouveaux haplotypes à l'aide de la méthode .have_new_haplotype()
+		#et stockage dans l'attribut lst_of_new_haplotype
+		geno.lst_of_new_haplotype = geno.have_new_haplotype() 
+		geno.number_of_new_created_haplotype = len(geno._lst_of_new_haplotype)
 
-
-
-"""Manip permettant d'avoir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
-#Création de nouveaux haplotypes à partir des génotypes et un haplotypes simailaire
-
-nb_total_new_h = 0 #compteur pour avoir le nombre total d'haplotype construit
-for geno in lst_of_geno_object :
-	#Parmi les haplotype similaire à notre génotype, lesquels combiné l'un avec l'autre redonne le génotype
-	geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno()
-	#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
-	geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
-	#création des nouveaux haplotypes à l'aide de la méthode .have_new_haplotype()
-	#et stockage dans l'attribut lst_of_new_haplotype
-	geno.lst_of_new_haplotype = geno.have_new_haplotype() 
-	geno.number_of_new_created_haplotype = len(geno._lst_of_new_haplotype)
-
-	#Sommage du compteur, dans la boucle
-	nb_total_new_h += geno.number_of_new_created_haplotype
-print ("le nombre total d'haplo créé est de  : {}".format(nb_total_new_h))	
-	
+		#Sommage du compteur, dans la boucle
+		nb_total_new_h += geno.number_of_new_created_haplotype
+	print ("le nombre total d'haplo créé est de  : {}".format(nb_total_new_h))	
+		
 
 
 
 
-#écriture de la troisième sortie (liste des nouveau haplotype créé)
-with open(third_output, 'w') as otp3 :
-	my_otp3_writer = writer(otp3, delimiter=delimit)
+	#écriture de la troisième sortie (liste des nouveau haplotype créé)
+	with open(third_output, 'w') as otp3 :
+		my_otp3_writer = writer(otp3, delimiter=delimit)
 
-	lst_header =[]
-	lst_header.append("Genotype")
-	lst_header.append("Haplotype")
-	lst_header.append("New_Haplotype")	
-	for markers in lst_of_geno_object[0].markers :
-		lst_header.append(markers)
-	#ecriture de l'en-tête de l'output n°3
-	my_otp3_writer.writerow(lst_header)
+		lst_header =[]
+		lst_header.append("Genotype")
+		lst_header.append("Haplotype")
+		lst_header.append("New_Haplotype")	
+		for markers in lst_of_geno_object[0].markers :
+			lst_header.append(markers)
+		#ecriture de l'en-tête de l'output n°3
+		my_otp3_writer.writerow(lst_header)
+
+
+		for geno in lst_of_geno_object :
+			if geno.number_of_new_created_haplotype > 0 :
+				for i in range(len(geno.lst_of_new_haplotype)) :
+					third_sortie = []
+					third_sortie.append(geno.name)
+					third_sortie.append((geno.similar_haplotype[i]).name)
+					third_sortie.append("new{}_G_{}".format(i+1, geno.name)) 
+					for values in geno.lst_of_new_haplotype[i] :
+						third_sortie.append(values)
+					my_otp3_writer.writerow(third_sortie)
+	#Sur les 274 nouveaux haplotypes généré il y a 246 réellement différents
+		otp3.close()
+
+
+
+
+
+	"""Comparaison des haplotypes les uns par rapport aux autres 
+	pour pouvoir comparer leur distribution avec celle des génotypes"""
+
+	#ouverture et écriture du quatrième fichier 
+	with open(fourst_output, 'w') as otp4 :
+		my_otp4_writer = writer(otp4, delimiter=delimit)
+
+	#écriture de la quatrième sortie
+		#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
+		for haplo1 in range(len(lst_of_haplo_object)-1) :
+			for haplo2 in range((haplo1+1),len(lst_of_haplo_object)) :
+				my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_two_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
+
+		otp4.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	#Penser a faire une fonction qui pourrait me donner ces résultats
+	count_2_0 = 0
+	count_2_1 = 0
+
+	count_3_0 = 0
+	count_3_1 = 0
+	count_3_2 = 0
+	count_3_3 = 0
+
+	count_4_0 = 0
+	count_4_1 = 0
+	count_4_2 = 0
+
+	count_5_0 = 0
+	count_5_1 = 0
+
+	count_6_0 = 0
+	count_6_1 = 0
+	count_6_2 = 0
+	count_6_3 = 0
 
 
 	for geno in lst_of_geno_object :
-		if geno.number_of_new_created_haplotype > 0 :
-			for i in range(len(geno.lst_of_new_haplotype)) :
-				third_sortie = []
-				third_sortie.append(geno.name)
-				third_sortie.append((geno.similar_haplotype[i]).name)
-				third_sortie.append("new{}_G_{}".format(i+1, geno.name)) 
-				for values in geno.lst_of_new_haplotype[i] :
-					third_sortie.append(values)
-				my_otp3_writer.writerow(third_sortie)
-#Sur les 274 nouveaux haplotypes généré il y a 246 réellement différents
-	otp3.close()
+		if geno.number_of_similar_haplotype == 2 : 
+			if geno.number_of_probable_haplotypes_combinaison == 0 :
+				count_2_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 1 :
+				count_2_1 +=1
+		
+		elif geno.number_of_similar_haplotype == 3 :
+			if geno.number_of_probable_haplotypes_combinaison == 0 :
+				count_3_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 1 :
+				count_3_1 +=1
+			elif geno.number_of_probable_haplotypes_combinaison == 2 :
+				count_3_2 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 3 :
+				count_3_3 += 1
+		
+		elif geno.number_of_similar_haplotype == 4 :
+			if geno.number_of_probable_haplotypes_combinaison == 0 :
+				count_4_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 1 :
+				count_4_1 +=1
+			elif geno.number_of_probable_haplotypes_combinaison == 2 :
+				count_4_2 += 1
+
+		elif geno.number_of_similar_haplotype == 5 :
+			if geno.number_of_probable_haplotypes_combinaison == 0 :
+				count_5_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 1 :
+				count_5_1 +=1
+
+		elif geno.number_of_similar_haplotype == 6 :
+			if geno.number_of_probable_haplotypes_combinaison == 0 :
+				count_6_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 1 :
+				count_6_1 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 2 :
+				count_6_2 += 1
+			elif geno.number_of_probable_haplotypes_combinaison == 3 :
+				count_6_3 += 1
+
+	print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
+	print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
+	print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
+	print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
+	print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaison ".format(count_6_0,count_6_1, count_6_2, count_6_3))
 
 
 
-
-
-"""Comparaison des haplotypes les uns par rapport aux autres 
-pour pouvoir comparer leur distribution avec celle des génotypes"""
-
-#ouverture et écriture du quatrième fichier 
-with open(fourst_output, 'w') as otp4 :
-	my_otp4_writer = writer(otp4, delimiter=delimit)
-
-#écriture de la quatrième sortie
-	#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
-	for haplo1 in range(len(lst_of_haplo_object)-1) :
-		for haplo2 in range((haplo1+1),len(lst_of_haplo_object)) :
-			my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_two_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
-
-	otp4.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Penser a faire une fonction qui pourrait me donner ces résultats
-count_2_0 = 0
-count_2_1 = 0
-
-count_3_0 = 0
-count_3_1 = 0
-count_3_2 = 0
-count_3_3 = 0
-
-count_4_0 = 0
-count_4_1 = 0
-count_4_2 = 0
-
-count_5_0 = 0
-count_5_1 = 0
-
-count_6_0 = 0
-count_6_1 = 0
-count_6_2 = 0
-count_6_3 = 0
-
-
-for geno in lst_of_geno_object :
-	if geno.number_of_similar_haplotype == 2 : 
-		if geno.number_of_probable_haplotypes_combinaison == 0 :
-			count_2_0 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 1 :
-			count_2_1 +=1
-	
-	elif geno.number_of_similar_haplotype == 3 :
-		if geno.number_of_probable_haplotypes_combinaison == 0 :
-			count_3_0 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 1 :
-			count_3_1 +=1
-		elif geno.number_of_probable_haplotypes_combinaison == 2 :
-			count_3_2 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 3 :
-			count_3_3 += 1
-	
-	elif geno.number_of_similar_haplotype == 4 :
-		if geno.number_of_probable_haplotypes_combinaison == 0 :
-			count_4_0 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 1 :
-			count_4_1 +=1
-		elif geno.number_of_probable_haplotypes_combinaison == 2 :
-			count_4_2 += 1
-
-	elif geno.number_of_similar_haplotype == 5 :
-		if geno.number_of_probable_haplotypes_combinaison == 0 :
-			count_5_0 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 1 :
-			count_5_1 +=1
-
-	elif geno.number_of_similar_haplotype == 6 :
-		if geno.number_of_probable_haplotypes_combinaison == 0 :
-			count_6_0 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 1 :
-			count_6_1 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 2 :
-			count_6_2 += 1
-		elif geno.number_of_probable_haplotypes_combinaison == 3 :
-			count_6_3 += 1
-
-print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
-print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
-print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
-print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
-print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaison ".format(count_6_0,count_6_1, count_6_2, count_6_3))
-
-
-
-#Sortie txt générale.
-with open(first_txt_output,'w') as txt_otp1 :
-	txt_otp1.write("Noms des fichiers passés en input : \nPour les haplotypes : {}\nPour les génotypes : {}".format(haplotype, genotype))
-	txt_otp1.write("\nNombre d'objet Haplotype créé : {}".format(len(lst_of_haplo_object)))
-	txt_otp1.write("\nNombre d'objet Genotype créé : {}".format(len(lst_of_geno_object)))
-	txt_otp1.write("\nSéquences composées de {} marqueurs".format(len(lst_of_geno_object[1].markers)))
-	txt_otp1.write("\nLes marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
-	txt_otp1.write("\n\nSi 2 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} on une combinaison qui redonne le génotype".format(count_2_0, count_2_1))
-	txt_otp1.write("\nSi 3 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
-	txt_otp1.write("\nSi 4 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
-	txt_otp1.write("\nSi 5 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
-	txt_otp1.write("\nSi 6 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 3 combinaisons \n\n\n\n".format(count_6_0, count_6_3))
-	
-	for geno in lst_of_geno_object :
-		if geno.number_of_probable_haplotypes_combinaison > 1 :
-			txt_otp1.write("\n\nProbleme de combinaison pour le génotype : {}".format(geno.name))
-			txt_otp1.write("\nVérification des combinaison suivante : {}".format(geno.probable_haplotypes_combinaison))
+	#Sortie txt générale.
+	with open(first_txt_output,'w') as txt_otp1 :
+		txt_otp1.write("Noms des fichiers passés en input : \nPour les haplotypes : {}\nPour les génotypes : {}".format(haplotype, genotype))
+		txt_otp1.write("\nNombre d'objet Haplotype créé : {}".format(len(lst_of_haplo_object)))
+		txt_otp1.write("\nNombre d'objet Genotype créé : {}".format(len(lst_of_geno_object)))
+		txt_otp1.write("\nSéquences composées de {} marqueurs".format(len(lst_of_geno_object[1].markers)))
+		txt_otp1.write("\nLes marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+		txt_otp1.write("\n\nSi 2 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} on une combinaison qui redonne le génotype".format(count_2_0, count_2_1))
+		txt_otp1.write("\nSi 3 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
+		txt_otp1.write("\nSi 4 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
+		txt_otp1.write("\nSi 5 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
+		txt_otp1.write("\nSi 6 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 3 combinaisons \n\n\n\n".format(count_6_0, count_6_3))
+		
+		for geno in lst_of_geno_object :
+			if geno.number_of_probable_haplotypes_combinaison > 1 :
+				txt_otp1.write("\n\nProbleme de combinaison pour le génotype : {}".format(geno.name))
+				txt_otp1.write("\nVérification des combinaison suivante : {}".format(geno.probable_haplotypes_combinaison))
 
 
 
