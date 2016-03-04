@@ -100,6 +100,7 @@ class Haplotype(object):
 	#OTHER METHODES#
 	################
 
+	#polymorphisme avec la fonction compare_geno_and_haplo_seq(self, geno, haplo) ==> voir comment ça marche
 	def compare_haplo_and_haplo_seq(self, haplo1, haplo2):
 		"""Méthode pour faire la comparaison entre haplo et avoir la distribution générale entre eux"""
 		ligne_de_sortie = []
@@ -131,10 +132,7 @@ class Genotype(Haplotype):
 	"""docstring for Genotype"""
 	def __init__(self, name, sequence, markers):
 		#héritage de la classe Haplotype
-		self._name = name 
-		self._sequence = sequence 
-		self._nbmarkers = len(self._sequence) #0 à création puis modif ou directe len(sequence)
-		self._markers = markers
+		Haplotype.__init__(self, name, sequence, markers)
 		#Propre à la classe Génotype
 		self._nb_hmz_markers = 0
 		self._nb_htz_markers = 0
@@ -420,7 +418,7 @@ class Genotype(Haplotype):
 """Création de 2 listes d'objets
 La premire, lst_of_haplo_object, contient les n objets Haplotype
 La seconde, lst_of_geno_object, contient les n objets Genotype"""
-
+#Réorganiser le main
 if __name__ == '__main__':
 	print ("\nLes histoires commencent  :")
 	lst_of_haplo_object = []
@@ -437,8 +435,8 @@ if __name__ == '__main__':
 	first_txt_output = argv[7]
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno :
-		my_haplo_reader = reader(src_haplo, delimiter = delimit)
-		my_geno_reader = reader(src_geno, delimiter = ",")
+		my_haplo_reader = reader(src_haplo, delimiter=delimit)
+		my_geno_reader = reader(src_geno, delimiter=",")
 		#my_otp1_writer = writer(otp1, delimiter = delimit)
 
 		#Compteur utilisé pour la récupération du header
@@ -447,22 +445,22 @@ if __name__ == '__main__':
 
 		"""Construction de ma lst_of_haplo_object"""
 		for rows in my_haplo_reader :
-			if count1 == True :
+			if count1 : #Si booleen est vrai
 				lst_markers_haplo = rows[1:80]
 				count1 = False
 			else :
-				A = Haplotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_haplo)
+				A = Haplotype(name=rows[0], sequence=rows[1:80], markers=lst_markers_haplo)
 				lst_of_haplo_object.append(A)
 		#print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
 
 
 		""" Construction de ma lst_of_geno_object"""
 		for rows in my_geno_reader :
-			if count2 == True :
+			if count2 : #Si booleen est vrai
 				lst_markers_geno = rows[1:80]
 				count2 = False
 			else :
-				B = Genotype(name = rows[0], sequence = rows[1:80], markers = lst_markers_geno)
+				B = Genotype(name=rows[0], sequence=rows[1:80], markers=lst_markers_geno)
 				lst_of_geno_object.append(B)
 		#print ("Nombre d'objet geno :",len(lst_of_geno_object))
 
@@ -491,8 +489,8 @@ if __name__ == '__main__':
 
 	#ouverture des fichiers pour les 2 premières sorties
 	with open(first_output, 'w') as otp1, open(second_output, 'w') as otp2 :
-		my_otp1_writer = writer(otp1, delimiter = delimit)
-		my_otp2_writer = writer(otp2, delimiter = delimit)
+		my_otp1_writer = writer(otp1, delimiter=delimit)
+		my_otp2_writer = writer(otp2, delimiter=delimit)
 
 		
 	#écriture de la première sortie
@@ -500,8 +498,7 @@ if __name__ == '__main__':
 			for haplo in lst_of_haplo_object :
 				geno.select_similar_haplotype(geno, haplo)
 				geno.number_of_similar_haplotype = len(geno.similar_haplotype)
-
-				
+				#écriture ce fait ici
 				my_otp1_writer.writerow(geno.compare_geno_and_haplo_seq(geno, haplo))
 
 		otp1.close()
@@ -552,14 +549,14 @@ def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 		count = 0
 	return count
 
+
 count_geno = 0
 count = 0
-
 for i in range((len(lst_of_haplo_object)+1)) :
 	count_geno += count
 	count = 0
 	for geno in lst_of_geno_object :
-		count += count_genotype_with_same_number_of_similar_haplotype(genotype =geno, theNumber =i)
+		count += count_genotype_with_same_number_of_similar_haplotype(genotype=geno, theNumber=i)
 	if count_geno < len(lst_of_geno_object) :		
 		print ("Les genotypes avec {} haplotype(s) commun(s) sont au nombre de {}".format(i, count))
 
@@ -567,6 +564,7 @@ for i in range((len(lst_of_haplo_object)+1)) :
 
 """Manip permettant d'avoir le nombre de combinaison viable en fonction du nombre d'haplotype possible"""
 #Création de nouveaux haplotypes à partir des génotypes et un haplotypes simailaire
+
 nb_total_new_h = 0 #compteur pour avoir le nombre total d'haplotype construit
 for geno in lst_of_geno_object :
 	#Parmi les haplotype similaire à notre génotype, lesquels combiné l'un avec l'autre redonne le génotype
@@ -578,7 +576,7 @@ for geno in lst_of_geno_object :
 	geno.lst_of_new_haplotype = geno.have_new_haplotype() 
 	geno.number_of_new_created_haplotype = len(geno._lst_of_new_haplotype)
 
-
+	#Sommage du compteur, dans la boucle
 	nb_total_new_h += geno.number_of_new_created_haplotype
 print ("le nombre total d'haplo créé est de  : {}".format(nb_total_new_h))	
 	
@@ -588,8 +586,7 @@ print ("le nombre total d'haplo créé est de  : {}".format(nb_total_new_h))
 
 #écriture de la troisième sortie (liste des nouveau haplotype créé)
 with open(third_output, 'w') as otp3 :
-	my_otp3_writer = writer(otp3, delimiter = delimit)
-
+	my_otp3_writer = writer(otp3, delimiter=delimit)
 
 	lst_header =[]
 	lst_header.append("Genotype")
@@ -597,6 +594,7 @@ with open(third_output, 'w') as otp3 :
 	lst_header.append("New_Haplotype")	
 	for markers in lst_of_geno_object[0].markers :
 		lst_header.append(markers)
+	#ecriture de l'en-tête de l'output n°3
 	my_otp3_writer.writerow(lst_header)
 
 
@@ -606,14 +604,13 @@ with open(third_output, 'w') as otp3 :
 				third_sortie = []
 				third_sortie.append(geno.name)
 				third_sortie.append((geno.similar_haplotype[i]).name)
-				#Trouver un nom pour les nouveau haplotype
 				third_sortie.append("new{}_G_{}".format(i+1, geno.name)) 
 				for values in geno.lst_of_new_haplotype[i] :
 					third_sortie.append(values)
 				my_otp3_writer.writerow(third_sortie)
 #Sur les 274 nouveaux haplotypes généré il y a 246 réellement différents
+	otp3.close()
 
-#Faire une 4ème sortie qui sera utilisé pour compléter le nombre d'haplotype connu pour
 
 
 
@@ -623,7 +620,7 @@ pour pouvoir comparer leur distribution avec celle des génotypes"""
 
 #ouverture et écriture du quatrième fichier 
 with open(fourst_output, 'w') as otp4 :
-	my_otp4_writer = writer(otp4, delimiter = delimit)
+	my_otp4_writer = writer(otp4, delimiter=delimit)
 
 #écriture de la quatrième sortie
 	#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
@@ -746,6 +743,7 @@ with open(first_txt_output,'w') as txt_otp1 :
 	txt_otp1.write("\nSi 4 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
 	txt_otp1.write("\nSi 5 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
 	txt_otp1.write("\nSi 6 haplotypes sont similaires au génotype :\n{} ont 0 combinaisons viables \n{} ont 3 combinaisons \n\n\n\n".format(count_6_0, count_6_3))
+	
 	for geno in lst_of_geno_object :
 		if geno.number_of_probable_haplotypes_combinaison > 1 :
 			txt_otp1.write("\n\nProbleme de combinaison pour le génotype : {}".format(geno.name))
