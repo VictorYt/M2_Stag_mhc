@@ -14,8 +14,10 @@
 
 #Nécessite de décrire le format d'input des 2 entrées.
 
+import time
 from csv import reader, writer
 from sys import argv
+#from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
 
@@ -57,6 +59,7 @@ La premire, lst_of_haplo_object, contient les n objets Haplotype
 La seconde, lst_of_geno_object, contient les n objets Genotype"""
 #Réorganiser le main
 if __name__ == '__main__':
+	debut = time.time()
 	print ("\nLes histoires commencent  :")
 	lst_of_haplo_object = []
 	lst_of_geno_object = []
@@ -379,7 +382,9 @@ if __name__ == '__main__':
 				txt_otp1.write("\nVérification des combinaison suivante : {}".format(geno.probable_haplotypes_combinaison))
 
 
-
+	fin = time.time()
+	temps = fin - debut
+	print ("\n\n\nLe temps d'execution du programme entier est de : {}".format(temps))
 #Create a READme !!!!!!!
 
 

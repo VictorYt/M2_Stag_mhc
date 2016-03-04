@@ -4,11 +4,35 @@
 from Haplotype import Haplotype
 
 class Genotype(Haplotype):
-	"""docstring for Genotype"""
 	def __init__(self, name, sequence, markers):
-		#héritage de la classe Haplotype
+		"""Class constructor Genotype
+
+		Genotype Class is characterized by :
+		Haplotype legacy of class :
+			-A name,
+			-a sequence, 
+			-a size who is the length of markers and
+			-the list of there markers
+		Genotype specific to class :
+			-A number of Homozygous (Hmz) markers ('A', 'C', 'G' or 'T') (default = 0) maybe '--' for the new_haplotype,
+			-a number of Heterozygous (Htz) markers (ex : '--' or 'A/G'), (default = 0)
+			-a list of the Htz indexs in the Genotype object sequence,
+			-a list of Haplotype(s) object(s) who are similar to our genotype
+			(sum of errors in each markers positions = ... 0 1 ou 2) 
+			-the size of this list (default = 0).
+			-a list of probable combination of similar haplotypes that allows us to
+			obtain the genotype.
+			-the size of this list (default = 0).
+			-a new haplotype list filled if there is at least 1 similar haplotype and
+			no prbable combination.
+			-the size of this list (default = 0).
+
+			something more?
+
+		"""
+		#Haplotype legacy of class
 		Haplotype.__init__(self, name, sequence, markers)
-		#Propre à la classe Génotype
+		#Genotype specific to class
 		self._nb_hmz_markers = 0
 		self._nb_htz_markers = 0
 		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
@@ -20,7 +44,7 @@ class Genotype(Haplotype):
 		self._number_of_new_created_haplotype = 0 #taille de la liste obtenue ci-dessus
 
 	def __str__(self):
-		"""Like str Haplotype"""
+		"""Like str Haplotype a quick description of our Genotype object"""
 		return "Le Genotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
 
 
@@ -29,40 +53,45 @@ class Genotype(Haplotype):
 	############
 
 	def _get_nb_hmz_markers(self):
-		"""Permet d'avoir accès au nombre de markers Hmz dans le génotype"""
+		"""Return the attribute that contains the number of Hmz markers"""
 		return self._nb_hmz_markers
 
 	def _get_nb_htz_markers(self):
-		"""Permet d'avoir accès au nombre de markers Htz dans le génotype"""
+		"""Return the attribute that contains the number of Htz markers"""
 		return self._nb_htz_markers
 
 	def _get_index_htz_markers_in_seq(self):
-		"""Permet d'avoir les indexes des positions ou le markers génotypique est Htz"""
+		"""Return the attribute that contains a list with the indexs of Hmz markers"""
 		return self._index_htz_markers_in_seq
 	
 	def _get_similar_haplotype(self):
-		"""Permet d'avoir la liste des objets Hapltype qui ont une séquence
-		compatible avec notre génotype"""
+		"""Return the attribute that contains a Haplotype object list  
+		similar to our genotype
+
+		"""
 		return self._similar_haplotype
 
 	def _get_number_of_similar_haplotype(self):
-		"""Permet d'avoir le nombre d'hapltype contenu dans la liste d'haplotype similaire"""
+		"""Return the attribute that contains the size of the similar Haplotype object list"""
 		return self._number_of_similar_haplotype
 
 	def _get_probable_haplotypes_combinaison(self):
-		"""Permet d'avoir une liste de combinaison de 2 haplotypes donnant le génotype observé"""
+		"""Return the attribut that contains the list of combination of similar Haplotype object  
+		that allows us to obtain the genotype.
+
+		"""
 		return self._probable_haplotypes_combinaison
 
 	def _get_number_of_probable_haplotypes_combinaison(self):
-		"""Permet d'avoir le nombre de combinaison contenu dans la liste de combinaison probable"""
+		"""Return the attribute that contains the size of the previous list above"""
 		return self._number_of_probable_haplotypes_combinaison		
 
 	def _get_lst_of_new_haplotype(self):
-		"""Permet d'avoir la liste des nouveaux haplotypes créés"""
+		"""Return the attribut that contains the list of new haplotypes obtained."""
 		return self._lst_of_new_haplotype
 
 	def _get_number_of_new_created_haplotype(self):
-		"""Permet d'avoir le nombre de nouveaux haplotypes créés"""
+		"""Return the attribute that contains the size of the previous list above"""
 		return self._number_of_new_created_haplotype
 
 	###########
@@ -70,42 +99,88 @@ class Genotype(Haplotype):
 	###########
 
 	def _set_nb_hmz_markers(self, nb_hmz_markers):
-		"""Permet de changer accès au nombre de markers Hmz dans le génotype"""
+		"""Changes the number of Hmz markers in genotype
+
+		Named parameters :
+		nb_hmz_markers -- a int (default = 0)
+
+		"""
 		self._nb_hmz_markers = nb_hmz_markers
 
 	def _set_nb_htz_markers(self, nb_htz_markers):
-		"""Permet de changer accès au nombre de markers Htz dans le génotype"""
+		"""Changes the number of Htz markers in genotype
+
+		Named parameters :
+		nb_htz_markers -- a int (default = 0)
+
+		"""
 		self._nb_htz_markers = nb_htz_markers
 
 	def _set_index_htz_markers_in_seq(self, index_htz_markers):
-		"""Permet de changer les indexes des positions ou le markers génotypique est Htz"""
+		"""Changes the list of Htz markers indexs in genotype
+
+		Named parameters :
+		index_htz_markers -- a list (empty by default)
+
+		"""
 		self._index_htz_markers_in_seq = index_htz_markers
 	
 	def _set_similar_haplotype(self, similar_haplotype):
-		"""Permet de changer la liste des objets Hapltype qui ont une séquence
-		compatible avec notre génotype"""
+		"""Changes the list of similar haplotype with our genotype
+
+		Named parameters :
+		similar_haplotype -- a list (empty by default)
+
+		"""
 		self._similar_haplotype = similar_haplotype
 
 	def _set_number_of_similar_haplotype(self, nb_similar_haplotype):
-		"""Permet de changer le nombre d'hapltype contenu dans la liste d'haplotype similaire"""
+		"""Changes the number of similar haplotype with our genotype
+
+		Named parameters :
+		nb_similar_haplotype -- a int (default = 0)
+
+		"""
 		self._number_of_similar_haplotype = nb_similar_haplotype
 
 	def _set_probable_haplotypes_combinaison(self, haplo_combinaison):
-		"""Permet de changer une liste de combinaison de 2 haplotypes donnant le génotype observé"""
+		"""Changes the list of probable combination of haplotype which can give our genotype 
+
+		Named parameters :
+		haplo_combinaison -- a list (empty by default)
+
+		"""
 		self._probable_haplotypes_combinaison = haplo_combinaison
 
 	def _set_number_of_probable_haplotypes_combinaison(self, nb_haplo_combinaison):
-		"""Permet de changer le nombre de combinaison contenu dans la liste de combinaison probable"""
+		"""Changes the number of probable combination we find above
+
+		Named parameters :
+		nb_haplo_combinaison -- a int (default = 0)
+
+		"""
 		self._number_of_probable_haplotypes_combinaison = nb_haplo_combinaison
 
 	def _set_lst_of_new_haplotype(self, new_haplotype):
-		"""Permet de changer la liste des haplotypes créé, qui est initialement vide, 
-		par celle générée par la méthode create_haplotype()"""
+		"""Changes the list of new haplotype which can give our genotype 
+		when knowing a similar haplotype without probable combination.
+		Please note that this list doesn't contain Haplotype objects (like previous)
+		but lists for the newly created sequences.
+ 
+
+		Named parameters :
+		new_haplotype -- a list (empty by default)
+
+		"""
 		self._lst_of_new_haplotype = new_haplotype
 
 	def _set_number_of_new_created_haplotype(self, new_number):
-		"""Permet de changer le nombre de nouveau(x) haplotype(s), qui est initialement
-		de zéro, au nombre réel de nouveau(x) haplotype(s) créé(s)"""
+		"""Changes the number to the size of new haplotype list
+
+		Named parameters :
+		new_number -- a int (default = 0)
+
+		"""
 		self._number_of_new_created_haplotype = new_number
 
 	############
@@ -129,7 +204,10 @@ class Genotype(Haplotype):
 	#attention je prend en compte les erreur de calling (--) dans le compte des Htz
 	#erreur d'indexation ===> a corriger
 	def position_htz_markers(self):
-		"""Permet de retourner une liste de position (index pour lesquels le markers est Htz)"""
+		"""Returns list of Htz positions sites (or bad calling) of the relevant genotic sequence, 
+		called 'position_htz_markers'.
+
+		"""
 		position_htz_markers = []
 		for nt in range(len(self.sequence)) : 
 			if len(self.sequence[nt]) > 1 :
@@ -139,7 +217,7 @@ class Genotype(Haplotype):
 		return position_htz_markers
 
 	def have_nb_htz_markers(self):
-		"""Permet d'avoir le nombre de markers Htz"""
+		"""Return the number of Htz markers by """
 		return len(self._index_htz_markers_in_seq)
 
 	def have_nb_hmz_markers(self):
