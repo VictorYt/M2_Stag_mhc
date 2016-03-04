@@ -27,9 +27,14 @@ from sys import argv
 	#############################################################W
 
 class Haplotype(object):
-	"""Classe définissant un Haplotype.
-	Il est caractérisé par son nom, sa taille (nombre de marqueurs) et sa séquence"""
 	def __init__(self, name, sequence, markers):
+		"""Class constructor Haplotype
+
+		Haplotype Class is characterized by :
+		A name, a sequence, a size who is the length of markers and
+		the list of there markers
+
+		"""
 		self._name = name 
 		self._sequence = sequence 
 		self._nbmarkers = len(self._sequence)
@@ -37,7 +42,7 @@ class Haplotype(object):
 
 
 	def __str__(self):
-		"""Méthode permettant d'afficher notre Haplotype"""
+		"""Return a description of the created Haplotype object"""
 		return "L'haplotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
 
 	############
@@ -45,22 +50,25 @@ class Haplotype(object):
 	############
 
 	def _get_name(self):
-		"""Méthode appelée si l'on souhaite accéder en lecture à l'attribut name"""
-		#print("Le nom de l'haplotype est :")
+		"""Return the attribut name of the Haplotype class"""
 		return self._name
 
 	def _get_sequence(self):
-		"""Méthode appelée si l'on souhaite accéder en lecture à l'attribut sequence"""
-		#print ("La séquence de cet haplotype est :")
+		"""Return the attribut sequence of the Haplotype class"""
 		return self._sequence
 
 	def _get_nbmarkers(self):
-		"""Méthode appelée si l'on souhaite accéder en lecture à l'attribut nbmarkers"""
-		#print ("Le nombre de marqueurs est de :")
+		"""Return the attribut nbmarkers of the Haplotype class which is 
+		the sequence size
+		
+		"""
 		return self._nbmarkers
 
 	def _get_markers(self):
-		"""Méthode appelée si l'on souhaite accéder en lecture à l'attribut markers"""
+		"""Return the attribut markers of the Haplotype class which is
+		a list of the markers name used for genotyping 
+		
+		"""
 		return self._markers
 
 	###########
@@ -68,24 +76,40 @@ class Haplotype(object):
 	###########
 
 	def _set_name (self, newname):
-		"""Permet de récupérer le nom de notre haplotype
-		Que prendre comme nom? (le mieux reste de le fournir en input = rows[0]"""
-		#ici name rows[0]
+		"""Change the name of our Haplotype object by a new one
+
+		Named parameters :
+		newname -- the new name selected (here first row of the input)
+		
+		"""
 		self._name = newname
 
 	def _set_sequence(self, newsequence):
-		"""Permet d'indiquer la sequence de l'haplotype aux marqueurs donnés
-		Faire une autre fonction qui la récupère elle même"""
+		"""Change the sequence list of our Haplotype object by a new one
+
+		Named parameters :
+		newsequence -- the new sequence list selected (here the end of the row in our input)
+		
+		"""
 		self._sequence = sequence
 
 	def _set_nbmarkers(self, newnbmarkers):
-		"""Permet d'indiquer le nombre de marqueurs s'il est connu
-		Faire une autre fonction ou il va le récupérer elle même"""
+		"""Change the sequence size of our Haplotype object by a new one
+
+		Named parameters :
+		newnbmarkers -- the new sequence size selected (here the length of markers)
+		
+		"""
 		self._nbmarkers = newnbmarkers
 
 	def _set_markers(self, lstmarkers):
-		"""Permet de changer l'attribut indiquant la liste des marqueurs utilisé ici"""
-		self._markers = lstmarkers # lui dire que c'est le header de mon fichier il ne comprendra pas ici
+		"""Change the markers list of our Haplotype object by a new one
+
+		Named parameters :
+		lstmarkers -- the new markers list selected (here the header of the input)
+		
+		"""
+		self._markers = lstmarkers 
 
 	############
 	#PROPERTIES#
@@ -101,20 +125,34 @@ class Haplotype(object):
 	################
 
 	#polymorphisme avec la fonction compare_geno_and_haplo_seq(self, geno, haplo) ==> voir comment ça marche
-	def compare_haplo_and_haplo_seq(self, haplo1, haplo2):
-		"""Méthode pour faire la comparaison entre haplo et avoir la distribution générale entre eux"""
+	def compare_two_seq(self, haplo1, haplo2):
+		"""Return a list with the name of the 2 Haplotypes objects,
+		a sequence with booleen (0, 1) and a int
+
+		0 means no differences between the 2 haplotypes sequence for the selected markers 
+		1 means that there is a difference
+		The int in the end of the returned list is the sum of 1 in the sequence.
+
+		Named parameters :
+		haplo1 -- The fisrt Haplotype object to compare
+		haplo2 -- The second Haplotype object to compare
+
+		"""
 		ligne_de_sortie = []
 		count_erreur = 0
 		ligne_de_sortie.append(haplo1.name)
 		ligne_de_sortie.append(haplo2.name)
 		for i in range(len(haplo1.sequence)) :
-			#traitment of Hmz Markers
+			#Equal to 1 in the case of fail or impossible calling for some markers
 			if len(haplo1.sequence[i]) == 1 :
 				if haplo1.sequence[i] == haplo2.sequence[i] :
 					ligne_de_sortie.append(0)
 				else :
 					ligne_de_sortie.append(1)
 					count_erreur += 1
+			#If we have one of them ('--') we concidere there are no differrence 
+			else :
+				ligne_de_sortie.append(0)
 		ligne_de_sortie.append(count_erreur)
 		return ligne_de_sortie
 
@@ -541,8 +579,13 @@ if __name__ == '__main__':
 #fonction a décrire
 #Voir pour inteégré dans la sortie txt
 def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
-	"""theNumber a int between 0 to len(list_of_genotype_object)
-	count is a counter that will be retrun"""
+	"""Use for count the number of génotypes with the same number of similar haplotypes
+
+	Named parameters :
+	genotype -- a Genotype object
+	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
+	
+	"""
 	if genotype.number_of_similar_haplotype == theNumber:
 		count = 1
 	else :
@@ -626,7 +669,7 @@ with open(fourst_output, 'w') as otp4 :
 	#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
 	for haplo1 in range(len(lst_of_haplo_object)-1) :
 		for haplo2 in range((haplo1+1),len(lst_of_haplo_object)) :
-			my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_haplo_and_haplo_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
+			my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_two_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
 
 	otp4.close()
 
