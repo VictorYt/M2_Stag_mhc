@@ -28,7 +28,7 @@ from Genotype import Genotype
 #SOME FONCTIONS#
 ################
 
-
+#Ou créer un fichier 'fonction_utilites'  
 def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 	"""Use for count the number of génotypes with the same number of similar haplotypes
 
@@ -59,7 +59,7 @@ La premire, lst_of_haplo_object, contient les n objets Haplotype
 La seconde, lst_of_geno_object, contient les n objets Genotype"""
 #Réorganiser le main
 if __name__ == '__main__':
-	debut = time.time()
+	debut1 = time.time()
 	print ("\nLes histoires commencent  :")
 	lst_of_haplo_object = []
 	lst_of_geno_object = []
@@ -288,8 +288,6 @@ if __name__ == '__main__':
 
 
 
-
-
 	#Penser a faire une fonction qui pourrait me donner ces résultats
 	count_2_0 = 0
 	count_2_1 = 0
@@ -380,34 +378,62 @@ if __name__ == '__main__':
 				txt_otp1.write("\nVérification des combinaison suivante : {}".format(geno.probable_haplotypes_combinaison))
 
 
-	fin = time.time()
-	temps = fin - debut
-	print ("\n\n\nLe temps d'execution du programme entier est de : {}".format(temps))
-#Create a READme !!!!!!!
+	fin1 = time.time()
+	temps1 = fin1 - debut1
+	print ("\n\n\nLe temps d'execution du premier run est de : {}".format(temps1))
+
+
+	debut2 = time.time()
 
 
 
-
-
-
-
-
+	
 			
-				
 
 
 
 
+	"""Second run without genotype who can be explain by knowning haplotype and with the new haplotype created in the 1st run """
+	
+	#List of Genotypes Objects no confirmed by the 1st run (genotype_none_confirmed)
+	#We keep genotypes confirmes in another list (genotype_confirmed)
+	genotype_confirmed = []
+	genotype_none_confirmed = []
+	for geno in lst_of_geno_object :
+		if geno.number_of_new_created_haplotype == 0 and geno.number_of_similar_haplotype > 1 :
+			genotype_confirmed.append(geno)
+		else : 
+			genotype_none_confirmed.append(geno)
+
+	#print (len(genotype_confirmed), len(genotype_none_confirmed))
 
 
+
+	#We expanded the Haplotype objects list with the new_haplotypes
+	with open(third_output,'r') as new_H :
+		my_new_H_reader = reader(new_H, delimiter=delimit)
+
+		lst_of_haplo_object_expanded = lst_of_haplo_object
+		for new_haplotypes in my_new_H_reader : 
+			A = Haplotype(name=new_haplotypes[2], sequence=new_haplotypes[3:82], markers=lst_markers_haplo)
+			#print (A)
+			lst_of_haplo_object_expanded.append(A)
+
+
+	fin2 = time.time()
+	temps2 = fin2 - debut2
+	print ("\n\n\nLe temps d'execution du second run est de : {}".format(temps2))
+
+#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!
 
 
 #A partir de la il faut
-	#Pour chaque new haplo de la liste retourné faire un objet Haplotype avec 
-	#ajouter cette liste (de nouveau(x) Haplo objet) dans un attribut de la class Genotype
-	#Reparcourir lst_geno_objet
-		#faire un
 
+	#Reparcourir lst_geno_objet et créer une nouvelle liste sans les geno retrouver avec nos haplotypes (309 geno)
+	#Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
+	#Ajouter à la liste des haplo les nvx haplo(tous?) ---> tous ici
+	#2ème run avec d'autres fichier d'output
+		#peut être faire un main avec run et ecriture d'output séparé (écriture d'output dans une fonction, comme ça 2ème run juste changer les arguments)
 
 
 

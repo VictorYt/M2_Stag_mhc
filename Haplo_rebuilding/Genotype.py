@@ -352,10 +352,9 @@ class Genotype(Haplotype):
 
 	#trouver un autre nom a cette fonction
 	def have_new_haplotype(self):
-		"""
-
-		Permet, de créer un nouvel haplotype avec tous les génotypes ayant au moins 1 haplotype similaire
-		,lequel ne combinant pas avec un autre halpotype similaire, pour donner le génotype observé
+		"""Return a list of new haplotypes sequences for Genotypes objects who :
+			-have a minimum of 1 similar haplotype
+			-the combination of different similar haplotype can't explain the observed genotype
 
 		"""
 		lst_new_haplo = []
