@@ -139,7 +139,7 @@ if __name__ == '__main__':
 				geno.select_similar_haplotype(geno, haplo)
 				geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 				#écriture ce fait ici
-				my_otp1_writer.writerow(geno.compare_geno_and_haplo_seq(geno, haplo))
+				my_otp1_writer.writerow(geno.compare_two_seq(geno, haplo))
 
 		otp1.close()
 
@@ -263,9 +263,7 @@ if __name__ == '__main__':
 		otp4.close()
 
 
-
-
-
+#Essayer de traité directement cette sortie pour avoir 2 autres sorties utiles pour avoir la distribution des erreurs
 
 
 
