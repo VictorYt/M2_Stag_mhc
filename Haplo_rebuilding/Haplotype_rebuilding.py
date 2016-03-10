@@ -462,6 +462,16 @@ if __name__ == '__main__':
 	print(len(lst_of_haplo_object_all))
 	print(len(lst_genotype_non_confirmed))
 
+
+	for new_haplo in lst_of_haplo_object_expanded :
+		new_haplo.similar_new_haplotype = new_haplo.screening_himself(lst_of_haplo_object_expanded)
+		new_haplo.number_of_similar_haplotype = len(new_haplo.similar_new_haplotype)
+		print (new_haplo.similar_new_haplotype)
+		print (new_haplo.number_of_similar_haplotype)
+
+
+
+
 	#Add new_haplo which are similar to our genotype no confirmed to the list of similar_haplotype
 	#And change the number of similar haplotype
 

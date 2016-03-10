@@ -22,8 +22,8 @@ class Haplotype(object):
 		self._nbmarkers = len(self.sequence)
 		self._markers = markers
 		#generate during 2nd run
-		self._similar_new_haplo = []
-		self._number_of_similar_new_haplo = 0
+		self._similar_new_haplotype = []
+		self._number_of_similar_new_haplotype = 0
 
 
 	def __str__(self):
@@ -56,14 +56,14 @@ class Haplotype(object):
 		"""
 		return self._markers
 
-	def _get_similar_new_haplo(self):
+	def _get_similar_new_haplotype(self):
 		"""Return the attribut similar_new_haplo of the Haplotype class which is
 		a list the new haplotype who have the same sequence than our haplotype 
 		
 		"""
 		return self._similar_new_haplo
 
-	def _get_number_of_similar_new_haplo(self):
+	def _get_number_of_similar_new_haplotype(self):
 		"""Return the attribut number_of_similar_new_haplo of the Haplotype class which is 
 		the size of the similar new haplotypes list
 		
@@ -110,7 +110,7 @@ class Haplotype(object):
 		"""
 		self._markers = lstmarkers 
 
-	def _set_similar_new_haplo(self, newhaplo):
+	def _set_similar_new_haplotype(self, newhaplo):
 		"""Change the markers list of our Haplotype object by a new one
 
 		Named parameters :
@@ -119,7 +119,7 @@ class Haplotype(object):
 		"""
 		self._similar_new_haplo = newhaplo
 
-	def _set_number_of_similar_new_haplo(self, newnbnewhaplo):
+	def _set_number_of_similar_new_haplotype(self, newnbnewhaplo):
 		"""Change the number of similar new haplotype size of our Haplotype object by a new one
 
 		Named parameters :
@@ -136,8 +136,8 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
-	similar_new_haplo = property(_get_similar_new_haplo, _set_similar_new_haplo)
-	number_of_similar_new_haplo = property(_get_number_of_similar_new_haplo, _set_number_of_similar_new_haplo)
+	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
+	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
 
 	################
 	#OTHER METHODES#
@@ -175,11 +175,22 @@ class Haplotype(object):
 		ligne_de_sortie.append(count_erreur)
 		return ligne_de_sortie
 
-	def screening_new_haplotype(self):
+	#chaud mais serait bien à faire fonctionner
+	def screening_himself(self, lst_of_new_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 
 		than the sequence of our Haplotype object.
 
 		"""
+		#étape pour se trouver lui même dans la liste et s'éviter après
+		index_me = 0
+		for me in lst_of_new_haplotype:
+			if self.name == me.name :
+				index_me = lst_of_new_haplotype.index(me)
+
 		lst_similar_new_haplo = []
-		for new_haplo in ... :
+		for new_haplo in lst_of_new_haplotype :
+			if lst_of_new_haplotype.index(new_haplo) == index_me :
+				pass
+			elif self.sequence == new_haplo.sequence :
+				lst_similar_new_haplo.append(new_haplo)
 		return lst_similar_new_haplo
