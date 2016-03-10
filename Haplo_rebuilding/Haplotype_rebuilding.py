@@ -25,7 +25,7 @@ from Genotype import Genotype
 
 
 ################
-#SOME FONCTIONS#
+#SOME FONCTIONS# importe un used(utile) from used import *
 ################
 
 #Ou créer un fichier 'fonction_utilites'  
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 					third_sortie = []
 					third_sortie.append(geno.name)
 					third_sortie.append((geno.similar_haplotype[i]).name)
-					third_sortie.append("new{}_G_{}".format(i+1, geno.name)) 
+					third_sortie.append("new{}_G:{}:H:{}".format(i+1, geno.name, (geno.similar_haplotype[i]).name)) 
 					for values in geno.lst_of_new_haplotype[i] :
 						third_sortie.append(values)
 					my_otp3_writer.writerow(third_sortie)
@@ -393,38 +393,113 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	"""Second run without genotype who can be explain by knowning haplotype and with the new haplotype created in the 1st run """
 	
-	#List of Genotypes Objects no confirmed by the 1st run (genotype_none_confirmed)
+	#List of Genotypes Objects no confirmed by the 1st run (genotype_non_confirmed)
 	#We keep genotypes confirmes in another list (genotype_confirmed)
-	genotype_confirmed = []
-	genotype_none_confirmed = []
+	lst_genotype_confirmed = []
+	lst_genotype_non_confirmed = []
 	for geno in lst_of_geno_object :
 		if geno.number_of_new_created_haplotype == 0 and geno.number_of_similar_haplotype > 1 :
-			genotype_confirmed.append(geno)
+			lst_genotype_confirmed.append(geno)
 		else : 
-			genotype_none_confirmed.append(geno)
+			lst_genotype_non_confirmed.append(geno)
 
-	#print (len(genotype_confirmed), len(genotype_none_confirmed))
-
-
+	
 
 	#We expanded the Haplotype objects list with the new_haplotypes
+	#lst_of_haplo_object_all ==> containing all the haplo
+	#lst_of_haplo_object_expanded ==> containing new halpo
 	with open(third_output,'r') as new_H :
 		my_new_H_reader = reader(new_H, delimiter=delimit)
 
-		lst_of_haplo_object_expanded = lst_of_haplo_object
+		header = True
+		lst_of_haplo_object_expanded = []
 		for new_haplotypes in my_new_H_reader : 
-			A = Haplotype(name=new_haplotypes[2], sequence=new_haplotypes[3:82], markers=lst_markers_haplo)
-			#print (A)
-			lst_of_haplo_object_expanded.append(A)
+			if header :
+				header = False
+				pass
+			else :
+				A = Haplotype(name=new_haplotypes[2], sequence=new_haplotypes[3:82], markers=lst_markers_haplo)
+				lst_of_haplo_object_expanded.append(A)
+		lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
+	
+	print(len(lst_of_haplo_object))
+	print(len(lst_of_haplo_object_expanded))
+	print(len(lst_of_haplo_object_all))
+	print(len(lst_genotype_non_confirmed))
+
+	#Add new_haplo which are similar to our genotype no confirmed to the list of similar_haplotype
+	#And change the number of similar haplotype
+
+	for geno_non_confirmed in lst_genotype_non_confirmed :
+		for new_haplo in lst_of_haplo_object_expanded :
+			#Repérage des new_haplo identique aux genotypes restant
+			geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
+			#Changer de nombre d'haplo similaire (faire une diff entre les deux a ce niveau?)
+			geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
+			#écriture ce fait ici (faire le nouveau fichier de sortie)
+			#my_otpx_writer.writerow(geno_non_confirmed.compare_two_seq(geno_non_confirmed, new_haplo))
+	
+	#petite vérification
+	#for g in lst_genotype_non_confirmed :
+	#	print("\ngeno : {} ".format(g.name))
+	#	print("les haplotype sim sont :")
+	#	print(g.number_of_similar_haplotype)
+	#	for i in range(len(g.similar_haplotype)):
+	#		print((g.similar_haplotype)[i].name)
+
+	#otpx.close()
 
 
-	fin2 = time.time()
-	temps2 = fin2 - debut2
-	print ("\n\n\nLe temps d'execution du second run est de : {}".format(temps2))
 
-#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!
+
+	count_geno_non_confirmed = 0
+	count = 0
+	for i in range((len(lst_of_haplo_object_all)+1)) :
+		count_geno_non_confirmed += count
+		count = 0
+		for geno_non_confirmed in lst_genotype_non_confirmed :
+			count += count_genotype_with_same_number_of_similar_haplotype(genotype=geno_non_confirmed, theNumber=i)
+		if count_geno_non_confirmed < len(lst_genotype_non_confirmed) :		
+			print ("Les genotypes avec {} haplotype(s) commun(s) sont au nombre de {}".format(i, count))
+
+
+
+
 
 
 #A partir de la il faut
@@ -436,4 +511,9 @@ if __name__ == '__main__':
 		#peut être faire un main avec run et ecriture d'output séparé (écriture d'output dans une fonction, comme ça 2ème run juste changer les arguments)
 
 
+	fin2 = time.time()
+	temps2 = fin2 - debut2
+	print ("\n\n\nLe temps d'execution du second run est de : {}".format(temps2))
 
+
+#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!

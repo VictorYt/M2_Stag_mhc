@@ -7,14 +7,23 @@ class Haplotype(object):
 		"""Class constructor Haplotype
 
 		Haplotype Class is characterized by :
-		A name, a sequence, a size who is the length of markers and
-		the list of there markers
+			-A name, 
+			-a sequence, 
+			-a size who is the length of markers 
+			-and the list of there markers
+
+		During a second run with new haplotypes created, we add to the instance :
+			-a list of the similar new haplotypes
+			-the length of this list
 
 		"""
 		self._name = name 
 		self._sequence = sequence 
 		self._nbmarkers = len(self.sequence)
-		self._markers = markers 
+		self._markers = markers
+		#generate during 2nd run
+		self._similar_new_haplo = []
+		self._number_of_similar_new_haplo = 0
 
 
 	def __str__(self):
@@ -46,6 +55,20 @@ class Haplotype(object):
 		
 		"""
 		return self._markers
+
+	def _get_similar_new_haplo(self):
+		"""Return the attribut similar_new_haplo of the Haplotype class which is
+		a list the new haplotype who have the same sequence than our haplotype 
+		
+		"""
+		return self._similar_new_haplo
+
+	def _get_number_of_similar_new_haplo(self):
+		"""Return the attribut number_of_similar_new_haplo of the Haplotype class which is 
+		the size of the similar new haplotypes list
+		
+		"""
+		return self._number_of_similar_new_haplo
 
 	###########
 	#MUTATEURS#
@@ -87,6 +110,24 @@ class Haplotype(object):
 		"""
 		self._markers = lstmarkers 
 
+	def _set_similar_new_haplo(self, newhaplo):
+		"""Change the markers list of our Haplotype object by a new one
+
+		Named parameters :
+		newhaplo -- the similar new haplotype list of our genotype selected (here the Haplotype object ref)
+		
+		"""
+		self._similar_new_haplo = newhaplo
+
+	def _set_number_of_similar_new_haplo(self, newnbnewhaplo):
+		"""Change the number of similar new haplotype size of our Haplotype object by a new one
+
+		Named parameters :
+		newnbnewhaplo -- the new size selected (here the length of similar_new_haplo list)
+		
+		"""
+		self._number_of_similar_new_haplo = newnbnewhaplo
+
 	############
 	#PROPERTIES#
 	############
@@ -95,6 +136,8 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
+	similar_new_haplo = property(_get_similar_new_haplo, _set_similar_new_haplo)
+	number_of_similar_new_haplo = property(_get_number_of_similar_new_haplo, _set_number_of_similar_new_haplo)
 
 	################
 	#OTHER METHODES#
@@ -131,3 +174,12 @@ class Haplotype(object):
 				ligne_de_sortie.append(0)
 		ligne_de_sortie.append(count_erreur)
 		return ligne_de_sortie
+
+	def screening_new_haplotype(self):
+		"""Return a list of Haplotype objects who have the same new haplotye sequence 
+		than the sequence of our Haplotype object.
+
+		"""
+		lst_similar_new_haplo = []
+		for new_haplo in ... :
+		return lst_similar_new_haplo

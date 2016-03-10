@@ -14,6 +14,7 @@ class Genotype(Haplotype):
 			-a size who is the length of markers and
 			-the list of there markers
 		Genotype specific to class :
+			#generate during the 1st run
 			-A number of Homozygous (Hmz) markers ('A', 'C', 'G' or 'T') (default = 0) maybe '--' for the new_haplotype,
 			-a number of Heterozygous (Htz) markers (ex : '--' or 'A/G'), (default = 0)
 			-a list of the Htz indexs in the Genotype object sequence,
@@ -25,6 +26,12 @@ class Genotype(Haplotype):
 			-the size of this list (default = 0).
 			-a new haplotype list filled if there is at least 1 similar haplotype and
 			no prbable combination.
+			-the size of this list (default = 0).
+			
+			#generate during the 2nd run
+			-a new list of probable combination of similar haplotypes that allows us to
+			obtain the genotype.Because, we add in similar haplotype list the new haplotype
+			created during the first run which are similar to our genotype
 			-the size of this list (default = 0).
 
 			something more?
@@ -39,9 +46,11 @@ class Genotype(Haplotype):
 		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)
 		self._number_of_similar_haplotype = 0 #taille de la liste obtenue ci-dessus
 		self._probable_haplotypes_combinaison = [] #liste de liste (ex: [[haplo1, haplo4], [haplo20, haplo79]])
-		self._number_of_probable_haplotypes_combinaison = 0
+		self._number_of_probable_haplotypes_combinaison = 0	
 		self._lst_of_new_haplotype = [] #une liste de nouveau(x) (pour le moment liste de la séqeunce seul) haplotype(s) créé à partir de l'objet Génotype en question
 		self._number_of_new_created_haplotype = 0 #taille de la liste obtenue ci-dessus
+		self._probable_haplotypes_combinaison_2_run = [] # nouvelle liste de combinaison 
+		self._number_of_probable_haplotypes_combinaison_2_run = 0
 
 	def __str__(self):
 		"""Like str Haplotype a quick description of our Genotype object"""
@@ -93,6 +102,18 @@ class Genotype(Haplotype):
 	def _get_number_of_new_created_haplotype(self):
 		"""Return the attribute that contains the size of the previous list above"""
 		return self._number_of_new_created_haplotype
+
+	def _get_probable_haplotypes_combinaison_2_run(self):
+		"""Return the attribut that contains the list of combination of similar Haplotype object 
+		(enlarged by new haplotype created in the 1st run)
+		that allows us to obtain the genotype.
+
+		"""
+		return self._probable_haplotypes_combinaison_2_run
+
+	def _get_number_of_probable_haplotypes_combinaison_2_run(self):
+		"""Return the attribute that contains the size of the previous list above"""
+		return self._number_of_probable_haplotypes_combinaison_2_run	
 
 	###########
 	#MUTATEURS#
@@ -183,6 +204,24 @@ class Genotype(Haplotype):
 		"""
 		self._number_of_new_created_haplotype = new_number
 
+	def _set_probable_haplotypes_combinaison_2_run(self, new_similar_haplotype):
+		"""Changes the list of probable combination (2nd run) of haplotype which can give our genotype 
+
+		Named parameters :
+		haplo_combinaison -- a list (default = probable_haplotypes_combinaison)
+
+		"""
+		self._probable_haplotypes_combinaison_2_run = new_similar_haplotype
+
+	def _set_number_of_probable_haplotypes_combinaison_2_run(self, new_nb_haplo_combinaison):
+		"""Changes the number of probable combination we find above
+
+		Named parameters :
+		new_nb_haplo_combinaison -- a int (default = nb_haplo_combinaison)
+
+		"""
+		self._number_of_probable_haplotypes_combinaison_2_run = new_nb_haplo_combinaison
+
 	############
 	#PROPERTIES#
 	############
@@ -196,6 +235,8 @@ class Genotype(Haplotype):
 	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison)
 	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype)
 	number_of_new_created_haplotype = property(_get_number_of_new_created_haplotype, _set_number_of_new_created_haplotype)
+	probable_haplotypes_combinaison_2_run = property(_get_probable_haplotypes_combinaison_2_run, _set_probable_haplotypes_combinaison_2_run)
+	number_of_probable_haplotypes_combinaison_2_run = property(_get_number_of_probable_haplotypes_combinaison_2_run, _set_number_of_probable_haplotypes_combinaison_2_run)
 
 	################
 	#OTHER METHODES#
@@ -277,6 +318,7 @@ class Genotype(Haplotype):
 		#print (len(ligne_de_sortie)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return ligne_de_sortie
 
+#Need change, add threshold (default = 0) 
 	def select_similar_haplotype(self, geno, haplo):
 		"""Put in the similar_haplotype list the Haplotype object for which the last index
 		of the compare_two_seq() return is equal to 0. it means that our haplotype can explain
@@ -293,6 +335,8 @@ class Genotype(Haplotype):
 		else :
 			pass
 
+#Because of the change before
+#Need accepte 2*thresold errors (but only in the error marker)
 	def combinaison_between_similar_haplotype_in_geno(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.
