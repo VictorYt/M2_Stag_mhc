@@ -46,17 +46,26 @@ def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 
 
 
-def probable_haplotypes_combinaison_counter(self, lstofgenoobject):
+def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
 	"""Return a dictionnary with the number of eatch probable combination
 	and this for eatch number of similar haplotype that our genotypes have
 
 	keys is the number of similar haplotype 
 	values is a list countaining the number of probable haplotype combination
 	(there index are the number of possible combination)
+
+	Named parameter: 
+	-lstofgenoobject :  the list of Genotype objects
+
 	"""
 	dico = {}
+
+	#for geno in lstofgenoobject:
+
+
 	#key = number of similar haplotype for our génotypes
 	#values = [nb, nb, nb] index [0, 1, 2] are the probable good combination observed
+	#penser a mettre la somme de geno pour chaque keys
 
 	return dico
 	#and now i just need a fonction who organize a output with this dico
@@ -485,6 +494,7 @@ if __name__ == '__main__':
 	print(len(lst_genotype_non_confirmed))
 
 
+
 	for new_haplo in lst_of_haplo_object_expanded :
 		new_haplo.similar_new_haplotype = new_haplo.screening_himself(lst_of_haplo_object_expanded)
 		new_haplo.number_of_similar_haplotype = len(new_haplo.similar_new_haplotype)
@@ -639,7 +649,7 @@ if __name__ == '__main__':
 
 
 
-	for geno in lst_of_geno_object :
+	for geno in lst_genotype_non_confirmed :
 		if geno.number_of_similar_haplotype == 2 : 
 			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
 				count_2_0 += 1
@@ -738,8 +748,13 @@ if __name__ == '__main__':
 	print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons \n{} ont les 4 combinaisons \n{} ont les 5 combinaisons \n{} ont les 6 combinaisons possible".format(count_4_0, count_4_1, count_4_2, count_4_3, count_4_4, count_4_5, count_4_6))
 	print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaisons \n{} ont 4 combinaisons \n{} ont 5 combinaisons \n{} ont 6 combinaisons \n{} ont 7 combinaisons \n{} ont 8 combinaisons \n{} ont 9 combinaisons \n{} ont 10 combinaisons".format(count_5_0, count_5_1, count_5_2, count_5_3, count_5_4, count_5_5, count_5_6, count_5_7, count_5_8, count_5_9, count_5_10))
 	print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaisons \n{} ont 4 combinaisons \n{} ont 5 combinaisons \n{} ont 6 combinaisons \n{} ont 7 combinaisons \n{} ont 8 combinaisons \n{} ont 9 combinaisons \n{} ont 10 combinaisons \n{} ont 11 combinaisons \n{} ont 12 combinaisons \n{} ont 13 combinaisons \n{} ont 14 combinaisons \n{} ont 15 combinaisons".format(count_6_0,count_6_1, count_6_2, count_6_3, count_6_4, count_6_5, count_6_6, count_6_7, count_6_8, count_6_9, count_6_10, count_6_11, count_6_12, count_6_13, count_6_14, count_6_15))
-
-
+	c2 = count_2_0 + count_2_1
+	c3 = count_3_0 + count_3_1 + count_3_2 + count_3_3
+	c4 = count_4_0 + count_4_1 + count_4_2 + count_4_3 + count_4_4 + count_4_5 + count_4_6
+	c5 = count_5_0 + count_5_1 + count_5_2 + count_5_3 + count_5_4 + count_5_5 + count_5_6 + count_5_7 + count_5_8 + count_5_9 + count_5_10
+	c6 = count_6_0 +count_6_1 + count_6_2 + count_6_3 + count_6_4 + count_6_5 + count_6_6 + count_6_7 + count_6_8 + count_6_9 + count_6_10 + count_6_11 + count_6_12 + count_6_13 + count_6_14 + count_6_15
+	c = 68+8+c2+c3+c4+c5+c6+12+7+4+1+5+4+2+4+3+2+3+2+2+0+1+0+0+1
+	print (c2,c3,c4,c5,c6,c)
 
 #A partir de la il faut
 
