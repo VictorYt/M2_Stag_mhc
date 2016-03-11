@@ -88,6 +88,10 @@ La seconde, lst_of_geno_object, contient les n objets Genotype"""
 if __name__ == '__main__':
 	debut1 = time.time()
 	print ("\nLes histoires commencent  :")
+
+
+	#Utilisation du module docpot pour récupérer ça a partir d'un dictionnaire.
+	#Utilisation du module path ou/et os pour organiser le rangement des sorties
 	lst_of_haplo_object = []
 	lst_of_geno_object = []
 	lst_markers_haplo = None
@@ -759,13 +763,13 @@ if __name__ == '__main__':
 #A partir de la il faut
 
 	# OK #Reparcourir lst_geno_objet et créer une nouvelle liste sans les geno retrouver avec nos haplotypes (309 geno)
-	#Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
+	# ... #Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
 	# OK #Ajouter à la liste des haplo les nvx haplo(tous?) ---> tous ici
 	#2ème run avec d'autres fichier d'output
 		# OK #Avoir la nouvelle liste d'haplo similaire (add new haplo sur ceux dejà existant)
-		#Sortie like la première pour le 2nd run
-		#Combiner les haplo similaire (nvl list de combi permet de comparer avec la precedente)
-		#Sortie like la seconde pour le 2nd run
+		# OK #Sortie like la première pour le 2nd run
+		# OK #Combiner les haplo similaire (nvl list de combi permet de comparer avec la precedente)
+		# OK #Sortie like la seconde pour le 2nd run
 		# ... #Faire fonction pour avoir le nombre de combinaison et tout
 		#peut être faire un main avec run et ecriture d'output séparé (écriture d'output dans une fonction, comme ça 2ème run juste changer les arguments)
 
