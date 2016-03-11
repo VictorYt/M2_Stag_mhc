@@ -46,7 +46,7 @@ def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 
 
 
-def probable_haplotypes_combinaison_counter(self):
+def probable_haplotypes_combinaison_counter(self, lstofgenoobject):
 	"""Return a dictionnary with the number of eatch probable combination
 	and this for eatch number of similar haplotype that our genotypes have
 
@@ -57,6 +57,7 @@ def probable_haplotypes_combinaison_counter(self):
 	dico = {}
 	#key = number of similar haplotype for our génotypes
 	#values = [nb, nb, nb] index [0, 1, 2] are the probable good combination observed
+
 	return dico
 	#and now i just need a fonction who organize a output with this dico
 
@@ -580,6 +581,163 @@ if __name__ == '__main__':
 
 
 
+	for geno in lst_genotype_non_confirmed :
+		#Parmi les haplotype similaire à notre génotype, lesquels combiné l'un avec l'autre redonne le génotype
+		geno.probable_haplotypes_combinaison_2_run = geno.combinaison_between_similar_haplotype_in_geno()
+		#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
+		geno.number_of_probable_haplotypes_combinaison_2_run = len(geno.probable_haplotypes_combinaison_2_run)
+		#print("\n",geno.name)
+		#print("{} similar haplo".format(geno.number_of_similar_haplotype))
+		#print("have : {} combi proba".format(geno.number_of_probable_haplotypes_combinaison_2_run))
+
+
+
+	count_2_0 = 0
+	count_2_1 = 0
+
+	count_3_0 = 0
+	count_3_1 = 0
+	count_3_2 = 0
+	count_3_3 = 0
+
+	count_4_0 = 0
+	count_4_1 = 0
+	count_4_2 = 0
+	count_4_3 = 0
+	count_4_4 = 0
+	count_4_5 = 0
+	count_4_6 = 0		
+
+	count_5_0 = 0
+	count_5_1 = 0
+	count_5_2 = 0
+	count_5_3 = 0
+	count_5_4 = 0
+	count_5_5 = 0
+	count_5_6 = 0
+	count_5_7 = 0
+	count_5_8 = 0
+	count_5_9 = 0
+	count_5_10 = 0
+
+	count_6_0 = 0
+	count_6_1 = 0
+	count_6_2 = 0
+	count_6_3 = 0
+	count_6_4 = 0
+	count_6_5 = 0
+	count_6_6 = 0
+	count_6_7 = 0
+	count_6_8 = 0
+	count_6_9 = 0
+	count_6_10 = 0
+	count_6_11 = 0
+	count_6_12 = 0
+	count_6_13 = 0
+	count_6_14 = 0
+	count_6_15 = 0
+
+
+
+	for geno in lst_of_geno_object :
+		if geno.number_of_similar_haplotype == 2 : 
+			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
+				count_2_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 1 :
+				count_2_1 +=1
+		
+		elif geno.number_of_similar_haplotype == 3 :
+			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
+				count_3_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 1 :
+				count_3_1 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 2 :
+				count_3_2 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 3 :
+				count_3_3 += 1
+		
+		elif geno.number_of_similar_haplotype == 4 :
+			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
+				count_4_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 1 :
+				count_4_1 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 2 :
+				count_4_2 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 3 :
+				count_4_3 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 4 :
+				count_4_4 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 5 :
+				count_4_5 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 6 :
+				count_4_6 += 1
+
+		elif geno.number_of_similar_haplotype == 5 :
+			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
+				count_5_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 1 :
+				count_5_1 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 2 :
+				count_5_2 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 3 :
+				count_5_3 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 4 :
+				count_5_4 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 5 :
+				count_5_5 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 6 :
+				count_5_6 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 7 :
+				count_5_7 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 8 :
+				count_5_8 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 9 :
+				count_5_9 +=1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 10 :
+				count_5_10 +=1
+
+		elif geno.number_of_similar_haplotype == 6 :
+			if geno.number_of_probable_haplotypes_combinaison_2_run == 0 :
+				count_6_0 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 1 :
+				count_6_1 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 2 :
+				count_6_2 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 3 :
+				count_6_3 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 4 :
+				count_6_4 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 5 :
+				count_6_5 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 6 :
+				count_6_6 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 7 :
+				count_6_7 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 8 :
+				count_6_8 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 9 :
+				count_6_9 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 10 :
+				count_6_10 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 11:
+				count_6_11 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 12:
+				count_6_12 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 13:
+				count_6_13 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 14:
+				count_6_14 += 1
+			elif geno.number_of_probable_haplotypes_combinaison_2_run == 15:
+				count_6_15 += 1
+
+
+
+	#une autre fonction qui traite la sortie dico de ce que j'ai ci-dessus et revois ce que j'ai ci-dessous
+	print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
+	print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
+	print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons \n{} ont les 4 combinaisons \n{} ont les 5 combinaisons \n{} ont les 6 combinaisons possible".format(count_4_0, count_4_1, count_4_2, count_4_3, count_4_4, count_4_5, count_4_6))
+	print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaisons \n{} ont 4 combinaisons \n{} ont 5 combinaisons \n{} ont 6 combinaisons \n{} ont 7 combinaisons \n{} ont 8 combinaisons \n{} ont 9 combinaisons \n{} ont 10 combinaisons".format(count_5_0, count_5_1, count_5_2, count_5_3, count_5_4, count_5_5, count_5_6, count_5_7, count_5_8, count_5_9, count_5_10))
+	print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaisons \n{} ont 4 combinaisons \n{} ont 5 combinaisons \n{} ont 6 combinaisons \n{} ont 7 combinaisons \n{} ont 8 combinaisons \n{} ont 9 combinaisons \n{} ont 10 combinaisons \n{} ont 11 combinaisons \n{} ont 12 combinaisons \n{} ont 13 combinaisons \n{} ont 14 combinaisons \n{} ont 15 combinaisons".format(count_6_0,count_6_1, count_6_2, count_6_3, count_6_4, count_6_5, count_6_6, count_6_7, count_6_8, count_6_9, count_6_10, count_6_11, count_6_12, count_6_13, count_6_14, count_6_15))
 
 
 
