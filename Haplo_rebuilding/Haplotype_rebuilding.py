@@ -46,6 +46,23 @@ def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 
 
 
+def probable_haplotypes_combinaison_counter(self):
+	"""Return a dictionnary with the number of eatch probable combination
+	and this for eatch number of similar haplotype that our genotypes have
+
+	keys is the number of similar haplotype 
+	values is a list countaining the number of probable haplotype combination
+	(there index are the number of possible combination)
+	"""
+	dico = {}
+	#key = number of similar haplotype for our génotypes
+	#values = [nb, nb, nb] index [0, 1, 2] are the probable good combination observed
+	return dico
+	#and now i just need a fonction who organize a output with this dico
+
+
+
+
 
 
 
@@ -73,6 +90,8 @@ if __name__ == '__main__':
 	third_output = argv[5]
 	fourst_output = argv[6]
 	first_txt_output = argv[7]
+	first_output_2 = argv[8]
+	second_output_2 = argv[9]
 
 	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno :
 		my_haplo_reader = reader(src_haplo, delimiter=delimit)
@@ -281,13 +300,6 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-
-
-
 	#Penser a faire une fonction qui pourrait me donner ces résultats
 	count_2_0 = 0
 	count_2_1 = 0
@@ -351,11 +363,20 @@ if __name__ == '__main__':
 			elif geno.number_of_probable_haplotypes_combinaison == 3 :
 				count_6_3 += 1
 
+	#une autre fonction qui traite la sortie dico de ce que j'ai ci-dessus et revois ce que j'ai ci-dessous
 	print ("\n\nSi 2 haplotypes similaires au géno :\n{} ne donne rien \n{} combinent et donne le génotype".format(count_2_0, count_2_1))
 	print ("\n\nSi 3 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont les 3 combinaisons possible".format(count_3_0, count_3_1, count_3_2, count_3_3))
 	print ("\n\nSi 4 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons".format(count_4_0, count_4_1, count_4_2))
 	print ("\n\nSi 5 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison ".format(count_5_0, count_5_1))
 	print ("\n\nSi 6 haplotypes similaires au géno :\n{} ne donne rien \n{} ont 1 combinaison \n{} ont 2 combinaisons \n{} ont 3 combinaison ".format(count_6_0,count_6_1, count_6_2, count_6_3))
+
+
+
+
+
+
+
+
 
 
 
@@ -466,37 +487,87 @@ if __name__ == '__main__':
 	for new_haplo in lst_of_haplo_object_expanded :
 		new_haplo.similar_new_haplotype = new_haplo.screening_himself(lst_of_haplo_object_expanded)
 		new_haplo.number_of_similar_haplotype = len(new_haplo.similar_new_haplotype)
-		print (new_haplo.similar_new_haplotype)
-		print (new_haplo.number_of_similar_haplotype)
+		#print (new_haplo.similar_new_haplotype)
+		#print (new_haplo.number_of_similar_haplotype)
 
 
 
 
 	#Add new_haplo which are similar to our genotype no confirmed to the list of similar_haplotype
 	#And change the number of similar haplotype
+	with open(first_output_2, 'w') as otp1_2, open(second_output_2, 'w') as otp2_2 :
+		my_otp1_2_writer = writer(otp1_2, delimiter=delimit)
+		my_otp2_2_writer = writer(otp2_2, delimiter=delimit)
 
-	for geno_non_confirmed in lst_genotype_non_confirmed :
-		for new_haplo in lst_of_haplo_object_expanded :
-			#Repérage des new_haplo identique aux genotypes restant
-			geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
-			#Changer de nombre d'haplo similaire (faire une diff entre les deux a ce niveau?)
-			geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
-			#écriture ce fait ici (faire le nouveau fichier de sortie)
-			#my_otpx_writer.writerow(geno_non_confirmed.compare_two_seq(geno_non_confirmed, new_haplo))
+
+	#écriture de la première sortie
+		for geno_non_confirmed in lst_genotype_non_confirmed :
+			for new_haplo in lst_of_haplo_object_expanded :
+				#Repérage des new_haplo identique aux genotypes restant
+				geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
+				#Changer de nombre d'haplo similaire (faire une diff entre les deux a ce niveau?)
+				geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
+				#écriture ce fait ici (faire le nouveau fichier de sortie)
+				my_otp1_2_writer.writerow(geno_non_confirmed.compare_two_seq(geno_non_confirmed, new_haplo))
 	
-	#petite vérification
-	#for g in lst_genotype_non_confirmed :
-	#	print("\ngeno : {} ".format(g.name))
-	#	print("les haplotype sim sont :")
-	#	print(g.number_of_similar_haplotype)
-	#	for i in range(len(g.similar_haplotype)):
-	#		print((g.similar_haplotype)[i].name)
+		#petite vérification
+		#for g in lst_genotype_non_confirmed :
+		#	print("\ngeno : {} ".format(g.name))
+		#	print("les haplotype sim sont :")
+		#	print(g.number_of_similar_haplotype)
+		#	for i in range(len(g.similar_haplotype)):
+		#		print((g.similar_haplotype)[i].name)
 
-	#otpx.close()
-
-
+		otp1_2.close()
 
 
+	#écriture de la seconde sortie (à revoir pas clair à la lecture)
+		lst_header =[]
+		lst_header.append("Genotype")
+		lst_header.append("Haplotype")	
+		for markers in lst_genotype_non_confirmed[0].markers :
+			lst_header.append(markers)
+		my_otp2_2_writer.writerow(lst_header)
+
+
+		for geno in lst_genotype_non_confirmed:
+			geno_second_sortie = []
+			geno_second_sortie.append(geno.name)
+			geno_second_sortie.append(geno.number_of_similar_haplotype)
+			for values in geno.sequence :
+				geno_second_sortie.append(values)
+			my_otp2_2_writer.writerow(geno_second_sortie)
+
+			
+			if geno.number_of_similar_haplotype > 0 :
+				for similar_haplo in geno.similar_haplotype :
+					haplo_second_sortie = []
+					haplo_second_sortie.append(geno.name)
+					haplo_second_sortie.append(similar_haplo.name)
+					for values in similar_haplo.sequence :
+						haplo_second_sortie.append(values)
+					my_otp2_2_writer.writerow(haplo_second_sortie)
+				my_otp2_2_writer.writerow("\n")
+			else : 
+				my_otp2_2_writer.writerow("\n")
+			
+		otp2_2.close()
+
+
+	#bug je devrais avoir 270 et j'ai 87 voir pb
+	"""#Filter on lst_of_haplo_object_expanded, some haplotype are the same (but not usually the same genotype and haplotype for his creation)
+	lst_of_haplo_object_expanded_filter = []
+	for haplo in lst_of_haplo_object_expanded:
+		for similar_haplo in haplo.similar_new_haplotype :
+			if similar_haplo in lst_of_haplo_object_expanded_filter :
+				pass
+			else :
+				lst_of_haplo_object_expanded_filter.append(haplo)
+	print("nb new haplo après filter : {}".format(len(lst_of_haplo_object_expanded_filter)))
+	"""
+
+
+	#Sortie shell voir comment la traiter mieux que ça
 	count_geno_non_confirmed = 0
 	count = 0
 	for i in range((len(lst_of_haplo_object_all)+1)) :
@@ -514,10 +585,15 @@ if __name__ == '__main__':
 
 #A partir de la il faut
 
-	#Reparcourir lst_geno_objet et créer une nouvelle liste sans les geno retrouver avec nos haplotypes (309 geno)
+	# OK #Reparcourir lst_geno_objet et créer une nouvelle liste sans les geno retrouver avec nos haplotypes (309 geno)
 	#Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
-	#Ajouter à la liste des haplo les nvx haplo(tous?) ---> tous ici
+	# OK #Ajouter à la liste des haplo les nvx haplo(tous?) ---> tous ici
 	#2ème run avec d'autres fichier d'output
+		# OK #Avoir la nouvelle liste d'haplo similaire (add new haplo sur ceux dejà existant)
+		#Sortie like la première pour le 2nd run
+		#Combiner les haplo similaire (nvl list de combi permet de comparer avec la precedente)
+		#Sortie like la seconde pour le 2nd run
+		# ... #Faire fonction pour avoir le nombre de combinaison et tout
 		#peut être faire un main avec run et ecriture d'output séparé (écriture d'output dans une fonction, comme ça 2ème run juste changer les arguments)
 
 
