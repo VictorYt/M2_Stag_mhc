@@ -61,14 +61,14 @@ class Haplotype(object):
 		a list the new haplotype who have the same sequence than our haplotype 
 		
 		"""
-		return self._similar_new_haplo
+		return self._similar_new_haplotype
 
 	def _get_number_of_similar_new_haplotype(self):
 		"""Return the attribut number_of_similar_new_haplo of the Haplotype class which is 
 		the size of the similar new haplotypes list
 		
 		"""
-		return self._number_of_similar_new_haplo
+		return self._number_of_similar_new_haplotype
 
 	###########
 	#MUTATEURS#
@@ -117,7 +117,7 @@ class Haplotype(object):
 		newhaplo -- the similar new haplotype list of our genotype selected (here the Haplotype object ref)
 		
 		"""
-		self._similar_new_haplo = newhaplo
+		self._similar_new_haplotype = newhaplo
 
 	def _set_number_of_similar_new_haplotype(self, newnbnewhaplo):
 		"""Change the number of similar new haplotype size of our Haplotype object by a new one
@@ -126,7 +126,7 @@ class Haplotype(object):
 		newnbnewhaplo -- the new size selected (here the length of similar_new_haplo list)
 		
 		"""
-		self._number_of_similar_new_haplo = newnbnewhaplo
+		self._number_of_similar_new_haplotype = newnbnewhaplo
 
 	############
 	#PROPERTIES#
@@ -184,13 +184,13 @@ class Haplotype(object):
 		#étape pour se trouver lui même dans la liste et s'éviter après
 		index_me = 0
 		for me in lst_of_new_haplotype:
-			if self.name == me.name :
+			if me.name == self.name :
 				index_me = lst_of_new_haplotype.index(me)
 
 		lst_similar_new_haplo = []
-		for new_haplo in lst_of_new_haplotype :
-			if lst_of_new_haplotype.index(new_haplo) == index_me :
+		for same in lst_of_new_haplotype :
+			if lst_of_new_haplotype.index(same) == index_me :
 				pass
-			elif self.sequence == new_haplo.sequence :
-				lst_similar_new_haplo.append(new_haplo)
+			elif same.sequence == self.sequence :
+				lst_similar_new_haplo.append(same)
 		return lst_similar_new_haplo

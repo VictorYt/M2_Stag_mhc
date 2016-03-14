@@ -20,7 +20,7 @@ from sys import argv
 #from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
-
+#from used_function import *
 
 
 
@@ -88,10 +88,6 @@ La seconde, lst_of_geno_object, contient les n objets Genotype"""
 if __name__ == '__main__':
 	debut1 = time.time()
 	print ("\nLes histoires commencent  :")
-
-
-	#Utilisation du module docpot pour récupérer ça a partir d'un dictionnaire.
-	#Utilisation du module path ou/et os pour organiser le rangement des sorties
 	lst_of_haplo_object = []
 	lst_of_geno_object = []
 	lst_markers_haplo = None
@@ -498,12 +494,24 @@ if __name__ == '__main__':
 	print(len(lst_genotype_non_confirmed))
 
 
-
+	#Screnning step. We look if they are identical new halpotype ===> OK
 	for new_haplo in lst_of_haplo_object_expanded :
 		new_haplo.similar_new_haplotype = new_haplo.screening_himself(lst_of_haplo_object_expanded)
-		new_haplo.number_of_similar_haplotype = len(new_haplo.similar_new_haplotype)
-		#print (new_haplo.similar_new_haplotype)
-		#print (new_haplo.number_of_similar_haplotype)
+		new_haplo.number_of_similar_new_haplotype = len(new_haplo.similar_new_haplotype)
+
+	#Filter on lst_of_haplo_object_expanded, some haplotype are the same (but not usually the same genotype and haplotype for his creation) ===> OK
+	lst_of_haplo_object_expanded_filter = []
+	for haplo in lst_of_haplo_object_expanded:
+		if haplo.number_of_similar_new_haplotype == 0:
+			lst_of_haplo_object_expanded_filter.append(haplo)
+		if haplo.number_of_similar_new_haplotype > 0:
+			count = 0
+			for identiq_haplo in haplo.similar_new_haplotype:
+				if identiq_haplo in lst_of_haplo_object_expanded_filter:
+					count += 1
+			if count == 0 :
+				lst_of_haplo_object_expanded_filter.append(haplo)
+	print("nb new haplo après filter : {}".format(len(lst_of_haplo_object_expanded_filter)))
 
 
 
@@ -517,7 +525,7 @@ if __name__ == '__main__':
 
 	#écriture de la première sortie
 		for geno_non_confirmed in lst_genotype_non_confirmed :
-			for new_haplo in lst_of_haplo_object_expanded :
+			for new_haplo in lst_of_haplo_object_expanded_filter :
 				#Repérage des new_haplo identique aux genotypes restant
 				geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
 				#Changer de nombre d'haplo similaire (faire une diff entre les deux a ce niveau?)
@@ -569,17 +577,10 @@ if __name__ == '__main__':
 		otp2_2.close()
 
 
-	#bug je devrais avoir 270 et j'ai 87 voir pb
-	"""#Filter on lst_of_haplo_object_expanded, some haplotype are the same (but not usually the same genotype and haplotype for his creation)
-	lst_of_haplo_object_expanded_filter = []
-	for haplo in lst_of_haplo_object_expanded:
-		for similar_haplo in haplo.similar_new_haplotype :
-			if similar_haplo in lst_of_haplo_object_expanded_filter :
-				pass
-			else :
-				lst_of_haplo_object_expanded_filter.append(haplo)
-	print("nb new haplo après filter : {}".format(len(lst_of_haplo_object_expanded_filter)))
-	"""
+
+
+
+
 
 
 	#Sortie shell voir comment la traiter mieux que ça
@@ -600,9 +601,9 @@ if __name__ == '__main__':
 		geno.probable_haplotypes_combinaison_2_run = geno.combinaison_between_similar_haplotype_in_geno()
 		#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
 		geno.number_of_probable_haplotypes_combinaison_2_run = len(geno.probable_haplotypes_combinaison_2_run)
-		#print("\n",geno.name)
-		#print("{} similar haplo".format(geno.number_of_similar_haplotype))
-		#print("have : {} combi proba".format(geno.number_of_probable_haplotypes_combinaison_2_run))
+		print("\n",geno.name)
+		print("{} similar haplo".format(geno.number_of_similar_haplotype))
+		print("have : {} combi proba".format(geno.number_of_probable_haplotypes_combinaison_2_run))
 
 
 
@@ -757,19 +758,18 @@ if __name__ == '__main__':
 	c4 = count_4_0 + count_4_1 + count_4_2 + count_4_3 + count_4_4 + count_4_5 + count_4_6
 	c5 = count_5_0 + count_5_1 + count_5_2 + count_5_3 + count_5_4 + count_5_5 + count_5_6 + count_5_7 + count_5_8 + count_5_9 + count_5_10
 	c6 = count_6_0 +count_6_1 + count_6_2 + count_6_3 + count_6_4 + count_6_5 + count_6_6 + count_6_7 + count_6_8 + count_6_9 + count_6_10 + count_6_11 + count_6_12 + count_6_13 + count_6_14 + count_6_15
-	c = 68+8+c2+c3+c4+c5+c6+12+7+4+1+5+4+2+4+3+2+3+2+2+0+1+0+0+1
-	print (c2,c3,c4,c5,c6,c)
+	print (c2,c3,c4,c5,c6)
 
 #A partir de la il faut
 
 	# OK #Reparcourir lst_geno_objet et créer une nouvelle liste sans les geno retrouver avec nos haplotypes (309 geno)
-	# ... #Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
+	#Mettre dans le fichier texte le nombre et le nom des genotypes pour lesquels les haplotypes connues permettent de les décrires
 	# OK #Ajouter à la liste des haplo les nvx haplo(tous?) ---> tous ici
 	#2ème run avec d'autres fichier d'output
 		# OK #Avoir la nouvelle liste d'haplo similaire (add new haplo sur ceux dejà existant)
-		# OK #Sortie like la première pour le 2nd run
-		# OK #Combiner les haplo similaire (nvl list de combi permet de comparer avec la precedente)
-		# OK #Sortie like la seconde pour le 2nd run
+		#Sortie like la première pour le 2nd run
+		#Combiner les haplo similaire (nvl list de combi permet de comparer avec la precedente)
+		#Sortie like la seconde pour le 2nd run
 		# ... #Faire fonction pour avoir le nombre de combinaison et tout
 		#peut être faire un main avec run et ecriture d'output séparé (écriture d'output dans une fonction, comme ça 2ème run juste changer les arguments)
 
