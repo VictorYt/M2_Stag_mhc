@@ -336,7 +336,7 @@ class Genotype(Haplotype):
 			pass
 
 #Because of the change before
-#Need accepte 2*thresold errors (but only in the error marker)
+#Need accepte 2*thresold errors (but only at the error marker)
 	def combinaison_between_similar_haplotype_in_geno(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.

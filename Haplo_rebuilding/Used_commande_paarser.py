@@ -4,21 +4,22 @@
 
 """
 usage: 
-    __main__.py [--ih <haplo_file>] [--ig <geno_file>] ( -o <filename> | -t | -d | -pca)
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>)
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t] [-d] [-p]
 
 options:
-    -h, --help                       This help.
-    -v, --version                    Displays program's version.
-    --ih=haplo_file                  Here the haplotype input file
-    --ig=geno_file                   Here the genotype input file
-    -o <filename>, --output=name     Output Name
-                                      [default: "Output_data"]
-    -t, --threshold                  Threshold of accepted errors during haplotype and genotype comparaison 
-                                      [default: 0]
-    -d, --dist                       Produce distribution graphics based on inputs and outputs files. 
-                                      [default: False]
-    -p, --ACP                        Produce pca graphics based on inputs and outputs files.
-                                      [default: False]
+    -h, --help                              This help.
+    -v, --version                           Displays program's version.
+    --ih <haplo_file>                       Haplotype input file
+    --ig <geno_file>                        Genotype input file
+    -o <filename>, --output <filename>      Output Name
+                                            [default: Output_data]
+    -t, --threshold                         Threshold of accepted errors during haplotype and genotype comparaison 
+                                            [default: 0]
+    -d, --dist                              Produce distribution graphics based on inputs and outputs files. 
+                                            [default: False]
+    -p, --ACP                               Produce pca graphics based on inputs and outputs files.
+                                            [default: False]
 
 """
 
@@ -56,8 +57,10 @@ if __name__ == "__main__":
         print ("-o utilisé")#I take the string give by the user and i use it for create all i need
     else :
         print("-o non utilisé")
-        output = "HR_output"
-        #HR for Haplotype Rebuilding
+        #Default name use (Output_data)
+
+
+
 
     # Look at threshold argument
     if (threshold == True):
@@ -67,6 +70,11 @@ if __name__ == "__main__":
     else :
         print ("-t non utilisé")
         arguments["-t"] = 0
+#Ne sera peut être incorporé au code car apparterait trop de faux positif
+
+
+
+
 
     # Look at distribution argument
     if (distribution == True):

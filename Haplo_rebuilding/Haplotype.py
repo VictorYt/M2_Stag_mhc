@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#from Genotype import Genotype
+
 
 class Haplotype(object):
 	def __init__(self, name, sequence, markers):
@@ -24,6 +26,7 @@ class Haplotype(object):
 		#generate during 2nd run
 		self._similar_new_haplotype = []
 		self._number_of_similar_new_haplotype = 0
+		self._similar_occurence = 0
 
 
 	def __str__(self):
@@ -69,6 +72,10 @@ class Haplotype(object):
 		
 		"""
 		return self._number_of_similar_new_haplotype
+
+	def _get_similar_occurence(self):
+		"""Return the number of time our haplotype is find similar to a genotype"""
+		return self._similar_occurence
 
 	###########
 	#MUTATEURS#
@@ -128,6 +135,15 @@ class Haplotype(object):
 		"""
 		self._number_of_similar_new_haplotype = newnbnewhaplo
 
+	def _set_similar_occurence(self, nboccurence):
+		"""Change the number of time the haplotype is find similar with a genotype
+
+		Named parameters :
+		nboccurence -- the new time haplotype be similar with genotype
+
+		"""
+		self._similar_occurence = nboccurence
+
 	############
 	#PROPERTIES#
 	############
@@ -138,6 +154,7 @@ class Haplotype(object):
 	markers = property(_get_markers, _set_markers)
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
 	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
+	similar_occurence = property(_get_similar_occurence, _set_similar_occurence) 
 
 	################
 	#OTHER METHODES#
@@ -194,3 +211,16 @@ class Haplotype(object):
 			elif same.sequence == self.sequence :
 				lst_similar_new_haplo.append(same)
 		return lst_similar_new_haplo
+
+	def occurence_new_haplotype(self, lst_of_genotype):
+		"""Return the number of time the haplotype is similar with a different genotype
+
+		By defaut a new_haplotype must appear at least one time, if he appear more than that 
+		we can concider him like a good one to add in our haplotype catalog
+
+		"""
+		occurence = 0
+		for geno in lst_of_genotype :
+			if self in geno.similar_haplotype :
+				occurence +=1
+		return occurence

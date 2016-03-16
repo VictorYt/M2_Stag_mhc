@@ -265,7 +265,7 @@ if __name__ == '__main__':
 					third_sortie = []
 					third_sortie.append(geno.name)
 					third_sortie.append((geno.similar_haplotype[i]).name)
-					third_sortie.append("new{}_G:{}:H:{}".format(i+1, geno.name, (geno.similar_haplotype[i]).name)) 
+					third_sortie.append("New:{}//{}".format( geno.name, (geno.similar_haplotype[i]).name)) 
 					for values in geno.lst_of_new_haplotype[i] :
 						third_sortie.append(values)
 					my_otp3_writer.writerow(third_sortie)
@@ -601,9 +601,9 @@ if __name__ == '__main__':
 		geno.probable_haplotypes_combinaison_2_run = geno.combinaison_between_similar_haplotype_in_geno()
 		#Le nombre de combinaison obtenues ci-dessus sont possible pour notre génotype.
 		geno.number_of_probable_haplotypes_combinaison_2_run = len(geno.probable_haplotypes_combinaison_2_run)
-		print("\n",geno.name)
-		print("{} similar haplo".format(geno.number_of_similar_haplotype))
-		print("have : {} combi proba".format(geno.number_of_probable_haplotypes_combinaison_2_run))
+		#print("\n",geno.name)
+		#print("{} similar haplo".format(geno.number_of_similar_haplotype))
+		#print("have : {} combi proba".format(geno.number_of_probable_haplotypes_combinaison_2_run))
 
 
 
@@ -779,4 +779,17 @@ if __name__ == '__main__':
 	print ("\n\n\nLe temps d'execution du second run est de : {}".format(temps2))
 
 
+
+	
+	print ("Haplo name, redondance, occurence similitude avec genotype")
+
+	for haplo in lst_of_haplo_object_expanded:
+		blabla = []
+		haplo.similar_occurence = haplo.occurence_new_haplotype(lst_genotype_non_confirmed)
+		blabla.append(haplo.name)
+		blabla.append((haplo.number_of_similar_new_haplotype)+1)
+		blabla.append(haplo.similar_occurence)
+		print(blabla)
+
 #Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!
+
