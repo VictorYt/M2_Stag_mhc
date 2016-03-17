@@ -44,8 +44,32 @@ def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 	return count
 
 
+def read_input_file(filename, objecttype, delimit):
+	"""Return a list of objet by reading your input file,
+	the type is determine by the argument "objecttype"
 
+	Named parameter :
+	-file -- Your input file
+	-objecttype -- The type of objects you want by reading the file
+	-delimit -- The delimiter of our file
 
+	"""
+	lst_of_objects = []
+	with open(filename, 'r') as src :
+		my_reader = reader(src, delimiter=delimit)
+		count = True
+		for rows in my_reader :
+			if count : 
+				lst_markers = rows[1:len(rows)]
+				count = False
+			else :
+				A = objecttype(name=rows[0], sequence=rows[1:len(rows)], markers=lst_markers)
+				lst_of_objects.append(A)
+		src.close()
+
+	return lst_of_objects
+
+#Need to think on this output for the main output = summary
 def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
 	"""Return a dictionnary with the number of eatch probable combination
 	and this for eatch number of similar haplotype that our genotypes have
@@ -88,10 +112,9 @@ La seconde, lst_of_geno_object, contient les n objets Genotype"""
 if __name__ == '__main__':
 	debut1 = time.time()
 	print ("\nLes histoires commencent  :")
-	lst_of_haplo_object = []
-	lst_of_geno_object = []
+	lst_of_haplo_object = None
+	lst_of_geno_object = None
 	lst_markers_haplo = None
-	lst_markers_geno = None
 	delimit = "\t"
 	haplotype = argv[1]
 	genotype = argv[2]
@@ -103,51 +126,29 @@ if __name__ == '__main__':
 	first_output_2 = argv[8]
 	second_output_2 = argv[9]
 
-	with open(haplotype, 'r') as src_haplo, open(genotype, 'r') as src_geno :
-		my_haplo_reader = reader(src_haplo, delimiter=delimit)
-		my_geno_reader = reader(src_geno, delimiter=",")
-		#my_otp1_writer = writer(otp1, delimiter = delimit)
 
-		#Compteur utilisé pour la récupération du header
-		count1 = True
-		count2 = True
-
-		"""Construction de ma lst_of_haplo_object"""
-		for rows in my_haplo_reader :
-			if count1 : #Si booleen est vrai
-				lst_markers_haplo = rows[1:80]
-				count1 = False
-			else :
-				A = Haplotype(name=rows[0], sequence=rows[1:80], markers=lst_markers_haplo)
-				lst_of_haplo_object.append(A)
-		#print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
-
-
-		""" Construction de ma lst_of_geno_object"""
-		for rows in my_geno_reader :
-			if count2 : #Si booleen est vrai
-				lst_markers_geno = rows[1:80]
-				count2 = False
-			else :
-				B = Genotype(name=rows[0], sequence=rows[1:80], markers=lst_markers_geno)
-				lst_of_geno_object.append(B)
-		#print ("Nombre d'objet geno :",len(lst_of_geno_object))
+	"""Construction de ma lst_of_haplo_object"""
+	lst_of_haplo_object = read_input_file(haplotype, Haplotype, "\t")
+	print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
+	""" Construction de ma lst_of_geno_object"""
+	lst_of_geno_object = read_input_file(genotype, Genotype, ",")
+	#print ("Nombre d'objet geno :",len(lst_of_geno_object))
 
 
 
-		"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
-		print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
-		for geno in lst_of_geno_object :
-			#print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
-			geno.index_htz_markers_in_seq = (geno.position_htz_markers())
-			geno.nb_htz_markers = geno.have_nb_htz_markers()
-			geno.nb_hmz_markers = geno.have_nb_hmz_markers()
-			#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
+
+	"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
+	print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+	for geno in lst_of_geno_object :
+		#print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
+		geno.index_htz_markers_in_seq = (geno.position_htz_markers())
+		geno.nb_htz_markers = geno.have_nb_htz_markers()
+		geno.nb_hmz_markers = geno.have_nb_hmz_markers()
+		#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
 
 
-		src_haplo.close()
-		src_geno.close()
+
 
 
 
