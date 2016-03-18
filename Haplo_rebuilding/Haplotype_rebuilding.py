@@ -20,80 +20,7 @@ from sys import argv
 #from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
-#from used_function import *
-
-
-
-################
-#SOME FONCTIONS# importe un used(utile) from used import *
-################
-
-#Ou créer un fichier 'fonction_utilites'  
-def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
-	"""Use for count the number of génotypes with the same number of similar haplotypes
-
-	Named parameters :
-	genotype -- a Genotype object
-	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
-	
-	"""
-	if genotype.number_of_similar_haplotype == theNumber:
-		count = 1
-	else :
-		count = 0
-	return count
-
-
-def read_input_file(filename, objecttype, delimit):
-	"""Return a list of objet by reading your input file,
-	the type is determine by the argument "objecttype"
-
-	Named parameter :
-	-file -- Your input file
-	-objecttype -- The type of objects you want by reading the file
-	-delimit -- The delimiter of our file
-
-	"""
-	lst_of_objects = []
-	with open(filename, 'r') as src :
-		my_reader = reader(src, delimiter=delimit)
-		count = True
-		for rows in my_reader :
-			if count : 
-				lst_markers = rows[1:len(rows)]
-				count = False
-			else :
-				A = objecttype(name=rows[0], sequence=rows[1:len(rows)], markers=lst_markers)
-				lst_of_objects.append(A)
-		src.close()
-
-	return lst_of_objects
-
-#Need to think on this output for the main output = summary
-def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
-	"""Return a dictionnary with the number of eatch probable combination
-	and this for eatch number of similar haplotype that our genotypes have
-
-	keys is the number of similar haplotype 
-	values is a list countaining the number of probable haplotype combination
-	(there index are the number of possible combination)
-
-	Named parameter: 
-	-lstofgenoobject :  the list of Genotype objects
-
-	"""
-	dico = {}
-
-	#for geno in lstofgenoobject:
-
-
-	#key = number of similar haplotype for our génotypes
-	#values = [nb, nb, nb] index [0, 1, 2] are the probable good combination observed
-	#penser a mettre la somme de geno pour chaque keys
-
-	return dico
-	#and now i just need a fonction who organize a output with this dico
-
+from used_function import *
 
 
 
@@ -118,37 +45,36 @@ if __name__ == '__main__':
 	delimit = "\t"
 	haplotype = argv[1]
 	genotype = argv[2]
-	first_output = argv[3]
-	second_output = argv[4]
-	third_output = argv[5]
-	fourst_output = argv[6]
-	first_txt_output = argv[7]
-	first_output_2 = argv[8]
-	second_output_2 = argv[9]
+	first_output = "first_"+argv[3]
+	second_output = "second_"+argv[3]
+	third_output = "third_"+argv[3]
+	fourst_output = "fourst_"+argv[3]
+	first_txt_output = "first_txt_"+argv[3]
+	first_output_2 = "first_"+argv[3]+"_2"
+	second_output_2 = "second_"+argv[3]+"_2"
 
 
 	"""Construction de ma lst_of_haplo_object"""
 	lst_of_haplo_object = read_input_file(haplotype, Haplotype, "\t")
-	print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
+	#print ("Nombre d'objet haplo :",len(lst_of_haplo_object))
 	""" Construction de ma lst_of_geno_object"""
 	lst_of_geno_object = read_input_file(genotype, Genotype, ",")
 	#print ("Nombre d'objet geno :",len(lst_of_geno_object))
 
-
-
-
 	"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
-	print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+	#print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
 	for geno in lst_of_geno_object :
-		#print ("Le genotype {}, constitué de {} marqueurs, à pour sequence \n{}".format(geno.name, geno.nbmarkers, geno.sequence))
 		geno.index_htz_markers_in_seq = (geno.position_htz_markers())
 		geno.nb_htz_markers = geno.have_nb_htz_markers()
 		geno.nb_hmz_markers = geno.have_nb_hmz_markers()
 		#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
+		#Sélection des haplotypes simailares à notre génotype
+		#for haplo in lst_of_haplo_object :
+		#	geno.select_similar_haplotype(geno, haplo)
+		#	geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
-
-
+	#Si je veux faire une fontion 1ère sortie c'est ici
 
 
 
@@ -166,7 +92,7 @@ if __name__ == '__main__':
 	#écriture de la première sortie
 		for geno in lst_of_geno_object :
 			for haplo in lst_of_haplo_object :
-				geno.select_similar_haplotype(geno, haplo)
+				geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
 				geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 				#écriture ce fait ici
 				my_otp1_writer.writerow(geno.compare_two_seq(geno, haplo))
@@ -246,32 +172,9 @@ if __name__ == '__main__':
 
 
 
-	#écriture de la troisième sortie (liste des nouveau haplotype créé)
-	with open(third_output, 'w') as otp3 :
-		my_otp3_writer = writer(otp3, delimiter=delimit)
+	#écriture de la troisième sortie et récupération de la liste de nouveau haplotype
+	lst_of_haplo_object_expanded = new_haplotype_output(third_output, lst_of_geno_object) 
 
-		lst_header =[]
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")
-		lst_header.append("New_Haplotype")	
-		for markers in lst_of_geno_object[0].markers :
-			lst_header.append(markers)
-		#ecriture de l'en-tête de l'output n°3
-		my_otp3_writer.writerow(lst_header)
-
-
-		for geno in lst_of_geno_object :
-			if geno.number_of_new_created_haplotype > 0 :
-				for i in range(len(geno.lst_of_new_haplotype)) :
-					third_sortie = []
-					third_sortie.append(geno.name)
-					third_sortie.append((geno.similar_haplotype[i]).name)
-					third_sortie.append("New:{}//{}".format( geno.name, (geno.similar_haplotype[i]).name)) 
-					for values in geno.lst_of_new_haplotype[i] :
-						third_sortie.append(values)
-					my_otp3_writer.writerow(third_sortie)
-	#Sur les 274 nouveaux haplotypes généré il y a 246 réellement différents
-		otp3.close()
 
 
 
@@ -475,19 +378,7 @@ if __name__ == '__main__':
 	#We expanded the Haplotype objects list with the new_haplotypes
 	#lst_of_haplo_object_all ==> containing all the haplo
 	#lst_of_haplo_object_expanded ==> containing new halpo
-	with open(third_output,'r') as new_H :
-		my_new_H_reader = reader(new_H, delimiter=delimit)
-
-		header = True
-		lst_of_haplo_object_expanded = []
-		for new_haplotypes in my_new_H_reader : 
-			if header :
-				header = False
-				pass
-			else :
-				A = Haplotype(name=new_haplotypes[2], sequence=new_haplotypes[3:82], markers=lst_markers_haplo)
-				lst_of_haplo_object_expanded.append(A)
-		lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
+	lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
 	
 	print(len(lst_of_haplo_object))
 	print(len(lst_of_haplo_object_expanded))
