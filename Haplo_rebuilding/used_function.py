@@ -80,7 +80,45 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 			otp_comparaison.close()	
 	return 0
 
+def compare_output_result(otp, listofgenoobject):
+	"""Return nothing 
 
+
+	"""
+	with open(otp, 'w') as otp_first_result :
+		my_compare_selection = writer(otp_first_result, delimiter="\t")
+		
+		#First row will be the header one
+		lst_header =[]
+		lst_header.append("Genotype")
+		lst_header.append("Haplotype")	
+		for markers in listofgenoobject[0].markers :
+			lst_header.append(markers)
+		my_compare_selection.writerow(lst_header)
+
+		#After that we put our geno.name is number of similar haplo and is sequence
+		for geno in listofgenoobject:
+			geno_second_output = []
+			geno_second_output.append(geno.name)
+			geno_second_output.append(geno.number_of_similar_haplotype)
+			for values in geno.sequence :
+				geno_second_output.append(values)
+			my_compare_selection.writerow(geno_second_output)
+
+		#If my genotype have some similar haplotype (>0)
+		#I put the haplotype name and his sequence under genotype sequence
+			if geno.number_of_similar_haplotype > 0 :
+				for similar_haplo in geno.similar_haplotype :
+					haplo_second_output = []
+					haplo_second_output.append("")
+					haplo_second_output.append(similar_haplo.name)
+					for values in similar_haplo.sequence :
+						haplo_second_output.append(values)
+					my_compare_selection.writerow(haplo_second_output)
+
+		otp_first_result.close()
+
+	return None
 
 #Functionfor created the list of new_haplo and the 3rd output
 def new_haplotype_output(otp, lstofgenoobject):
@@ -136,6 +174,12 @@ def new_haplotype_output(otp, lstofgenoobject):
 def error_distribution():
 	"""Soit en utilisant les sorties 1 et 4 
 	ou en refaisant la méthode dans génotype"""
+	pass
+
+def geom_plot():
+	"""Avec la dernière sortie et occurence des new haplotype (voir aussi pour hmz)
+	faire appel a R et lancer la réalisation du graph geom_plot
+	"""
 	pass
 
 

@@ -69,6 +69,7 @@ if __name__ == '__main__':
 			geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
 			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
+
 	#écriture de la première sortie
 	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
 	compare_output(first_output, lst_of_geno_object, lst_of_haplo_object)
@@ -77,60 +78,8 @@ if __name__ == '__main__':
 	compare_output(fourst_output, lst_of_haplo_object, lst_of_haplo_object)
 	#Essayer de traité directement cette sortie pour avoir 2 autres sorties utiles pour avoir la distribution des erreurs
 
-
-
-	#A partir d'ici j'ai Ma liste d'Haplo et de Geno
-	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0 ici tout le temps =0
-	
-
-
-	#ouverture des fichiers pour les 2 premières sorties
-	with open(second_output, 'w') as otp2 :
-		my_otp2_writer = writer(otp2, delimiter=delimit)
-
-		
-
-
-
-
-	#écriture de la seconde sortie (à revoir pas clair à la lecture)
-		lst_header =[]
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")	
-		for markers in lst_of_geno_object[0].markers :
-			lst_header.append(markers)
-		my_otp2_writer.writerow(lst_header)
-
-
-		for geno in lst_of_geno_object:
-			geno_second_sortie = []
-			geno_second_sortie.append(geno.name)
-			geno_second_sortie.append(geno.number_of_similar_haplotype)
-			for values in geno.sequence :
-				geno_second_sortie.append(values)
-			my_otp2_writer.writerow(geno_second_sortie)
-
-			
-			if geno.number_of_similar_haplotype > 0 :
-				for similar_haplo in geno.similar_haplotype :
-					haplo_second_sortie = []
-					haplo_second_sortie.append(geno.name)
-					haplo_second_sortie.append(similar_haplo.name)
-					for values in similar_haplo.sequence :
-						haplo_second_sortie.append(values)
-					my_otp2_writer.writerow(haplo_second_sortie)
-				my_otp2_writer.writerow("\n")
-			else : 
-				my_otp2_writer.writerow("\n")
-			
-		otp2.close()
-
-
-
-
-
-
-
+	"""A second output to see each similar Hmz haplotype of our Genotype in the Genotype object list"""
+	compare_output_result(second_output, lst_of_geno_object)
 
 
 
