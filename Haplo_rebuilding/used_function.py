@@ -55,7 +55,30 @@ def read_input_file(filename, objecttype, delimit):
 	return lst_of_objects
 
 
+def compare_output(otp, firstobjcetlist, secondobjcetlist):
+	"""Return nothing but give the csv output file with the compraison of 
+	one sequence between a list of one. 
 
+	Named parameters :
+	-otp -- The output name
+	-firstobjcetlist -- Can be a list of Genotypes objects or Haplotypes objects
+	-secondobjcetlist -- A list of Haplotypes objects
+
+	"""
+	with open(otp, 'w') as otp_comparaison :
+		my_otp_writer = writer(otp_comparaison, delimiter="\t")
+
+		if firstobjcetlist == secondobjcetlist :
+			for haplo1 in range(len(firstobjcetlist)-1) :
+				for haplo2 in range((haplo1+1),len(secondobjcetlist)) :
+					my_otp_writer.writerow(firstobjcetlist[haplo1].compare_two_seq(firstobjcetlist[haplo1], secondobjcetlist[haplo2]))
+			otp_comparaison.close()
+		else :
+			for geno in firstobjcetlist :
+				for haplo in secondobjcetlist :
+					my_otp_writer.writerow(geno.compare_two_seq(geno, haplo))
+			otp_comparaison.close()	
+	return 0
 
 
 
@@ -110,7 +133,10 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 
 
-
+def error_distribution():
+	"""Soit en utilisant les sorties 1 et 4 
+	ou en refaisant la méthode dans génotype"""
+	pass
 
 
 

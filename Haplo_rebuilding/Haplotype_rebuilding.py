@@ -8,8 +8,7 @@
 
 #A faire
 	#Gérer les options -i -o etc ... (docpot)
-	#vérifier les combinaisons haplo/haplo pour obtenir notre geno
-	#Sorties (brut/rangée/comme on souhaite les avoir/...)
+	#vérifier les combinaisons haplo/haplo pour obtenir notre geno (si -dist) 
 
 
 #Nécessite de décrire le format d'input des 2 entrées.
@@ -17,16 +16,10 @@
 import time
 from csv import reader, writer
 from sys import argv
-#from Object import ClassName
+#from Object import ClassName, function ...
 from Haplotype import Haplotype
 from Genotype import Genotype
 from used_function import *
-
-
-
-
-
-
 
 
 
@@ -49,7 +42,7 @@ if __name__ == '__main__':
 	second_output = "second_"+argv[3]
 	third_output = "third_"+argv[3]
 	fourst_output = "fourst_"+argv[3]
-	first_txt_output = "first_txt_"+argv[3]
+	summary = "summary_"+argv[3]
 	first_output_2 = "first_"+argv[3]+"_2"
 	second_output_2 = "second_"+argv[3]+"_2"
 
@@ -69,35 +62,34 @@ if __name__ == '__main__':
 		geno.nb_hmz_markers = geno.have_nb_hmz_markers()
 		#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
-		#Sélection des haplotypes simailares à notre génotype
-		#for haplo in lst_of_haplo_object :
-		#	geno.select_similar_haplotype(geno, haplo)
-		#	geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
-	#Si je veux faire une fontion 1ère sortie c'est ici
+	#
+	for geno in lst_of_geno_object :
+		for haplo in lst_of_haplo_object :
+			geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
+			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
+
+	#écriture de la première sortie
+	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
+	compare_output(first_output, lst_of_geno_object, lst_of_haplo_object)
+	"""Comparaison des haplotypes les uns par rapport aux autres 
+	pour pouvoir comparer leur distribution avec celle des génotypes"""
+	compare_output(fourst_output, lst_of_haplo_object, lst_of_haplo_object)
+	#Essayer de traité directement cette sortie pour avoir 2 autres sorties utiles pour avoir la distribution des erreurs
 
 
 
 	#A partir d'ici j'ai Ma liste d'Haplo et de Geno
 	#voir pour interprétation des unknowing markers (new branche in git) va se traiter comme A/B sauf que là tout le temps = 0 ici tout le temps =0
-	"""Comparaison 1 par 1 des génotype avec la liste des haplotype"""
+	
 
 
 	#ouverture des fichiers pour les 2 premières sorties
-	with open(first_output, 'w') as otp1, open(second_output, 'w') as otp2 :
-		my_otp1_writer = writer(otp1, delimiter=delimit)
+	with open(second_output, 'w') as otp2 :
 		my_otp2_writer = writer(otp2, delimiter=delimit)
 
 		
-	#écriture de la première sortie
-		for geno in lst_of_geno_object :
-			for haplo in lst_of_haplo_object :
-				geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
-				geno.number_of_similar_haplotype = len(geno.similar_haplotype)
-				#écriture ce fait ici
-				my_otp1_writer.writerow(geno.compare_two_seq(geno, haplo))
 
-		otp1.close()
 
 
 
@@ -132,6 +124,11 @@ if __name__ == '__main__':
 				my_otp2_writer.writerow("\n")
 			
 		otp2.close()
+
+
+
+
+
 
 
 
@@ -179,24 +176,6 @@ if __name__ == '__main__':
 
 
 
-
-	"""Comparaison des haplotypes les uns par rapport aux autres 
-	pour pouvoir comparer leur distribution avec celle des génotypes"""
-
-	#ouverture et écriture du quatrième fichier 
-	with open(fourst_output, 'w') as otp4 :
-		my_otp4_writer = writer(otp4, delimiter=delimit)
-
-	#écriture de la quatrième sortie
-		#parcourt des n(n-1)/2 combinaisons entre haplotypes possibles
-		for haplo1 in range(len(lst_of_haplo_object)-1) :
-			for haplo2 in range((haplo1+1),len(lst_of_haplo_object)) :
-				my_otp4_writer.writerow(lst_of_haplo_object[haplo1].compare_two_seq(lst_of_haplo_object[haplo1], lst_of_haplo_object[haplo2]))
-
-		otp4.close()
-
-
-#Essayer de traité directement cette sortie pour avoir 2 autres sorties utiles pour avoir la distribution des erreurs
 
 
 
@@ -295,7 +274,7 @@ if __name__ == '__main__':
 
 
 	#Sortie txt générale.
-	with open(first_txt_output,'w') as txt_otp1 :
+	with open(summary,'w') as txt_otp1 :
 		txt_otp1.write("Noms des fichiers passés en input : \nPour les haplotypes : {}\nPour les génotypes : {}".format(haplotype, genotype))
 		txt_otp1.write("\nNombre d'objet Haplotype créé : {}".format(len(lst_of_haplo_object)))
 		txt_otp1.write("\nNombre d'objet Genotype créé : {}".format(len(lst_of_geno_object)))
