@@ -7,6 +7,7 @@ from sys import argv
 #from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
+from itertools import product, combinations
 
 
 """Functions used for reduicing main size
@@ -45,10 +46,10 @@ def read_input_file(filename, objecttype, delimit):
 		count = True
 		for rows in my_reader :
 			if count : 
-				lst_markers = rows[1:len(rows)]
+				lst_markers = rows[1:-1]
 				count = False
 			else :
-				A = objecttype(name=rows[0], sequence=rows[1:len(rows)], markers=lst_markers)
+				A = objecttype(name=rows[0], sequence=rows[1:-1], markers=lst_markers)
 				lst_of_objects.append(A)
 		src.close()
 
@@ -69,16 +70,12 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 		my_otp_writer = writer(otp_comparaison, delimiter="\t")
 
 		if firstobjcetlist == secondobjcetlist :
-			for haplo1 in range(len(firstobjcetlist)-1) :
-				for haplo2 in range((haplo1+1),len(secondobjcetlist)) :
-					my_otp_writer.writerow(firstobjcetlist[haplo1].compare_two_seq(firstobjcetlist[haplo1], secondobjcetlist[haplo2]))
-			otp_comparaison.close()
+			for haplo1, haplo2 in combinations(firstobjcetlist, 2) :
+				my_otp_writer.writerow(haplo1.compare_two_seq(haplo1, haplo2))
 		else :
-			for geno in firstobjcetlist :
-				for haplo in secondobjcetlist :
-					my_otp_writer.writerow(geno.compare_two_seq(geno, haplo))
-			otp_comparaison.close()	
-	return 0
+			for geno, haplo in product(firstobjcetlist, secondobjcetlist) :
+				my_otp_writer.writerow(geno.compare_two_seq(geno, haplo))
+
 
 def compare_output_result(otp, listofgenoobject):
 	"""Return nothing 
@@ -116,9 +113,7 @@ def compare_output_result(otp, listofgenoobject):
 						haplo_second_output.append(values)
 					my_compare_selection.writerow(haplo_second_output)
 
-		otp_first_result.close()
 
-	return None
 
 #Functionfor created the list of new_haplo and the 3rd output
 def new_haplotype_output(otp, lstofgenoobject):
@@ -160,10 +155,6 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 					#I write my output where i can find the sequence of all my new haplotype in row
 					my_new_H_otp_writer.writerow(third_sortie)
-
-
-
-		otp3.close()
 
 
 	return lst_of_haplo_object_expanded

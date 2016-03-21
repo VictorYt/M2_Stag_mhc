@@ -63,11 +63,10 @@ if __name__ == '__main__':
 		#print ("il a {} marqueurs Hmz et {} Htz".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
 
-	#
-	for geno in lst_of_geno_object :
-		for haplo in lst_of_haplo_object :
-			geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
-			geno.number_of_similar_haplotype = len(geno.similar_haplotype)
+	#Necessaire pour l'écriture de la première sortie
+	for geno, haplo in product(lst_of_geno_object, lst_of_haplo_object):
+		geno.select_similar_haplotype(geno, haplo) #Threshold ici si je veux récupérer plus d'haplotype similaire
+		geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
 
 	#écriture de la première sortie
@@ -338,69 +337,14 @@ if __name__ == '__main__':
 
 	#Add new_haplo which are similar to our genotype no confirmed to the list of similar_haplotype
 	#And change the number of similar haplotype
-	with open(first_output_2, 'w') as otp1_2, open(second_output_2, 'w') as otp2_2 :
-		my_otp1_2_writer = writer(otp1_2, delimiter=delimit)
-		my_otp2_2_writer = writer(otp2_2, delimiter=delimit)
-
-
-	#écriture de la première sortie
-		for geno_non_confirmed in lst_genotype_non_confirmed :
-			for new_haplo in lst_of_haplo_object_expanded_filter :
-				#Repérage des new_haplo identique aux genotypes restant
-				geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
-				#Changer de nombre d'haplo similaire (faire une diff entre les deux a ce niveau?)
-				geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
-				#écriture ce fait ici (faire le nouveau fichier de sortie)
-				my_otp1_2_writer.writerow(geno_non_confirmed.compare_two_seq(geno_non_confirmed, new_haplo))
+	for geno_non_confirmed, new_haplo in product(lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter):
+		geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
+		geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
 	
-		#petite vérification
-		#for g in lst_genotype_non_confirmed :
-		#	print("\ngeno : {} ".format(g.name))
-		#	print("les haplotype sim sont :")
-		#	print(g.number_of_similar_haplotype)
-		#	for i in range(len(g.similar_haplotype)):
-		#		print((g.similar_haplotype)[i].name)
-
-		otp1_2.close()
-
-
-	#écriture de la seconde sortie (à revoir pas clair à la lecture)
-		lst_header =[]
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")	
-		for markers in lst_genotype_non_confirmed[0].markers :
-			lst_header.append(markers)
-		my_otp2_2_writer.writerow(lst_header)
-
-
-		for geno in lst_genotype_non_confirmed:
-			geno_second_sortie = []
-			geno_second_sortie.append(geno.name)
-			geno_second_sortie.append(geno.number_of_similar_haplotype)
-			for values in geno.sequence :
-				geno_second_sortie.append(values)
-			my_otp2_2_writer.writerow(geno_second_sortie)
-
-			
-			if geno.number_of_similar_haplotype > 0 :
-				for similar_haplo in geno.similar_haplotype :
-					haplo_second_sortie = []
-					haplo_second_sortie.append(geno.name)
-					haplo_second_sortie.append(similar_haplo.name)
-					for values in similar_haplo.sequence :
-						haplo_second_sortie.append(values)
-					my_otp2_2_writer.writerow(haplo_second_sortie)
-				my_otp2_2_writer.writerow("\n")
-			else : 
-				my_otp2_2_writer.writerow("\n")
-			
-		otp2_2.close()
-
-
-
-
-
-
+	#Même sortie que la première mais pour le second run
+	compare_output(first_output_2, lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter)
+	#Même sortie que la seconde mais pour le second run
+	compare_output_result(second_output_2, lst_genotype_non_confirmed)
 
 
 	#Sortie shell voir comment la traiter mieux que ça
@@ -603,7 +547,7 @@ if __name__ == '__main__':
 	
 	print ("Haplo name, redondance, occurence similitude avec genotype")
 
-	for haplo in lst_of_haplo_object_expanded:
+	for haplo in lst_of_haplo_object_expanded_filter:
 		blabla = []
 		haplo.similar_occurence = haplo.occurence_new_haplotype(lst_genotype_non_confirmed)
 		blabla.append(haplo.name)

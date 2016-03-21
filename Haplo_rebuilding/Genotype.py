@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from Haplotype import Haplotype
+from itertools import combinations
 
 class Genotype(Haplotype):
 	def __init__(self, name, sequence, markers):
@@ -347,23 +348,22 @@ class Genotype(Haplotype):
 		lstZip = []
 		lst_good_combinaison = []
 		if self.number_of_similar_haplotype > 1 :
-			for haplo1 in range(len(self.similar_haplotype)-1) :
-				for haplo2 in range((haplo1+1),len(self.similar_haplotype)) :
-					lst_combinaison = []
-					lstZip = list(zip((self.similar_haplotype[haplo1]).sequence, (self.similar_haplotype[haplo2]).sequence, self.sequence))
-					count_bad_combinaison = 0
-					for val_index in self.index_htz_markers_in_seq :
-						#we only considered the real htz markers ('A/G')
-						if len(lstZip[val_index][2]) == 3 : 
-							tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
-							tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
-							if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
-								lst_combinaison.append(0)
-							else :
-								lst_combinaison.append(1)
-								count_bad_combinaison += 1
-					if count_bad_combinaison == 0 :
-						lst_good_combinaison.append([self.similar_haplotype[haplo1].name, self.similar_haplotype[haplo2].name])		
+			for haplo1, haplo2 in combinations(self.similar_haplotype, 2) :
+				lst_combinaison = []
+				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
+				count_bad_combinaison = 0
+				for val_index in self.index_htz_markers_in_seq :
+					#we only considered the real htz markers ('A/G')
+					if len(lstZip[val_index][2]) == 3 : 
+						tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
+						tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
+						if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
+							lst_combinaison.append(0)
+						else :
+							lst_combinaison.append(1)
+							count_bad_combinaison += 1
+				if count_bad_combinaison == 0 :
+					lst_good_combinaison.append([haplo1, haplo2])
 		return lst_good_combinaison
 		#This list can be empty if any combination can explain our genotype
 

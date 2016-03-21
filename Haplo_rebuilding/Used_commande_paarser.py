@@ -5,7 +5,7 @@
 """
 usage: 
     __main__.py (--ih <haplo_file>) (--ig <geno_file>)
-    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t] [-d] [-p]
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p]
 
 options:
     -h, --help                              This help.
@@ -14,7 +14,7 @@ options:
     --ig <geno_file>                        Genotype input file
     -o <filename>, --output <filename>      Output Name
                                             [default: Output_data]
-    -t, --threshold                         Threshold of accepted errors during haplotype and genotype comparaison 
+    -t <nb>, --threshold <nb>               Threshold of accepted errors during haplotype and genotype comparaison 
                                             [default: 0]
     -d, --dist                              Produce distribution graphics based on inputs and outputs files. 
                                             [default: False]
@@ -63,9 +63,9 @@ if __name__ == "__main__":
 
 
     # Look at threshold argument
-    if (threshold == True):
+    if (threshold != 0):
         print ("-t utilisé")
-        print (arguments["-t"])
+        print (threshold)
         #blabla 
     else :
         print ("-t non utilisé")
