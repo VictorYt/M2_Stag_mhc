@@ -55,7 +55,7 @@ if __name__ == '__main__':
 	#print ("Nombre d'objet geno :",len(lst_of_geno_object))
 
 	"""Récupératoin du nombre de markers Hmz et Htz par génotype avec en plus l'index des position Htz"""
-	#print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
+	print ("Les marqueurs des genotypes sont {}:".format(lst_of_geno_object[1].markers))
 	for geno in lst_of_geno_object :
 		geno.index_htz_markers_in_seq = (geno.position_htz_markers())
 		geno.nb_htz_markers = geno.have_nb_htz_markers()
@@ -555,5 +555,12 @@ if __name__ == '__main__':
 		blabla.append(haplo.similar_occurence)
 		print(blabla)
 
+
+	#Pour la partie -d
+	#Reste a faire l'output dist et Subprocess R qui lit un sricrpt tout fait en ggplot2
+	"""Récupération des distribution pour les sortie 1 et 4"""
+	print("Mon dico a transfo en csv lisible par R : \n{}".format(error_distribution(lst_of_haplo_object, first_output)))
+	print("Mon dico a transfo en csv lisible par R : \n{}".format(error_distribution(lst_of_haplo_object_expanded_filter, fourst_output)))	
+	error_distribution_output(error_distribution(lst_of_haplo_object, first_output))
 #Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!
 

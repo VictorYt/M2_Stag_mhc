@@ -14,7 +14,7 @@ from itertools import product, combinations
 ..."""
 
 
-#Ou créer un fichier 'fonction_utilites'  
+  
 def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
 	"""Use for count the number of génotypes with the same number of similar haplotypes
 
@@ -46,10 +46,10 @@ def read_input_file(filename, objecttype, delimit):
 		count = True
 		for rows in my_reader :
 			if count : 
-				lst_markers = rows[1:-1]
+				lst_markers = rows[1:]
 				count = False
 			else :
-				A = objecttype(name=rows[0], sequence=rows[1:-1], markers=lst_markers)
+				A = objecttype(name=rows[0], sequence=rows[1:], markers=lst_markers)
 				lst_of_objects.append(A)
 		src.close()
 
@@ -69,6 +69,14 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 	with open(otp, 'w') as otp_comparaison :
 		my_otp_writer = writer(otp_comparaison, delimiter="\t")
 
+		lst_header =[]
+		lst_header.append("Genotype")
+		lst_header.append("Haplotype")	
+		for markers in firstobjcetlist[0].markers :
+			lst_header.append(markers)
+		lst_header.append("nb_errors")
+		my_otp_writer.writerow(lst_header)
+
 		if firstobjcetlist == secondobjcetlist :
 			for haplo1, haplo2 in combinations(firstobjcetlist, 2) :
 				my_otp_writer.writerow(haplo1.compare_two_seq(haplo1, haplo2))
@@ -78,8 +86,12 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 
 
 def compare_output_result(otp, listofgenoobject):
-	"""Return nothing 
+	"""Return nothing but give the csv output file with genotypes and them 
+	similar haplotype (0 error find during the comparaison). 
 
+	Named parameters :
+	-otp -- The output name
+	-listofgenoobject -- A list of Genotypes objects
 
 	"""
 	with open(otp, 'w') as otp_first_result :
@@ -161,11 +173,40 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 
 
+#Change the name of the fonction to be more specific
 
-def error_distribution():
+
+
+def error_distribution(lstofhaplotype, filetoread):
 	"""Soit en utilisant les sorties 1 et 4 
 	ou en refaisant la méthode dans génotype"""
-	pass
+	distribution_dictionnary = {}
+
+	for i in range(len(lstofhaplotype[0].sequence)+1):
+		distribution_dictionnary[i] = 0
+	
+	with open(filetoread, 'r') as distri_src :
+		my_distri_reader = reader(distri_src, delimiter="\t")
+		
+		header = True
+		for rows in my_distri_reader :
+			if header :
+				header = False
+			else :
+				distribution_dictionnary[int(rows[-1])] +=1
+
+	return distribution_dictionnary
+
+
+def error_distribution_output(distri_dictionary):
+	"""Return nothing but do the necesary otp for R distribution"""
+	#with open(otp, 'w') as distri_otp :
+	#	my_distri_writer = writer(distri_otp, delimiter="\t")
+
+	for key in distri_dictionary :
+		print(key[0], key[1])
+		#my_distri_writer.writerow(key)
+
 
 def geom_plot():
 	"""Avec la dernière sortie et occurence des new haplotype (voir aussi pour hmz)
