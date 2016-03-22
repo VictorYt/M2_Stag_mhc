@@ -208,11 +208,34 @@ def error_distribution_output(distri_dictionary):
 		#my_distri_writer.writerow(key)
 
 
+def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
+	"""Return nothing but give an output of occurency the new haplotype be similar 
+	with our genotypes
+
+	"""
+	with open(otp, 'w') as occurency_src :
+	my_occurency_writer = writer(occurency_src, delimiter="\t")
+
+	header =  [Name, run1_occurency, run2_occurency]
+	my_occurency_writer.writerow(header)
+	for haplo in lstofscreeninghaplo:
+		occurency = []
+		haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
+		occurency.append(haplo.name)
+		occurency.append((haplo.number_of_similar_new_haplotype)+1)
+		occurency.append(haplo.similar_occurence)
+		my_occurency_writer.writerow(occurency)
+
 def geom_plot():
 	"""Avec la dernière sortie et occurence des new haplotype (voir aussi pour hmz)
 	faire appel a R et lancer la réalisation du graph geom_plot
 	"""
+	#call subprocess 
+	#Do R script here
 	pass
+
+
+
 
 
 

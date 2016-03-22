@@ -546,14 +546,15 @@ if __name__ == '__main__':
 
 	
 	print ("Haplo name, redondance, occurence similitude avec genotype")
+	new_haplotype_occurency(argv[3]+"_occurency", lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 
-	for haplo in lst_of_haplo_object_expanded_filter:
-		blabla = []
-		haplo.similar_occurence = haplo.occurence_new_haplotype(lst_genotype_non_confirmed)
-		blabla.append(haplo.name)
-		blabla.append((haplo.number_of_similar_new_haplotype)+1)
-		blabla.append(haplo.similar_occurence)
-		print(blabla)
+	#for haplo in lst_of_haplo_object_expanded_filter:
+	#	blabla = []
+	#	haplo.similar_occurence = haplo.occurence_new_haplotype(lst_genotype_non_confirmed)
+	#	blabla.append(haplo.name)
+	#	blabla.append((haplo.number_of_similar_new_haplotype)+1)
+	#	blabla.append(haplo.similar_occurence)
+	#	print(blabla)
 
 
 	#Pour la partie -d
