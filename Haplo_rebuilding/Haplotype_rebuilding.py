@@ -341,6 +341,7 @@ if __name__ == '__main__':
 		geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
 		geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
 	
+	"""Sortie pour le second run"""
 	#Même sortie que la première mais pour le second run
 	compare_output(first_output_2, lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter)
 	#Même sortie que la seconde mais pour le second run
@@ -562,6 +563,11 @@ if __name__ == '__main__':
 	"""Récupération des distribution pour les sortie 1 et 4"""
 	print("Mon dico a transfo en csv lisible par R : \n{}".format(error_distribution(lst_of_haplo_object, first_output)))
 	print("Mon dico a transfo en csv lisible par R : \n{}".format(error_distribution(lst_of_haplo_object_expanded_filter, fourst_output)))	
-	error_distribution_output(error_distribution(lst_of_haplo_object, first_output))
+	error_distribution_output("error_dist_g_"+argv[3], error_distribution(lst_of_haplo_object, first_output))
+	error_distribution_output("error_dist_h_"+argv[3], error_distribution(lst_of_haplo_object_expanded_filter, fourst_output))
+
+
+	"""Récupération des distribution occurence des new_haplotypes"""
+	new_haplotype_occurency("occurence_"+argv[3], lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 #Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!#Create a READme !!!!!!!
 

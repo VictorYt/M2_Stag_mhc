@@ -127,25 +127,48 @@ def compare_output_result(otp, listofgenoobject):
 
 
 
+def new_haplotype(lstofgenoobject):
+	"""Return a list of Haplotype object containing the potential new haplotype
+
+	Named parameters :
+	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
+
+	"""
+	lst_of_haplo_object_expanded = []
+
+	lst_markers = []
+	for markers in lstofgenoobject[0].markers :
+		lst_markers.append(markers)
+
+	for geno in lstofgenoobject :
+		if geno.number_of_new_created_haplotype > 0 :
+			for i in range(len(geno.lst_of_new_haplotype)) :
+				my_new_haplo = []
+				my_new_haplo.append("New:{}//{}".format(geno.name, (geno.similar_haplotype[i]).name))
+				for values in geno.lst_of_new_haplotype[i] :
+					my_new_haplo.append(values)		
+				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
+				lst_of_haplo_object_expanded.append(A)
+
+	return lst_of_haplo_object_expanded
+
+
+
+
 #Functionfor created the list of new_haplo and the 3rd output
 def new_haplotype_output(otp, lstofgenoobject):
-	"""Return a list of Haplotype object containing the potential new haplotype
+	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
 
 	Named parameters :
 	-otp -- the output name
 	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
 
 	"""
-	lst_of_haplo_object_expanded = []
-	
 	with open(otp, 'w') as otp3 :
 		my_new_H_otp_writer = writer(otp3, delimiter="\t")
 
 		#Creation of the header of my output
-		lst_header= []
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")
-		lst_header.append("New_Haplotype")
+		lst_header = ["Genotype", "Haplotype", "New_Haplotype"]
 		for markers in lstofgenoobject[0].markers :
 			lst_header.append(markers)
 		my_new_H_otp_writer.writerow(lst_header)
@@ -161,20 +184,10 @@ def new_haplotype_output(otp, lstofgenoobject):
 					for values in geno.lst_of_new_haplotype[i] :
 						third_sortie.append(values)
 
-					#Here i append to my list of new haplotype the potential new haplotype i can have
-					A = Haplotype(name=third_sortie[2], sequence=third_sortie[3:len(third_sortie)], markers=lst_header[3:len(third_sortie)])
-					lst_of_haplo_object_expanded.append(A)
-
 					#I write my output where i can find the sequence of all my new haplotype in row
 					my_new_H_otp_writer.writerow(third_sortie)
 
-
-	return lst_of_haplo_object_expanded
-
-
-
 #Change the name of the fonction to be more specific
-
 
 
 def error_distribution(lstofhaplotype, filetoread):
@@ -198,14 +211,17 @@ def error_distribution(lstofhaplotype, filetoread):
 	return distribution_dictionnary
 
 
-def error_distribution_output(distri_dictionary):
+def error_distribution_output(otp, distri_dictionary):
 	"""Return nothing but do the necesary otp for R distribution"""
-	#with open(otp, 'w') as distri_otp :
-	#	my_distri_writer = writer(distri_otp, delimiter="\t")
+	with open(otp, 'w') as distri_otp :
+		my_distri_writer = writer(distri_otp, delimiter="\t")
 
-	for key in distri_dictionary :
-		print(key[0], key[1])
-		#my_distri_writer.writerow(key)
+		header = ['Error_number', 'Occurency']
+		my_distri_writer.writerow(header)
+		for key, value in distri_dictionary.items() :
+			my_distri_writer.writerow([key, value])
+
+	
 
 
 def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
@@ -214,17 +230,17 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 
 	"""
 	with open(otp, 'w') as occurency_src :
-	my_occurency_writer = writer(occurency_src, delimiter="\t")
+		my_occurency_writer = writer(occurency_src, delimiter="\t")
 
-	header =  [Name, run1_occurency, run2_occurency]
-	my_occurency_writer.writerow(header)
-	for haplo in lstofscreeninghaplo:
-		occurency = []
-		haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
-		occurency.append(haplo.name)
-		occurency.append((haplo.number_of_similar_new_haplotype)+1)
-		occurency.append(haplo.similar_occurence)
-		my_occurency_writer.writerow(occurency)
+		header =  ['Name', 'run1_occurency', 'run2_occurency']
+		my_occurency_writer.writerow(header)
+		for haplo in lstofscreeninghaplo:
+			occurency = []
+			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
+			occurency.append(haplo.name)
+			occurency.append((haplo.number_of_similar_new_haplotype)+1)
+			occurency.append(haplo.similar_occurence)
+			my_occurency_writer.writerow(occurency)
 
 def geom_plot():
 	"""Avec la dernière sortie et occurence des new haplotype (voir aussi pour hmz)
@@ -237,7 +253,7 @@ def geom_plot():
 
 
 
-
+#Function for the summary of the résult
 
 def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
 	"""Return a dictionnary with the number of eatch probable combination
