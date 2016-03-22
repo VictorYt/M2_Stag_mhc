@@ -25,6 +25,7 @@ options:
 
 if __name__ == "__main__":
     from docopt import docopt
+    import os
  
     # Parse arguments, use file docstring as a parameter definition
     arguments = docopt(__doc__, version='Haplotype rebuilding 0.1')
@@ -48,17 +49,35 @@ if __name__ == "__main__":
     #     '--version': False}
 
 
-    #Est-ce que je doit spécifier ici toutes les possibilité
-        #Juste -ih et -ig (obligatoire)
-        #Toutes les autres combinaisons 
+
+
+    #1) créer le répertoire -o ...+"_Results" et le def comme curdir
+    #2) si -d créer le répertoire -d ...+ -o ... et le def comme curdir pour les étapes qui le concerne
+    #3) idem pour -p (penser a revenir en arrière si execution d'un -d avant)
+
+    #http://sametmax.com/path-py-plus-en-detail/
+    # ouutiliser lib standard?
+
+    dirname = arguments+'_Results'
+
+    try:
+        os.makedirs(dirname)
+    except OSError:
+        if os.path.exists(dirname):
+            # We are nearly safe
+            pass
+        else:
+            # There was an error on creation, so make sure we know about it
+            raise
 
 
     if (output == True):
         print ("-o utilisé")#I take the string give by the user and i use it for create all i need
     else :
         print("-o non utilisé")
+        print(output)
         #Default name use (Output_data)
-
+        #vas faire la même chose que le if juste le nom de -o change
 
 
 
@@ -79,6 +98,7 @@ if __name__ == "__main__":
     # Look at distribution argument
     if (distribution == True):
         print ("-dist utilisé")
+
         #Look if the directory "-o filename_distribution" exist
             #if True go in and do distribution graphiques
             #if not create it and go in and do distribution graphiques
