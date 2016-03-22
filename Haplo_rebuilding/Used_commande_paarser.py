@@ -97,7 +97,7 @@ if __name__ == "__main__":
         geno.nb_hmz_markers = geno.have_nb_hmz_markers()
         #print ("There is {} Hmz and {} Htz markers".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
-# !!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!
     #Necessary to write the first output
     #Care of this step if we choise a threshold
     for geno, haplo in product(lst_of_geno_object, lst_of_haplo_object):
@@ -114,7 +114,7 @@ if __name__ == "__main__":
 #        print ("-t no used")
 #        arguments["-t"] = 0
 #   #Ne sera peut être incorporé au code car apparterait trop de faux positif
-# !!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!
     
 
     """After finding similar haplotypes to our genotypes, 
@@ -180,6 +180,13 @@ if __name__ == "__main__":
             lst_genotype_non_confirmed.append(geno)
 
 
+
+    print ("Number of Genotype who can be explain by our list of Haplotypes : {}".format(len(lst_genotype_confirmed)))
+    print ("Another {} unconfirmed Genotypes ".format(len(lst_genotype_non_confirmed)))
+
+
+
+
     #Here we make a list of all Haplotypes objects
     lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
 
@@ -207,6 +214,32 @@ if __name__ == "__main__":
     ##############
     ##OUTPUT RUN##
     ##############
+    run3_start = time.time()
+    
+
+    ###RUN 1###
+    """Comparison of each genotype with each Hmz haplotype """
+    compare_output(os.path.join(output, "run1_GvH"), lst_of_geno_object, lst_of_haplo_object)
+    """A second output to see each similar Hmz haplotype of our Genotype in the Genotype object list"""
+    compare_output_result(os.path.join(output, "run1_Compatible_Haplotypes"), lst_of_geno_object)
+    """A third output to see the new Haplotype created"""
+    new_haplotype_output(os.path.join(output, "run1_New_Haplotypes"), lst_of_geno_object)
+
+    ###RUN 2###
+    #Same output with new haplotype and the list of genotype not confirmed yet
+    compare_output(os.path.join(output, "run2_GvH"), lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter)
+    compare_output_result(os.path.join(output, "run2_Compatible_Haplotypes"), lst_genotype_non_confirmed)
+
+
+    ###SUMMARY OUTPUT###
+    #create the fonction and put it here
+
+
+    run3_end = time.time()
+    time3 = run3_end - run3_start
+    print("Output_given")
+    print("it's spend {}".format(time3))
+
 
 
     #questionner sur les sortie voulu
@@ -230,8 +263,18 @@ if __name__ == "__main__":
             # There was an error on creation, so make sure we know about it
                 raise
 
+        """The distribution of the run1_GvH"""
+        error_distribution_output(os.path.join(dist,"GvH_distribution"), error_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
+        
+        """The distribution of the run1_HvH"""
+        compare_output(os.path.join(dist, "run1_HvH"), lst_of_haplo_object, lst_of_haplo_object)
+        error_distribution_output(os.path.join(dist, "HvH_distribution"), error_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist,"run1_HvH")))
+
+        """Distribution of the occurrence of new haplotypes during the second run"""
+        new_haplotype_occurency(os.path.join(dist, "new_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 
 
+        #And now the functions using subprocess to collect distribution pdf
 
 
 
