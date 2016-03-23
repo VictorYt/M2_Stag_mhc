@@ -1,9 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/python3.4
 # -*- coding: utf-8 -*-
 
 
 from csv import reader, writer
 from sys import argv
+import subprocess
+import os
+import sys
 #from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
@@ -250,6 +253,38 @@ def geom_plot():
 	#Do R script here
 	pass
 
+
+
+
+
+
+def run_R_file(path):
+	"""This function return the result you obtain with your R file"""
+	#Verify if the file exist
+	if not os.path.exists(path):
+		raise IOError("No such file: %s" % path)
+
+	#We can read it
+	if hasattr(os, 'access') and not os.access(path, os.R_OK):
+		raise IOError("Cannot access file %s" % path)
+
+	#Run the rigth software
+	if hasattr(os, 'startfile') : #windows
+		#Startfile limited on windows, we can't see if we have a mistake
+		proc = os.startfile(path)
+	elif sys.platform.startswith('Linux'): #Linux
+		proc = subprocess.Popen(['R', path],
+			#capture stdin and out to not bloque all of them
+			stdout =subprocess.PIPE, stderr=subprocess.PIPE)
+	elif sys.platform == 'darwin': #Mac
+		proc = subprocess.Popen(['open', '--', path],
+			stdout =subprocess.PIPE, stderr=subprocess.PIPE)
+	else :
+		raise NotImplementedError("Your `%s` isn't a supported operatin system`." % sys.platform)
+
+	#proc willl be always None on Windows
+	#With the other OS, it allows you to: retrieve the status code of the program, and read / write on stdin and out
+	return proc
 
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3.4
 # -*- coding: utf-8 -*-
 
 
@@ -275,7 +275,7 @@ if __name__ == "__main__":
 
 
         #And now the functions using subprocess to collect distribution pdf
-
+        run_R_file("barplot_distribution.R")
 
 
     # Look at pca argument
