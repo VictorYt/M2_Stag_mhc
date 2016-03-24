@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from Haplotype import Haplotype
-from itertools import combinations
+import itertools as it
 
 class Genotype(Haplotype):
 	def __init__(self, name, sequence, markers):
@@ -348,7 +348,7 @@ class Genotype(Haplotype):
 		lstZip = []
 		lst_good_combinaison = []
 		if self.number_of_similar_haplotype > 1 :
-			for haplo1, haplo2 in combinations(self.similar_haplotype, 2) :
+			for haplo1, haplo2 in it.combinations(self.similar_haplotype, 2) :
 				lst_combinaison = []
 				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
 				count_bad_combinaison = 0

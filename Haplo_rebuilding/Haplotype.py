@@ -27,6 +27,7 @@ class Haplotype(object):
 		self._similar_new_haplotype = []
 		self._number_of_similar_new_haplotype = 0
 		self._similar_occurence = 0
+		self._missing_data = 0
 
 
 	def __str__(self):
@@ -76,6 +77,10 @@ class Haplotype(object):
 	def _get_similar_occurence(self):
 		"""Return the number of time our haplotype is find similar to a genotype"""
 		return self._similar_occurence
+
+	def _get_missing_data(self):
+		"""Return the number of missing data find in the genotype sequence"""
+		return self._missing_data
 
 	###########
 	#MUTATEURS#
@@ -144,6 +149,15 @@ class Haplotype(object):
 		"""
 		self._similar_occurence = nboccurence
 
+	def _set_missing_data(self, nbmssingdata):
+		"""Change the number of missing data find in the genotype sequence
+
+		Named parameters :
+		nbmssingdata -- the new number of missing data find in the genotype sequence
+
+		"""
+		self._missing_data = nbmssingdata
+
 	############
 	#PROPERTIES#
 	############
@@ -154,7 +168,8 @@ class Haplotype(object):
 	markers = property(_get_markers, _set_markers)
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
 	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
-	similar_occurence = property(_get_similar_occurence, _set_similar_occurence) 
+	similar_occurence = property(_get_similar_occurence, _set_similar_occurence)
+	missing_data = property(_get_missing_data, _set_missing_data)
 
 	################
 	#OTHER METHODES#
@@ -224,3 +239,8 @@ class Haplotype(object):
 			if self in geno.similar_haplotype :
 				occurence +=1
 		return occurence
+
+	def missing_data_counter(self):
+		for values in self.sequence :
+			if values == "--" :
+				self.missing_data += 1

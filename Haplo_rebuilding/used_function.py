@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 
-from csv import reader, writer
-from sys import argv
+
+
 import subprocess
 import os
-import sys
+import csv
 #from Object import ClassName
 from Haplotype import Haplotype
 from Genotype import Genotype
-from itertools import product, combinations
+import itertools as it
 
 
 """Functions used for reduicing main size
@@ -45,7 +45,7 @@ def read_input_file(filename, objecttype, delimit):
 	"""
 	lst_of_objects = []
 	with open(filename, 'r') as src :
-		my_reader = reader(src, delimiter=delimit)
+		my_reader = csv.reader(src, delimiter=delimit)
 		count = True
 		for rows in my_reader :
 			if count : 
@@ -70,7 +70,7 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 
 	"""
 	with open(otp, 'w') as otp_comparaison :
-		my_otp_writer = writer(otp_comparaison, delimiter="\t")
+		my_otp_writer = csv.writer(otp_comparaison, delimiter="\t")
 
 		lst_header =[]
 		lst_header.append("Genotype")
@@ -81,10 +81,10 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 		my_otp_writer.writerow(lst_header)
 
 		if firstobjcetlist == secondobjcetlist :
-			for haplo1, haplo2 in combinations(firstobjcetlist, 2) :
+			for haplo1, haplo2 in it.combinations(firstobjcetlist, 2) :
 				my_otp_writer.writerow(haplo1.compare_two_seq(haplo1, haplo2))
 		else :
-			for geno, haplo in product(firstobjcetlist, secondobjcetlist) :
+			for geno, haplo in it.product(firstobjcetlist, secondobjcetlist) :
 				my_otp_writer.writerow(geno.compare_two_seq(geno, haplo))
 
 
@@ -98,7 +98,7 @@ def compare_output_result(otp, listofgenoobject):
 
 	"""
 	with open(otp, 'w') as otp_first_result :
-		my_compare_selection = writer(otp_first_result, delimiter="\t")
+		my_compare_selection = csv.writer(otp_first_result, delimiter="\t")
 		
 		#First row will be the header one
 		lst_header =[]
@@ -168,7 +168,7 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 	"""
 	with open(otp, 'w') as otp3 :
-		my_new_H_otp_writer = writer(otp3, delimiter="\t")
+		my_new_H_otp_writer = csv.writer(otp3, delimiter="\t")
 
 		#Creation of the header of my output
 		lst_header = ["Genotype", "Haplotype", "New_Haplotype"]
@@ -192,7 +192,7 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 #Change the name of the fonction to be more specific
 
-
+#Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
 def error_distribution(lstofhaplotype, filetoread):
 	"""Soit en utilisant les sorties 1 et 4 
 	ou en refaisant la méthode dans génotype"""
@@ -202,7 +202,7 @@ def error_distribution(lstofhaplotype, filetoread):
 		distribution_dictionnary[i] = 0
 	
 	with open(filetoread, 'r') as distri_src :
-		my_distri_reader = reader(distri_src, delimiter="\t")
+		my_distri_reader = csv.reader(distri_src, delimiter="\t")
 		
 		header = True
 		for rows in my_distri_reader :
@@ -217,9 +217,9 @@ def error_distribution(lstofhaplotype, filetoread):
 def error_distribution_output(otp, distri_dictionary):
 	"""Return nothing but do the necesary otp for R distribution"""
 	with open(otp, 'w') as distri_otp :
-		my_distri_writer = writer(distri_otp, delimiter="\t")
+		my_distri_writer = csv.writer(distri_otp, delimiter="\t")
 
-		header = ['Error_number', 'Occurency']
+		header = ['Number_of_error', 'Number_of_error_occurency']
 		my_distri_writer.writerow(header)
 		for key, value in distri_dictionary.items() :
 			my_distri_writer.writerow([key, value])
@@ -233,9 +233,9 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 
 	"""
 	with open(otp, 'w') as occurency_src :
-		my_occurency_writer = writer(occurency_src, delimiter="\t")
+		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
 
-		header =  ['Name', 'run1_occurency', 'run2_occurency']
+		header =  ['Name', 'run1_occurency', 'run2_occurency', 'missing_data']
 		my_occurency_writer.writerow(header)
 		for haplo in lstofscreeninghaplo:
 			occurency = []
@@ -243,6 +243,7 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 			occurency.append(haplo.name)
 			occurency.append((haplo.number_of_similar_new_haplotype)+1)
 			occurency.append(haplo.similar_occurence)
+			occurency.append(haplo.missing_data)
 			my_occurency_writer.writerow(occurency)
 
 def geom_plot():
@@ -258,33 +259,15 @@ def geom_plot():
 
 
 
-def run_R_file(path):
+def run_R_file(path2file, outputdir):
 	"""This function return the result you obtain with your R file"""
-	#Verify if the file exist
-	if not os.path.exists(path):
-		raise IOError("No such file: %s" % path)
-
-	#We can read it
-	if hasattr(os, 'access') and not os.access(path, os.R_OK):
-		raise IOError("Cannot access file %s" % path)
-
-	#Run the rigth software
-	if hasattr(os, 'startfile') : #windows
-		#Startfile limited on windows, we can't see if we have a mistake
-		proc = os.startfile(path)
-	elif sys.platform.startswith('Linux'): #Linux
-		proc = subprocess.Popen(['R', path],
-			#capture stdin and out to not bloque all of them
-			stdout =subprocess.PIPE, stderr=subprocess.PIPE)
-	elif sys.platform == 'darwin': #Mac
-		proc = subprocess.Popen(['open', '--', path],
-			stdout =subprocess.PIPE, stderr=subprocess.PIPE)
-	else :
-		raise NotImplementedError("Your `%s` isn't a supported operatin system`." % sys.platform)
-
-	#proc willl be always None on Windows
-	#With the other OS, it allows you to: retrieve the status code of the program, and read / write on stdin and out
-	return proc
+	command = 'Rscript'
+	path2script = os.path.join(os.path.curdir, path2file)
+	setwd = [os.path.abspath(os.path.join(os.path.curdir, outputdir))]
+       
+	cmd = [command, path2script] + setwd
+	x = subprocess.Popen(cmd, stderr=subprocess.PIPE)
+	return x.communicate()
 
 
 

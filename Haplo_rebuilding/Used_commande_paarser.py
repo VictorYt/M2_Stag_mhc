@@ -27,8 +27,7 @@ if __name__ == "__main__":
     from docopt import docopt
     import os
     import time
-    from csv import reader, writer
-    from sys import argv
+    import itertools as it
     #from Object import ClassName, function ...
     from Haplotype import Haplotype
     from Genotype import Genotype
@@ -100,7 +99,7 @@ if __name__ == "__main__":
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!
     #Necessary to write the first output
     #Care of this step if we choise a threshold
-    for geno, haplo in product(lst_of_geno_object, lst_of_haplo_object):
+    for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
         geno.select_similar_haplotype(geno, haplo) 
         geno.number_of_similar_haplotype = len(geno.similar_haplotype)
 
@@ -190,8 +189,13 @@ if __name__ == "__main__":
     #Here we make a list of all Haplotypes objects
     lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
 
+    #Add to Haplotypes objets missing_data occurence in there sequence
+    for haplo in lst_of_haplo_object_all :
+        haplo.missing_data_counter()
+
+
     #Add new_haplotype which are similar to our genotype no confirmed, in the list of similar_haplotype
-    for geno_non_confirmed, new_haplo in product(lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter):
+    for geno_non_confirmed, new_haplo in it.product(lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter):
         geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
         geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
 
@@ -263,6 +267,9 @@ if __name__ == "__main__":
             # There was an error on creation, so make sure we know about it
                 raise
 
+    ##############
+    ##OUTPUT RUN##
+    ##############
         """The distribution of the run1_GvH"""
         error_distribution_output(os.path.join(dist,"GvH_distribution"), error_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
         
@@ -273,9 +280,22 @@ if __name__ == "__main__":
         """Distribution of the occurrence of new haplotypes during the second run"""
         new_haplotype_occurency(os.path.join(dist, "new_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 
-
+    #############
+    ##GRAPHIQUE##
+    #############
         #And now the functions using subprocess to collect distribution pdf
-        run_R_file("barplot_distribution.R")
+        run_R_file("barplot_distribution.R", dist)
+        #The violin dotplot
+        run_R_file("geom_dotplot_violin.R", dist)
+
+
+
+
+
+
+
+
+
 
 
     # Look at pca argument
