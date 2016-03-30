@@ -208,7 +208,8 @@ def error_distribution_output(otp, distri_dictionary):
 		for key, value in distri_dictionary.items() :
 			my_distri_writer.writerow([key, value])
 
-
+#Les deux fonctions suivantes sont la pour avoir des info sur le nombre de fois qu'un haplotype est trouvé similaire a un génotype
+#Possibilité de la réduire en une avec une condition pour savoir ce que je traite
 def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
 	"""Return nothing but give an output of occurency hmz haplotype be similar 
 	with our genotypes.
@@ -225,7 +226,6 @@ def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
 			occurency.append(haplo.name)
 			occurency.append(haplo.similar_occurence)
 			my_occurency_writer.writerow(occurency)
-
 
 def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 	"""Return nothing but give an output of occurency the new haplotype be similar 
@@ -246,9 +246,15 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 			occurency.append(haplo.missing_data)
 			my_occurency_writer.writerow(occurency)
 
-
+#Funtion use for read another script language
 def run_R_file(path2file, outputdir):
-	"""This function return the result you obtain with your R file"""
+	"""This function return the result you obtain with your R file
+
+	Named parameters :
+	-path2file -- the path to the file to read
+	-outputdir -- the path to write the output of the reading file
+
+	"""
 	command = 'Rscript'
 	path2script = os.path.join(os.path.curdir, path2file)
 	setwd = [os.path.abspath(os.path.join(os.path.curdir, outputdir))]
@@ -267,7 +273,7 @@ def cytoscape_file(outputdir):
 	We see quickly haplotypes of interest (with multiple interaction with genotypes & haplotypes)
 
 	"""
-	
+	#check the output file needed for the cytoscape software and my représentation 
 	pass
 
 

@@ -271,6 +271,9 @@ if __name__ == "__main__":
         compare_output(os.path.join(dist, "run1_HvH"), lst_of_haplo_object, lst_of_haplo_object)
         error_distribution_output(os.path.join(dist, "HvH_distribution"), error_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist,"run1_HvH")))
 
+        """Distribution of the occurence of haplotype hmz during the first run"""
+        haplotype_occurency(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object, lst_of_geno_object)
+
         """Distribution of the occurrence of new haplotypes during the second run"""
         new_haplotype_occurency(os.path.join(dist, "new_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 
@@ -307,6 +310,12 @@ if __name__ == "__main__":
             else:
             # There was an error on creation, so make sure we know about it
                 raise
+    ##############
+    ##OUTPUT RUN##
+    ##############
+
+
+
 
 
     # Look at cytoscape argument
