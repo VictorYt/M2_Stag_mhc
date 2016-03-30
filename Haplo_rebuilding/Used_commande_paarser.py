@@ -5,7 +5,7 @@
 """
 usage: 
     __main__.py (--ih <haplo_file>) (--ig <geno_file>)
-    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p]
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p] [-c]
 
 options:
     -h, --help                              This help.
@@ -19,6 +19,8 @@ options:
     -d, --dist                              Produce distribution graphics based on inputs and outputs files. 
                                             [default: False]
     -p, --ACP                               Produce pca graphics based on inputs and outputs files.
+                                            [default: False]
+    -c, --cytoscape                         Produce the cytoscape file 
                                             [default: False]
 
 """
@@ -43,6 +45,7 @@ if __name__ == "__main__":
     threshold = arguments["--threshold"]
     haplotype_file = arguments["--ih"]
     genootype_file = arguments["--ig"]
+    cytoscape = arguments["--cytoscape"]
 
     
     #    {'--help': False,
@@ -52,17 +55,11 @@ if __name__ == "__main__":
     #     '--threshold': 0,
     #     '--dist': False,
     #     '--pca': False,
+    #     '--cytoscape : False'
     #     '--version': False}
 
 
-
-
-    #1) créer le répertoire -o ...+"_Results" et le def comme curdir
-    #2) si -d créer le répertoire -d ...+ -o ... et le def comme curdir pour les étapes qui le concerne
-    #3) idem pour -p (penser a revenir en arrière si execution d'un -d avant)
-
     #http://sametmax.com/path-py-plus-en-detail/
-    # ouutiliser lib standard?
 
     dirname = output
 
@@ -239,16 +236,13 @@ if __name__ == "__main__":
     #create the fonction and put it here
 
 
+
     run3_end = time.time()
     time3 = run3_end - run3_start
     print("Output_given")
     print("it's spend {}".format(time3))
 
 
-
-    #questionner sur les sortie voulu
-    #expliquer que si option -d choisi ou en a deja 3 
-    #et si -p on en a 1
 
 
     # Look at distribution argument
@@ -285,7 +279,7 @@ if __name__ == "__main__":
     #############
         #And now the functions using subprocess to collect distribution pdf
         run_R_file("barplot_distribution.R", dist)
-        #The violin dotplot
+        #The violin dotplot & occurency of missing data
         run_R_file("geom_dotplot_violin.R", dist)
 
 
@@ -300,7 +294,7 @@ if __name__ == "__main__":
 
     # Look at pca argument
     if (pca == True):
-        print ("-pca utilisé")
+        print ("-p utilisé")
 
         pca = os.path.join(dirname, "ACP")
 
@@ -308,6 +302,23 @@ if __name__ == "__main__":
             os.makedirs(pca)
         except OSError:
             if os.path.exists(pca):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+
+
+    # Look at cytoscape argument
+    if (cytoscape == True):
+        print ("-c utilisé")
+
+        cytoscape = os.path.join(dirname, "Cytoscape")
+
+        try:
+            os.makedirs(cytoscape)
+        except OSError:
+            if os.path.exists(cytoscape):
             # We are nearly safe
                 pass
             else:

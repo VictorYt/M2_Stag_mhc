@@ -15,8 +15,10 @@ class Haplotype(object):
 			-and the list of there markers
 
 		During a second run with new haplotypes created, we add to the instance :
-			-a list of the similar new haplotypes
+			-a list of the similar new haplotypes (same sequence after their been created)
 			-the length of this list
+			-a number of similar occurence (number of time an haplotype is find similar to a genotype)
+			-the number of missing data by haplotype sequence
 
 		"""
 		self._name = name 
@@ -241,6 +243,11 @@ class Haplotype(object):
 		return occurence
 
 	def missing_data_counter(self):
+		"""Return nothing but grow the number of missing data of each Haplotype each time it appear 
+		in the haplotype sequence
+		By default missing_data = 0
+
+		"""
 		for values in self.sequence :
 			if values == "--" :
 				self.missing_data += 1

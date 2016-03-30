@@ -17,22 +17,6 @@ import itertools as it
 ..."""
 
 
-  
-def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
-	"""Use for count the number of génotypes with the same number of similar haplotypes
-
-	Named parameters :
-	genotype -- a Genotype object
-	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
-	
-	"""
-	if genotype.number_of_similar_haplotype == theNumber:
-		count = 1
-	else :
-		count = 0
-	return count
-
-
 def read_input_file(filename, objecttype, delimit):
 	"""Return a list of objet by reading your input file,
 	the type is determine by the argument "objecttype"
@@ -224,7 +208,23 @@ def error_distribution_output(otp, distri_dictionary):
 		for key, value in distri_dictionary.items() :
 			my_distri_writer.writerow([key, value])
 
-	
+
+def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
+	"""Return nothing but give an output of occurency hmz haplotype be similar 
+	with our genotypes.
+
+	"""
+	with open(otp, 'w') as occurency_src :
+		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
+
+		header =  ['Name', 'run1_occurency']
+		my_occurency_writer.writerow(header)
+		for haplo in lstofhmzhaplo:
+			occurency = []
+			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofgenotype)
+			occurency.append(haplo.name)
+			occurency.append(haplo.similar_occurence)
+			my_occurency_writer.writerow(occurency)
 
 
 def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
@@ -246,18 +246,6 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 			occurency.append(haplo.missing_data)
 			my_occurency_writer.writerow(occurency)
 
-def geom_plot():
-	"""Avec la dernière sortie et occurence des new haplotype (voir aussi pour hmz)
-	faire appel a R et lancer la réalisation du graph geom_plot
-	"""
-	#call subprocess 
-	#Do R script here
-	pass
-
-
-
-
-
 
 def run_R_file(path2file, outputdir):
 	"""This function return the result you obtain with your R file"""
@@ -268,6 +256,35 @@ def run_R_file(path2file, outputdir):
 	cmd = [command, path2script] + setwd
 	x = subprocess.Popen(cmd, stderr=subprocess.PIPE)
 	return x.communicate()
+
+
+#Penser à faire le fichier de sortie
+#a besoin de savoir ou mettre le fichier de sortie c'est tout
+def cytoscape_file(outputdir):
+	"""Return nothing but give a file that can be open with cytoscape software
+	to see the interaction between genotype & haplotype.
+
+	We see quickly haplotypes of interest (with multiple interaction with genotypes & haplotypes)
+
+	"""
+	
+	pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -309,3 +326,18 @@ def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobj
 
 ##DANS Haplotype rebuilding (main)
 	#docopt et conditions plus utilisation des fonctions ci dessus.
+
+
+def count_genotype_with_same_number_of_similar_haplotype(genotype, theNumber) :
+	"""Use for count the number of génotypes with the same number of similar haplotypes
+
+	Named parameters :
+	genotype -- a Genotype object
+	theNumber -- a int between 0 to 84 (len(lst_of_haplo_object)
+	
+	"""
+	if genotype.number_of_similar_haplotype == theNumber:
+		count = 1
+	else :
+		count = 0
+	return count

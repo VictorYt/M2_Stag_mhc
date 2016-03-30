@@ -24,16 +24,8 @@ dev.off()
 
 
 #Missing data and occurency after the second run
-occu_dist$Name <- ifelse(occu_dist$run2_occurency>8 ,  "Occurence > 8", "Not Sig")
-
-ggplot(data = occu_dist, aes(x=missing_data, y=run2_occurency)) +
-  geom_point(aes(color=Name)) +
-  scale_color_manual(values = c("red", "grey")) +
-  theme_bw(base_size = 10) + theme(legend.position = "bottom") +
-  geom_text_repel(
-    data = subset(occu_dist, run2_occurency > 8),
-    aes(label = Name),
-    size =5,
-    box.padding = unit(0.35, "lines"), 
-    point.padding = unit(0.3, "lines")
-      )
+pdf("Missing_data_&_occurency_of_haplotype.pdf", height = 10, width = 10)
+ggplot(data = occu_dist, aes(x=run2_occurency, y=missing_data)) +
+  geom_point(aes(colour=missing_data)) +
+  ggtitle("Missing data distribution")
+dev.off()
