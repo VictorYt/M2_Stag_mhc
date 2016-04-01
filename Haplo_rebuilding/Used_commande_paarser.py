@@ -12,7 +12,7 @@ options:
     -v, --version                           Displays program's version.
     --ih <haplo_file>                       Haplotype input file
     --ig <geno_file>                        Genotype input file
-    -o <filename>, --output <filename>      Output Name
+    -o <filename>, --output <filename>      Specifying output file prefix
                                             [default: Output_data]
     -t <nb>, --threshold <nb>               Threshold of accepted errors during haplotype and genotype comparaison 
                                             [default: 0]
