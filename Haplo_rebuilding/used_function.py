@@ -266,7 +266,7 @@ def run_R_file(path2file, outputdir):
 
 #Penser à faire le fichier de sortie
 #a besoin de savoir ou mettre le fichier de sortie c'est tout
-def cytoscape_file(outputdir):
+def cytoscape_file(outputdir, lstofgenoobject):
 	"""Return nothing but give a file that can be open with cytoscape software
 	to see the interaction between genotype & haplotype.
 
@@ -274,8 +274,22 @@ def cytoscape_file(outputdir):
 
 	"""
 	#check the output file needed for the cytoscape software and my représentation 
-	pass
+	#did i need to specify a new column for haplo-haplo combinaison?
+	with open(outputdir, 'w') as cyto_output :
+		my_cytotp_writer = csv.writer(cytoscape_file, delimiter="\t")
 
+		header = ['Source', 'interaction_type', 'Target']
+		my_cytotp_writer.writerow(header)
+		for geno in lstofgenoobject :
+			if geno.similar_haplotype > 0 :
+				for haplo in geno.similar_haplotype :
+					source_target = [geno.name]
+					source_target.append("?")
+					source_target.append(haplo.name)
+
+
+
+	
 
 
 
