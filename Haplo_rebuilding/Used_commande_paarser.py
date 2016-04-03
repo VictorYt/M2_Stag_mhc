@@ -313,6 +313,10 @@ if __name__ == "__main__":
     ##############
     ##OUTPUT RUN##
     ##############
+        #Here do the function of used_funtion to call an R script and do the pca for eatch sample
+            #Known haplotype
+            #New one
+            #All
 
 
 
@@ -333,3 +337,7 @@ if __name__ == "__main__":
             else:
             # There was an error on creation, so make sure we know about it
                 raise
+    ##############
+    ##OUTPUT RUN##
+    ##############
+        #Here do the function of used_function to have the output file
