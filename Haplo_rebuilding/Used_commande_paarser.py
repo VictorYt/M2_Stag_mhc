@@ -36,7 +36,7 @@ if __name__ == "__main__":
     from used_function import *
  
     # Parse arguments, use file docstring as a parameter definition
-    arguments = docopt(__doc__, version='Haplotype rebuilding 0.1')
+    arguments = docopt(__doc__, version='Haplotype rebuilding 0.3')
     print (arguments)
 
     distribution = arguments["--dist"]
