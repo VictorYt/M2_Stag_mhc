@@ -82,7 +82,7 @@ if __name__ == "__main__":
     lst_of_haplo_object = read_input_file(haplotype_file, Haplotype, "\t")
     #print ("Haplotype number :",len(lst_of_haplo_object))
     """Construction of my list of Genotype object"""
-    lst_of_geno_object = read_input_file(genootype_file, Genotype, ",")
+    lst_of_geno_object = read_input_file(genootype_file, Genotype, "\t")
     #print ("Genotype number :",len(lst_of_geno_object))
 
     """For each genotype, recovering the number of markers: Hmz, Htz and index them"""
