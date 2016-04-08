@@ -270,22 +270,32 @@ def cytoscape_file(outputdir, lstofgenoobject):
 	"""Return nothing but give a file that can be open with cytoscape software
 	to see the interaction between genotype & haplotype.
 
-	We see quickly haplotypes of interest (with multiple interaction with genotypes & haplotypes)
+	We maybe can see quickly haplotypes of interest (with multiple interaction with genotypes & haplotypes)
 
 	"""
 	#check the output file needed for the cytoscape software and my représentation 
 	#did i need to specify a new column for haplo-haplo combinaison?
 	with open(outputdir, 'w') as cyto_output :
-		my_cytotp_writer = csv.writer(cytoscape_file, delimiter="\t")
+		my_cytotp_writer = csv.writer(cyto_output, delimiter="\t")
 
-		header = ['Source', 'interaction_type', 'Target']
+		header = ['Source', 'Interaction_type', 'Target', 'Nb_of_missing_data', 'Haplo_origin']
 		my_cytotp_writer.writerow(header)
+		
 		for geno in lstofgenoobject :
-			if geno.similar_haplotype > 0 :
+			if geno.number_of_similar_haplotype > 0 :
 				for haplo in geno.similar_haplotype :
 					source_target = [geno.name]
-					source_target.append("?")
+					source_target.append("g:h")
 					source_target.append(haplo.name)
+					source_target.append(haplo.missing_data)
+					if "New" in haplo.name :
+						source_target.append("new")
+					else :
+						source_target.append("known")
+					my_cytotp_writer.writerow(source_target)
+			else :
+				source_target = [geno.name]
+				my_cytotp_writer.writerow(source_target)
 
 
 

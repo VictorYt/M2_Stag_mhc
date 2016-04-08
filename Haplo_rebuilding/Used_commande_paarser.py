@@ -20,7 +20,7 @@ options:
                                             [default: False]
     -p, --ACP                               Produce pca graphics based on inputs and outputs files.
                                             [default: False]
-    -c, --cytoscape                         Produce the cytoscape file 
+    -c, --cytoscape                         Produce file usable for the construction of an interaction network between G & H
                                             [default: False]
 
 """
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     """A second output to see each similar Hmz haplotype of our Genotype in the Genotype object list"""
     compare_output_result(os.path.join(output, "run1_Compatible_Haplotypes"), lst_of_geno_object)
     """A third output to see the new Haplotype created"""
-    new_haplotype_output(os.path.join(output, "run1_New_Haplotypes"), lst_of_geno_object)
+    new_haplotype_output(os.path.join(output, "run1_candidates_Haplotypes"), lst_of_geno_object)
 
     ###RUN 2###
     #Same output with new haplotype and the list of genotype not confirmed yet
@@ -275,7 +275,7 @@ if __name__ == "__main__":
         haplotype_occurency(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object, lst_of_geno_object)
 
         """Distribution of the occurrence of new haplotypes during the second run"""
-        new_haplotype_occurency(os.path.join(dist, "new_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
+        new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_genotype_non_confirmed)
 
     #############
     ##GRAPHIQUE##
@@ -315,8 +315,10 @@ if __name__ == "__main__":
     ##############
         #Here do the function of used_funtion to call an R script and do the pca for eatch sample
             #Known haplotype
-            #New one
+            #Candidate one
             #All
+        #try
+        run_R_file("pca_script.R",pca)
 
 
 
@@ -340,4 +342,6 @@ if __name__ == "__main__":
     ##############
     ##OUTPUT RUN##
     ##############
+        """The file who can be use for build a network with cytoscape"""
+        cytoscape_file(os.path.join(cytoscape, "G_&_H_interaction"), lst_of_geno_object)
         #Here do the function of used_function to have the output file

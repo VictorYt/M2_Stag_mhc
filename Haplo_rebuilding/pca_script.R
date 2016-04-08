@@ -39,7 +39,7 @@ haplo_hmz <- haplo_hmz[,2:length(haplo_hmz)]
 
 #Candidats Haplotypes#
 #(attention not a list of unique haplotype ...)
-new_haplo <- read.csv2("run1_candidates_Haplotypes", header = TRUE, sep = "\t")
+new_haplo <- read.csv2("test_acp/run1_candidates_Haplotypes", header = TRUE, sep = "\t")
 new_haplo <- new_haplo[,c(3:length(new_haplo))] 
 row.names(new_haplo) = new_haplo[,1]
 new_haplo <- new_haplo[,2:length(new_haplo)]
