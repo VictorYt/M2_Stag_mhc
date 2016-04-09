@@ -25,6 +25,7 @@ if __name__ == "__main__":
     import time
     #from Object import ClassName, function ...
     from HaplotypeR import Haplotype
+    from test_windows import *
  
     # Parse arguments, use file docstring as a parameter definition
     arguments = docopt(__doc__, version='Recombinaison finding 0.1')
@@ -52,18 +53,6 @@ if __name__ == "__main__":
 #pendant le script:
     #sequence de la fenêtre
     #chez qu'elle autre haplotype elle est retrouvé
-
-    dirname = output
-
-    try:
-        os.makedirs(dirname)
-    except OSError:
-        if os.path.exists(dirname):
-            # We are nearly safe
-            pass
-        else:
-            # There was an error on creation, so make sure we know about it
-            raise
 
 
 

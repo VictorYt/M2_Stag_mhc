@@ -10,6 +10,7 @@
 
 import collections as co
 import itertools as it
+import csv
 from HaplotypeR import Haplotype
 
 # Voila les outils 
@@ -26,7 +27,7 @@ def windows(iterable, size):
 
 
 #leecture du fichier
- def read_input_file(filename, objecttype, delimit):
+def read_input_file(filename, objecttype, delimit):
 	"""Return a list of objet by reading your input file,
 	the type is determine by the argument "objecttype"
 
