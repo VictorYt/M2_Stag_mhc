@@ -14,10 +14,6 @@ class Haplotype(object):
 			-a size who is the length of markers 
 			-and the list of there markers
 
-		#taille de la fênetre
-		#sequence de la fenêtre
-		#chez qu'elle autre haplotype elle est retrouvé
-
 
 		"""
 		self._name = name 
