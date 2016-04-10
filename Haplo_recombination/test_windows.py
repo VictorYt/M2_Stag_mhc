@@ -40,11 +40,11 @@ def read_input_file(filename, objecttype, delimit):
 	lst_of_objects = []
 	with open(filename, 'r') as src :
 		my_reader = csv.reader(src, delimiter=delimit)
-		count = True
+		header = True
 		for rows in my_reader :
-			if count : 
+			if header : 
 				lst_markers = rows[1:]
-				count = False
+				header = False
 			else :
 				A = objecttype(name=rows[0], sequence=rows[1:], markers=lst_markers)
 				lst_of_objects.append(A)

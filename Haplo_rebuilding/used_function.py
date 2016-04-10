@@ -30,15 +30,14 @@ def read_input_file(filename, objecttype, delimit):
 	lst_of_objects = []
 	with open(filename, 'r') as src :
 		my_reader = csv.reader(src, delimiter=delimit)
-		count = True
+		header = True
 		for rows in my_reader :
-			if count : 
+			if header : 
 				lst_markers = rows[1:]
-				count = False
+				header = False
 			else :
 				A = objecttype(name=rows[0], sequence=rows[1:], markers=lst_markers)
 				lst_of_objects.append(A)
-		src.close()
 
 	return lst_of_objects
 
@@ -115,7 +114,9 @@ def compare_output_result(otp, listofgenoobject):
 
 
 def new_haplotype(lstofgenoobject):
-	"""Return a list of Haplotype object containing the potential new haplotype
+	"""Return a list of Haplotype object containing the potential new haplotype = candidates
+	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
+	needed for his construction. Those one are separate by "//"
 
 	Named parameters :
 	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
@@ -145,6 +146,7 @@ def new_haplotype(lstofgenoobject):
 #Functionfor created the list of new_haplo and the 3rd output
 def new_haplotype_output(otp, lstofgenoobject):
 	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
+	(=candidates)
 
 	Named parameters :
 	-otp -- the output name
@@ -164,17 +166,19 @@ def new_haplotype_output(otp, lstofgenoobject):
 		for geno in lstofgenoobject :
 			if geno.number_of_new_created_haplotype > 0 :
 				for i in range(len(geno.lst_of_new_haplotype)) :
-					third_sortie = []
-					third_sortie.append(geno.name)
-					third_sortie.append((geno.similar_haplotype[i]).name)
-					third_sortie.append("New:{}//{}".format( geno.name, (geno.similar_haplotype[i]).name)) 
+					candidate_haplo_output = []
+					candidate_haplo_output.append(geno.name)
+					candidate_haplo_output.append((geno.similar_haplotype[i]).name)
+					candidate_haplo_output.append("New:{}//{}".format( geno.name, (geno.similar_haplotype[i]).name)) 
 					for values in geno.lst_of_new_haplotype[i] :
-						third_sortie.append(values)
+						candidate_haplo_output.append(values)
 
 					#I write my output where i can find the sequence of all my new haplotype in row
-					my_new_H_otp_writer.writerow(third_sortie)
+					my_new_H_otp_writer.writerow(candidate_haplo_output)
 
 #Change the name of the fonction to be more specific
+
+
 
 #Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
 def error_distribution(lstofhaplotype, filetoread):
@@ -207,6 +211,9 @@ def error_distribution_output(otp, distri_dictionary):
 		my_distri_writer.writerow(header)
 		for key, value in distri_dictionary.items() :
 			my_distri_writer.writerow([key, value])
+
+
+
 
 #Les deux fonctions suivantes sont la pour avoir des info sur le nombre de fois qu'un haplotype est trouvé similaire a un génotype
 #Possibilité de la réduire en une avec une condition pour savoir ce que je traite
@@ -246,6 +253,9 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 			occurency.append(haplo.missing_data)
 			my_occurency_writer.writerow(occurency)
 
+
+
+
 #Funtion use for read another script language
 def run_R_file(path2file, outputdir):
 	"""This function return the result you obtain with your R file
@@ -262,6 +272,8 @@ def run_R_file(path2file, outputdir):
 	cmd = [command, path2script] + setwd
 	x = subprocess.Popen(cmd, stderr=subprocess.PIPE)
 	return x.communicate()
+
+
 
 
 #Penser à faire le fichier de sortie
@@ -319,7 +331,6 @@ def cytoscape_file(outputdir, lstofgenoobject):
 
 
 #Function for the summary of the résult
-
 def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
 	"""Return a dictionnary with the number of eatch probable combination
 	and this for eatch number of similar haplotype that our genotypes have
