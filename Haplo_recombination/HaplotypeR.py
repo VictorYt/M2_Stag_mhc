@@ -20,6 +20,7 @@ class Haplotype(object):
 		self._sequence = sequence 
 		self._nbmarkers = len(self.sequence)
 		self._markers = markers
+		self._candidate = False
 
 
 
@@ -52,6 +53,14 @@ class Haplotype(object):
 		
 		"""
 		return self._markers
+
+	def _get_candidate(self):
+		"""Return True or Flase,
+		False if the haplotype come from Homozygous Genotypes
+		True if we find it previously by or Haplotype_rebuilding METHODES
+
+		"""
+		return self._candidate
 
 	###########
 	#MUTATEURS#
@@ -93,6 +102,15 @@ class Haplotype(object):
 		"""
 		self._markers = lstmarkers 
 
+	def _set_candidate(self, TorF):
+		"""Switch the False by a True if our haplotype his a candidate one
+
+		Named parameters :
+		TorF -- a booleen False of True
+
+		"""
+		self._candidate = TorF
+
 	############
 	#PROPERTIES#
 	############
@@ -101,6 +119,7 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
+	candidate = property(_get_candidate, _set_candidate)
 
 	################
 	#OTHER METHODES#
