@@ -97,8 +97,8 @@ if __name__ == "__main__":
     #Necessary to write the first output
     #Care of this step if we choise a threshold
     for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
-        geno.select_similar_haplotype(geno, haplo) 
-        geno.number_of_similar_haplotype = len(geno.similar_haplotype)
+        geno.select_similar_haplotype(geno, haplo) #put the THRESOLD here in argument
+        geno.number_of_similar_haplotype = len(geno.similar_haplotype) #make n list [0 to n] with the haplotype name (or a dict)
 
 
 #    # Look at threshold argument
