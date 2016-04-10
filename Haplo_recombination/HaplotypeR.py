@@ -124,3 +124,8 @@ class Haplotype(object):
 	################
 	#OTHER METHODES#
 	################
+
+	def is_it_candidate(self):
+		"""Return True if the haplotype have the prefix "New:", esle that return False"""
+		if "New:" in self.name:
+			return True
