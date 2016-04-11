@@ -61,6 +61,19 @@ if __name__ == "__main__":
 
     #http://sametmax.com/path-py-plus-en-detail/
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     dirname = output
 
     try:
@@ -93,6 +106,9 @@ if __name__ == "__main__":
         geno.nb_hmz_markers = geno.have_nb_hmz_markers()
         #print ("There is {} Hmz and {} Htz markers".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
+
+
+
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!
     #Necessary to write the first output
     #Care of this step if we choise a threshold
@@ -111,7 +127,10 @@ if __name__ == "__main__":
 #        arguments["-t"] = 0
 #   #Ne sera peut être incorporé au code car apparterait trop de faux positif
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
+   
+
+
+
 
     """After finding similar haplotypes to our genotypes, 
     we combine these haplotypes to see if they explain our genotype."""
@@ -232,6 +251,10 @@ if __name__ == "__main__":
     compare_output_result(os.path.join(output, "run2_Compatible_Haplotypes"), lst_genotype_non_confirmed)
 
 
+
+
+
+
     ###SUMMARY OUTPUT###
     #create the fonction and put it here
 
@@ -241,6 +264,16 @@ if __name__ == "__main__":
     time3 = run3_end - run3_start
     print("Output_given")
     print("it's spend {}".format(time3))
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -295,6 +328,9 @@ if __name__ == "__main__":
 
 
 
+
+
+
     # Look at pca argument
     if (pca == True):
         print ("-p utilisé")
@@ -313,12 +349,17 @@ if __name__ == "__main__":
     ##############
     ##OUTPUT RUN##
     ##############
-        #Here do the function of used_funtion to call an R script and do the pca for eatch sample
-            #Known haplotype
-            #Candidate one
-            #All
         #try
         run_R_file("pca_script.R",pca)
+        #that does work, i think it's because he don't find the right input files (fail setwd in our R script?)
+
+
+
+
+
+
+
+
 
 
 

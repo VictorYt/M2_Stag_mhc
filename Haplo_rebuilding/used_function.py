@@ -55,13 +55,13 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 	with open(otp, 'w') as otp_comparaison :
 		my_otp_writer = csv.writer(otp_comparaison, delimiter="\t")
 
-		lst_header =[]
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")	
+		header =[]
+		header.append("Genotype")
+		header.append("Haplotype")	
 		for markers in firstobjcetlist[0].markers :
-			lst_header.append(markers)
-		lst_header.append("nb_errors")
-		my_otp_writer.writerow(lst_header)
+			header.append(markers)
+		header.append("nb_errors")
+		my_otp_writer.writerow(header)
 
 		if firstobjcetlist == secondobjcetlist :
 			for haplo1, haplo2 in it.combinations(firstobjcetlist, 2) :
@@ -91,30 +91,30 @@ def compare_output_result(otp, listofgenoobject):
 			lst_header.append(markers)
 		my_compare_selection.writerow(lst_header)
 
-		#After that we put our geno.name is number of similar haplo and is sequence
+		#After that we put our geno.name, is number of similar haplo and is sequence
 		for geno in listofgenoobject:
-			geno_second_output = []
-			geno_second_output.append(geno.name)
-			geno_second_output.append(geno.number_of_similar_haplotype)
+			geno_compare_output = []
+			geno_compare_output.append(geno.name)
+			geno_compare_output.append(geno.number_of_similar_haplotype)
 			for values in geno.sequence :
-				geno_second_output.append(values)
-			my_compare_selection.writerow(geno_second_output)
+				geno_compare_output.append(values)
+			my_compare_selection.writerow(geno_compare_output)
 
 		#If my genotype have some similar haplotype (>0)
 		#I put the haplotype name and his sequence under genotype sequence
 			if geno.number_of_similar_haplotype > 0 :
 				for similar_haplo in geno.similar_haplotype :
-					haplo_second_output = []
-					haplo_second_output.append("")
-					haplo_second_output.append(similar_haplo.name)
+					haplo_compare_output = []
+					haplo_compare_output.append("")
+					haplo_compare_output.append(similar_haplo.name)
 					for values in similar_haplo.sequence :
-						haplo_second_output.append(values)
-					my_compare_selection.writerow(haplo_second_output)
+						haplo_compare_output.append(values)
+					my_compare_selection.writerow(haplo_compare_output)
 
 
 
 def new_haplotype(lstofgenoobject):
-	"""Return a list of Haplotype object containing the potential new haplotype = candidates
+	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
 	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
 	needed for his construction. Those one are separate by "//"
 
@@ -143,7 +143,7 @@ def new_haplotype(lstofgenoobject):
 
 
 
-#Functionfor created the list of new_haplo and the 3rd output
+#Functionfor created the list of new_haplo and the output
 def new_haplotype_output(otp, lstofgenoobject):
 	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
 	(=candidates)
@@ -157,10 +157,10 @@ def new_haplotype_output(otp, lstofgenoobject):
 		my_new_H_otp_writer = csv.writer(otp3, delimiter="\t")
 
 		#Creation of the header of my output
-		lst_header = ["Genotype", "Haplotype", "New_Haplotype"]
+		header = ["Genotype", "Haplotype", "New_Haplotype"]
 		for markers in lstofgenoobject[0].markers :
-			lst_header.append(markers)
-		my_new_H_otp_writer.writerow(lst_header)
+			header.append(markers)
+		my_new_H_otp_writer.writerow(header)
 
 		#Add eatch row containing a new haplotype (where he come from, his name and his sequence)
 		for geno in lstofgenoobject :
@@ -175,9 +175,6 @@ def new_haplotype_output(otp, lstofgenoobject):
 
 					#I write my output where i can find the sequence of all my new haplotype in row
 					my_new_H_otp_writer.writerow(candidate_haplo_output)
-
-#Change the name of the fonction to be more specific
-
 
 
 #Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype

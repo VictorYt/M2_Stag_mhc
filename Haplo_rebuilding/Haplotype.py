@@ -34,7 +34,7 @@ class Haplotype(object):
 
 	def __str__(self):
 		"""Return a description of the created Haplotype object"""
-		return "L'haplotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
 
 	############
 	#ACCESSEURS#
@@ -57,14 +57,14 @@ class Haplotype(object):
 
 	def _get_markers(self):
 		"""Return the attribut markers of the Haplotype class which is
-		a list of the markers name used for genotyping 
+		a list of the markers names used for genotyping 
 		
 		"""
 		return self._markers
 
 	def _get_similar_new_haplotype(self):
 		"""Return the attribut similar_new_haplo of the Haplotype class which is
-		a list the new haplotype who have the same sequence than our haplotype 
+		a list of candidate haplotype who have the similar sequence than our haplotype 
 		
 		"""
 		return self._similar_new_haplotype
@@ -77,11 +77,11 @@ class Haplotype(object):
 		return self._number_of_similar_new_haplotype
 
 	def _get_similar_occurence(self):
-		"""Return the number of time our haplotype is find similar to a genotype"""
+		"""Return the number of time our candidate haplotype is find similar to a genotype"""
 		return self._similar_occurence
 
 	def _get_missing_data(self):
-		"""Return the number of missing data find in the genotype sequence"""
+		"""Return the number of missing data find in the candidate haplotype sequence"""
 		return self._missing_data
 
 	###########
@@ -125,22 +125,22 @@ class Haplotype(object):
 		self._markers = lstmarkers 
 
 	def _set_similar_new_haplotype(self, newhaplo):
-		"""Change the markers list of our Haplotype object by a new one
+		"""Change the candidate haplotype list of our Haplotype object by a new one
 
 		Named parameters :
-		newhaplo -- the similar new haplotype list of our genotype selected (here the Haplotype object ref)
+		newhaplo -- the similar candidate haplotype list of our genotype selected (here the Haplotype object ref)
 		
 		"""
 		self._similar_new_haplotype = newhaplo
 
-	def _set_number_of_similar_new_haplotype(self, newnbnewhaplo):
-		"""Change the number of similar new haplotype size of our Haplotype object by a new one
+	def _set_number_of_similar_new_haplotype(self, nbnewhaplo):
+		"""Change the similar candidate haplotype size of our Haplotype object by a new one
 
 		Named parameters :
 		newnbnewhaplo -- the new size selected (here the length of similar_new_haplo list)
 		
 		"""
-		self._number_of_similar_new_haplotype = newnbnewhaplo
+		self._number_of_similar_new_haplotype = nbnewhaplo
 
 	def _set_similar_occurence(self, nboccurence):
 		"""Change the number of time the haplotype is find similar with a genotype
@@ -152,10 +152,10 @@ class Haplotype(object):
 		self._similar_occurence = nboccurence
 
 	def _set_missing_data(self, nbmssingdata):
-		"""Change the number of missing data find in the genotype sequence
+		"""Change the number of missing data find in the haplotype sequence
 
 		Named parameters :
-		nbmssingdata -- the new number of missing data find in the genotype sequence
+		nbmssingdata -- the new number of missing data find in the haplotype sequence
 
 		"""
 		self._missing_data = nbmssingdata
@@ -177,45 +177,45 @@ class Haplotype(object):
 	#OTHER METHODES#
 	################
 
-	#polymorphisme (surcharge) avec la fonction compare_geno_and_haplo_seq(self, geno, haplo) ==> voir comment ça marche
+	#polymorphisme (surcharge) with same function name in Genotype class
 	def compare_two_seq(self, haplo1, haplo2):
 		"""Return a list with the name of the 2 Haplotypes objects,
 		a sequence with booleen (0, 1) and a int
 
-		0 means no differences between the 2 haplotypes sequence for the selected markers 
-		1 means that there is a difference
-		The int in the end of the returned list is the sum of 1 in the sequence.
+		0 means no missmatch between the 2 Haplotypes sequence objects for the selected markers 
+		1 means that there is a missmatch
+		The int at the end of the returned list is the sum of 1 in the sequence 
+		(= number of missmatch).
 
 		Named parameters :
 		haplo1 -- The fisrt Haplotype object to compare
 		haplo2 -- The second Haplotype object to compare
 
 		"""
-		ligne_de_sortie = []
+		output_line = []
 		count_erreur = 0
-		ligne_de_sortie.append(haplo1.name)
-		ligne_de_sortie.append(haplo2.name)
+		output_line.append(haplo1.name)
+		output_line.append(haplo2.name)
 		for i in range(len(haplo1.sequence)) :
 			#Equal to 1 in the case of fail or impossible calling for some markers
 			if len(haplo1.sequence[i]) == 1 :
 				if haplo1.sequence[i] == haplo2.sequence[i] :
-					ligne_de_sortie.append(0)
+					output_line.append(0)
 				else :
-					ligne_de_sortie.append(1)
+					output_line.append(1)
 					count_erreur += 1
 			#If we have one of them ('--') we concidere there are no differrence 
 			else :
-				ligne_de_sortie.append(0)
-		ligne_de_sortie.append(count_erreur)
-		return ligne_de_sortie
+				output_line.append(0)
+		output_line.append(count_erreur)
+		return output_line
 
-	#chaud mais serait bien à faire fonctionner
 	def screening_himself(self, lst_of_new_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 
 		than the sequence of our Haplotype object.
 
 		"""
-		#étape pour se trouver lui même dans la liste et s'éviter après
+		#Find himself in the list
 		index_me = 0
 		for me in lst_of_new_haplotype:
 			if me.name == self.name :
@@ -223,17 +223,20 @@ class Haplotype(object):
 
 		lst_similar_new_haplo = []
 		for same in lst_of_new_haplotype :
+			#if he find himslef i pass
 			if lst_of_new_haplotype.index(same) == index_me :
 				pass
+			#for all the other i compare the sequence
 			elif same.sequence == self.sequence :
 				lst_similar_new_haplo.append(same)
+				#if 2 Haplotype instance have the same sequence i have the second in the list of similar instance of that i'm looking for
 		return lst_similar_new_haplo
 
 	def occurence_new_haplotype(self, lst_of_genotype):
 		"""Return the number of time the haplotype is similar with a different genotype
 
 		By defaut a new_haplotype must appear at least one time, if he appear more than that 
-		we can concider him like a good one to add in our haplotype catalog
+		we can concider him like a good candidate to add in our haplotype catalog
 
 		"""
 		occurence = 0

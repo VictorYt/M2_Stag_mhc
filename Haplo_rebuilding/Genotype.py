@@ -289,37 +289,38 @@ class Genotype(Haplotype):
 		haplo -- The Haplotype object to compare
 
 		"""
-		ligne_de_sortie = []
+		output_line = []
 		count_erreur = 0
-		#add ib the ligne_de_sortie list the name of the 2 sequences compared
-		ligne_de_sortie.append(geno.name)
-		ligne_de_sortie.append(haplo.name)
+		#add ib the output_line list the name of the 2 sequences compared
+		output_line.append(geno.name)
+		output_line.append(haplo.name)
 		for i in range(len(geno.sequence)) :
 			#traitment of Hmz Markers
 			if len(geno.sequence[i]) == 1 :
 				if geno.sequence[i] == haplo.sequence[i] :
-					ligne_de_sortie.append(0)
+					output_line.append(0)
 				else :
-					ligne_de_sortie.append(1)
+					output_line.append(1)
 					count_erreur += 1
 			#traitment of unknowing base for markers ('--')
 			elif len(geno.sequence[i]) == 2 :
-				ligne_de_sortie.append(0)
+				output_line.append(0)
 			#traitment of Htz markers
 			elif len(geno.sequence[i]) == 3 :
 				if geno.sequence[i].rsplit("/", 1)[0] != haplo.sequence[i] :
 					if geno.sequence[i].rsplit("/", 1)[1] != haplo.sequence[i] :
-						ligne_de_sortie.append(1)
+						output_line.append(1)
 						count_erreur += 1
 					else :
-						ligne_de_sortie.append(0)
+						output_line.append(0)
 				else :
-					ligne_de_sortie.append(0)
-		ligne_de_sortie.append(count_erreur)
-		#print (len(ligne_de_sortie)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
-		return ligne_de_sortie
+					output_line.append(0)
+		output_line.append(count_erreur)
+		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
+		return output_line
 
 #Need change, add threshold (default = 0) 
+#if i have a thresold that will be 2n (care need to know the error location)
 	def select_similar_haplotype(self, geno, haplo):
 		"""Put in the similar_haplotype list the Haplotype object for which the last index
 		of the compare_two_seq() return is equal to 0. it means that our haplotype can explain
