@@ -320,7 +320,7 @@ class Genotype(Haplotype):
 		return output_line
 
 #Need change, add threshold (default = 0) 
-#if i have a thresold that will be 2n (care need to know the error location)
+#if i have a threshold that will be 2n (care need to know the error location)
 	def select_similar_haplotype(self, geno, haplo):
 		"""Put in the similar_haplotype list the Haplotype object for which the last index
 		of the compare_two_seq() return is equal to 0. it means that our haplotype can explain
@@ -337,8 +337,30 @@ class Genotype(Haplotype):
 		else :
 			pass
 
+#surcharge de la fonction du dessus (qui sera a supp quand celle-ci marchera)
+	def select_similar_haplotype(self, geno, haplo, threshold):
+		"""Return nothing
+		Put in the similar_haplotype list the Haplotype object for which the last index
+		of the compare_two_seq() return is equal to threshold. it means that our haplotype can explain
+		our genotype with a maximum of threshold missmatch.
+
+
+		Named parameters :
+		geno -- The Genotype object 
+		haplo -- The Haplotype object
+		threshold -- mismatch number accepted  
+
+
+		"""
+		#We look at the last index ([-1] summ of missmatch between the 2 sequences) of the comparative list give by 'compare_two_seq' method
+		if geno.compare_two_seq(geno, haplo)[-1] <= threshold :
+			geno.similar_haplotype.append(haplo)
+		#voir poly ce que je doit retenir en plus....
+
+
+
 #Because of the change before
-#Need accepte 2*thresold errors (but only at the error marker)
+#Need accepte 2*threshold errors (but only at the error marker)
 	def combinaison_between_similar_haplotype_in_geno(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.
