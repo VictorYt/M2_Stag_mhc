@@ -55,7 +55,7 @@ class Genotype(Haplotype):
 
 	def __str__(self):
 		"""Like str Haplotype a quick description of our Genotype object"""
-		return "Le Genotype {}, construit à l'aide de {} marqueurs, est : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
 
 
 	############
