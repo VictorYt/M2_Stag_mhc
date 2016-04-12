@@ -356,6 +356,7 @@ class Genotype(Haplotype):
 		if geno.compare_two_seq(geno, haplo)[-1] <= threshold :
 			geno.similar_haplotype.append(haplo)
 		#voir poly ce que je doit retenir en plus....
+		
 
 
 
