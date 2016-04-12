@@ -84,12 +84,12 @@ def compare_output_result(otp, listofgenoobject):
 		my_compare_selection = csv.writer(otp_first_result, delimiter="\t")
 		
 		#First row will be the header one
-		lst_header =[]
-		lst_header.append("Genotype")
-		lst_header.append("Haplotype")	
+		header =[]
+		header.append("Genotype")
+		header.append("Haplotype")	
 		for markers in listofgenoobject[0].markers :
-			lst_header.append(markers)
-		my_compare_selection.writerow(lst_header)
+			header.append(markers)
+		my_compare_selection.writerow(header)
 
 		#After that we put our geno.name, is number of similar haplo and is sequence
 		for geno in listofgenoobject:
