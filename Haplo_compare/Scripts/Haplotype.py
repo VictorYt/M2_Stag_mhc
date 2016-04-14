@@ -139,3 +139,7 @@ class Haplotype(object):
 	name = property(_get_name, _set_name)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
+	half_geno_compatibility = property(_get_half_geno_compatibility, _set_half_geno_compatibility)
+	number_of_half_copatibility = property(_get_number_of_half_compatibility, _set_number_of_half_compatibility)
+	entire_geno_compatibility = property(_get_entire_geno_compatibility, _set_entire_geno_compatibility)
+	number_of_entire_copatibility = property(_get_number_of_entire_compatibility, _set_entire_of_half_compatibility
