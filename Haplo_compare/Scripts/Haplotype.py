@@ -63,6 +63,7 @@ class Haplotype(object):
 		"""
 		return self._number_of_entire_copatibility
 
+#did i need to know with which one (haplotype) our haplotype is associated to have the entire genotype sequence?
 
 	###########
 	#MUTATEURS#
@@ -93,7 +94,43 @@ class Haplotype(object):
 		lstmarkers -- the new markers list selected (here the header of the input)
 			
 		"""
-		self._markers = lstmarkers 
+		self._markers = lstmarkers
+
+	def _set_half_geno_compatibility(self, lsthalfcompatib):
+		"""Change the compatibility list of half genotype instance with which our haplotype
+
+		Named parameters :
+		lsthalfcompatib -- the list of half geno compatibility
+
+		"""
+		self._half_geno_compatibility = lsthalfcompatib
+
+	def _set_number_of_half_compatibility(self, number):
+		"""Change the number of found genotype
+
+		Named parameters :
+		number -- the length of  our list of half geno compatibility
+
+		"""		
+		self._number_of_half_copatibility = number
+
+	def _set_entire_geno_compatibility(self, lstentirecompatib):
+		"""Change the compatibility list of entire genotype instance with which our haplotype
+
+		Named parameters :
+		lstentirecompatib -- the list of entire geno compatibility
+
+		"""
+		self._entire_geno_compatibility = lstentirecompatib
+
+	def _set_number_of_entre_compatibility(self, number):
+		"""Change the number of found genotype 
+
+		Named parameters :
+		number -- the length of  our list of entire geno compatibility
+
+		"""
+		self._number_of_entire_copatibility = number		
 
 	############
 	#PROPERTIES#
