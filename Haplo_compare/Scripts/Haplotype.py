@@ -4,22 +4,30 @@
 #Haplotype mother class
 
 class Haplotype(object):
-	def __init__(self, name, sequence, markers):
+	def __init__(self, name, sequence, markers, origin):
 		"""Class constructor Haplotype
 
 		Haplotype Class is characterized by :
 			-A name, 
-			-a sequence
+			-a sequence,
+			-a list of there markers
+			-a origin (if it's a Known one, candidate or come from fastPHASE).
+
+		Information for the comparison of haplotype origin
 
 		"""
 		self._name = name 
 		self._sequence = sequence
 		self._markers = markers
+		self._origin = origin
 		self._half_geno_compatibility = []
 		self._number_of_half_copatibility = 0
 		self._entire_geno_compatibility = []
 		self._number_of_entire_copatibility = 0
 
+	def __str__(self):
+		"""Return a description of the created Haplotype object"""
+		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
 
 
 	############
@@ -40,6 +48,9 @@ class Haplotype(object):
 		
 		"""
 		return self._markers
+
+	def _get_origin(self):
+		"""Return where the haplotype come from (Known one/candidate/fastPHASE)"""
 
 	def _get_half_geno_compatibility(self):
 		"""Return a list of genotype instace with which our haplotype is compatible"""
