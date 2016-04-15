@@ -184,7 +184,7 @@ class Haplotype(object):
 
 	#compare avec geno pour savoir à qui il ressemble
 	def compa_with_genotype(self, geno):
-		"""Return ...."""
+		"""Return ..."""
 		count_missmatch = 0
 		for i in range(len(self.sequence)) :
 			#traitment of Hmz Markers

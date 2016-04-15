@@ -22,8 +22,6 @@ options:
 if __name__ == "__main__":
     from docopt import docopt
     import os
-    import time
-    import itertools as it
     #from Object import ClassName, function ...
     from Haplotype_c import Haplotype_c
     from Genotype_c import Genotype_c
@@ -58,7 +56,11 @@ if __name__ == "__main__":
 
     """Récupération des instances de Genotype et d'Haplotype_c dans des list"""
     #geno
+    lst_geno_obj = read_input_file(genotype_file, Genotype, "\t")
     #haplo (list global)
+    lst_k_haplo_obj = read_input_file(known_haplo, Haplotype, "\t")
+    lst_c_haplo_obj = read_input_file(candidate_haplo, Haplotype, "\t")
+    lst_f_haplo_obj = read_input_file(fastPhase_haplo, Haplotype, "\t")
     #haplo séparé par ori (known/candidate/fP)
 
 
