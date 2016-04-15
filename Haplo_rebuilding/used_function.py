@@ -176,6 +176,22 @@ def new_haplotype_output(otp, lstofgenoobject):
 					#I write my output where i can find the sequence of all my new haplotype in row
 					my_new_H_otp_writer.writerow(candidate_haplo_output)
 
+def uniq_candidate_haplo(otp, lstuniqhaplo):
+	with open(otp, 'w') as uniq_new :
+		my_otp_uniq_new_writer = csv.writer(uniq_new, delimiter="\t")
+
+		header = ["candidate_name"]
+		for markers in lstuniqhaplo[0].markers :
+			header.append(markers)
+		my_otp_uniq_new_writer.writerow(header)
+
+		for candidate in lstuniqhaplo :
+			candidate_haplo_output = []
+			candidate_haplo_output.append(candidate.name)
+			for nt in candidate.sequence :
+				candidate_haplo_output.append(nt)
+			my_otp_uniq_new_writer.writerow(candidate_haplo_output)
+
 
 #Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
 def error_distribution(lstofhaplotype, filetoread):

@@ -4,15 +4,15 @@
 
 """
 usage: 
-    __main__.py (--ik <haplo_file>) (--ic <haplo_file>) (--ip <haplo_file>) (--ig <geno_file>)
-    __main__.py (--ih <haplo_file>) (--ic <haplo_file>) (--ip <haplo_file>) (--ig <geno_file>) [-o <filename>]
+    __main__.py (--ik <file1>) (--ic <file2>) (--ip <file3>) (--ig <geno_file>)
+    __main__.py (--ik <file1>) (--ic <file2>) (--ip <file3>) (--ig <geno_file>) [-o <filename>]
 
 options:
     -h, --help                              This help.
     -v, --version                           Displays program's version.
-    --ik <haplo_file>                       Known haplotype input file
-    --ic <haplo_file>                       Candidate haplotype input file
-    --ip <haplo_file>                       fastPHASE haplotype input file
+    --ik <file1>                            Known haplotype input file
+    --ic <file2>                            Candidate haplotype input file
+    --ip <file3>                            fastPHASE haplotype input file
     --ig <geno_file>                        Genotype input file
     -o <filename>, --output <filename>      Specifying output file prefix
                                             [default: Output_data]
@@ -23,8 +23,9 @@ if __name__ == "__main__":
     from docopt import docopt
     import os
     #from Object import ClassName, function ...
-    from Haplotype_c import Haplotype_c
-    from Genotype_c import Genotype_c
+    from Haplotype_c import Haplotype
+    from Genotype_c import Genotype
+    from functions import *
  
     # Parse arguments, use file docstring as a parameter definition
     arguments = docopt(__doc__, version='Haplotype compare 0.1')
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     lst_f_haplo_obj = read_input_file(fastPhase_haplo, Haplotype, "\t")
     #haplo séparé par ori (known/candidate/fP)
 
-
+    print (lst_geno_obj[0])
 
     #############
 

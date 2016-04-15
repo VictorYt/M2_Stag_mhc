@@ -27,7 +27,7 @@ class Haplotype(object):
 
 	def __str__(self):
 		"""Return a description of the created Haplotype object"""
-		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, len(self._markers), self._sequence)
 
 
 	############
@@ -166,7 +166,7 @@ class Haplotype(object):
 	half_geno_compatibility = property(_get_half_geno_compatibility, _set_half_geno_compatibility)
 	number_of_half_copatibility = property(_get_number_of_half_compatibility, _set_number_of_half_compatibility)
 	entire_geno_compatibility = property(_get_entire_geno_compatibility, _set_entire_geno_compatibility)
-	number_of_entire_copatibility = property(_get_number_of_entire_compatibility, _set_entire_of_half_compatibility)
+	number_of_entire_copatibility = property(_get_number_of_entire_compatibility, _set_number_of_entre_compatibility)
 
 	##############
 	#OTHER METHOD#
@@ -193,7 +193,7 @@ class Haplotype(object):
 					count_missmatch += 1
 			#traitment of unknowing base for markers ('--')
 			elif len(geno.sequence[i]) == 2 :
-				pass
+				pass #like a have no mistakes
 			#traitment of Htz markers
 			elif len(geno.sequence[i]) == 3 :
 				if geno.sequence[i].rsplit("/", 1)[0] != self.sequence[i] :
@@ -205,3 +205,5 @@ class Haplotype(object):
 	#maintenant que j'ai le nombre de missmatch avec le genotype que je lui donnerai a manger 
 	#si me return 0 je l'ajoute à half_geno_compatibility
 	# faire len(half_geno_compatibility) -> obtenir la frequence (voir la formule a choisir pour calcule de la freq)
+
+		

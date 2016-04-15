@@ -1,7 +1,7 @@
 #!/usr/bin/python3.4
 # -*- coding: utf-8 -*-
 
-from Haplotype import Haplotype
+from Haplotype_c import Haplotype
 import itertools as it
 
 class Genotype(Haplotype):
@@ -29,7 +29,7 @@ class Genotype(Haplotype):
 
 	def __str__(self):
 		"""Like str Haplotype a quick description of our Genotype object"""
-		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, len(self._markers), self._sequence)
 
 
 	############
