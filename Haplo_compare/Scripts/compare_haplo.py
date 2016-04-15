@@ -39,3 +39,33 @@ if __name__ == "__main__":
     genotype_file = arguments["--ig"]
 
     #http://sametmax.com/path-py-plus-en-detail/
+
+
+    dirname = output
+
+    try:
+        os.makedirs(dirname)
+    except OSError:
+        if os.path.exists(dirname):
+            # We are nearly safe
+            pass
+        else:
+            # There was an error on creation, so make sure we know about it
+            raise
+
+
+    #############
+
+    """Récupération des instances de Genotype et d'Haplotype_c dans des list"""
+    #geno
+    #haplo (list global)
+    #haplo séparé par ori (known/candidate/fP)
+
+
+
+    #############
+
+    """Retrouver les haplo similaire entre Known/fP et Candidate/fP"""
+    #faire une sortie pour le diagram de venn des haplotye de fP avec les nom de Known et Candidate quand c'est le cas
+        #peut être pas besoin si matlib-venn prend les listes des sequences(mais peut être plus long)
+    #faire le diagrame de venn avec matlib-venn

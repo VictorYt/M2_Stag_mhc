@@ -126,6 +126,7 @@ class Haplotype(object):
 		"""
 		self._half_geno_compatibility = lsthalfcompatib
 
+	#est-ce vraiment necessaire c'est juste un len(lst)
 	def _set_number_of_half_compatibility(self, number):
 		"""Change the number of found genotype
 
@@ -144,6 +145,7 @@ class Haplotype(object):
 		"""
 		self._entire_geno_compatibility = lstentirecompatib
 
+	#est-ce vraiment necessaire c'est juste un len(lst)
 	def _set_number_of_entre_compatibility(self, number):
 		"""Change the number of found genotype 
 
@@ -171,11 +173,35 @@ class Haplotype(object):
 	##############
 
 	#i need a method for :  
-	#have origin
+	#have origin (care for Known, non prefix for now)
 
 	def haplo_origin(self):
 		"""Return the prefix of the haplotype name"""
 		ori = ""
-		for prefix in self.name :
-			
+		for prefix in self.name.split(':', maxsplit=1) :
+			ori = prefix[0]
 		return ori
+
+	#compare avec geno pour savoir à qui il ressemble
+	def compa_with_genotype(self, geno):
+		"""Return ...."""
+		count_missmatch = 0
+		for i in range(len(self.sequence)) :
+			#traitment of Hmz Markers
+			if len(geno.sequence[i]) == 1 :
+				if geno.sequence[i] != self.sequence[i] :
+					count_missmatch += 1
+			#traitment of unknowing base for markers ('--')
+			elif len(geno.sequence[i]) == 2 :
+				pass
+			#traitment of Htz markers
+			elif len(geno.sequence[i]) == 3 :
+				if geno.sequence[i].rsplit("/", 1)[0] != self.sequence[i] :
+					if geno.sequence[i].rsplit("/", 1)[1] != self.sequence[i] :
+						count_missmatch += 1
+		#print (count_missmatch) #--> if = 0 mon haplo = geno
+		return count_missmatch
+
+	#maintenant que j'ai le nombre de missmatch avec le genotype que je lui donnerai a manger 
+	#si me return 0 je l'ajoute à half_geno_compatibility
+	# faire len(half_geno_compatibility) -> obtenir la frequence (voir la formule a choisir pour calcule de la freq)

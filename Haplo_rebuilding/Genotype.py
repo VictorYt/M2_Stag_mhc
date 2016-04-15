@@ -244,7 +244,7 @@ class Genotype(Haplotype):
 	################
 
 	#attention je prend en compte les erreur de calling (--) dans le compte des Htz
-	#erreur d'indexation ===> a corriger
+	#erreur d'indexation ===> a corriger DONE
 	def position_htz_markers(self):
 		"""Returns list of Htz positions sites (or bad calling) of the relevant genotic sequence, 
 		called 'position_htz_markers'.
