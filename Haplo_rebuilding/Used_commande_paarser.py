@@ -113,7 +113,7 @@ if __name__ == "__main__":
     #Necessary to write the first output
     #Care of this step if we choise a threshold
     for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
-        geno.select_similar_haplotype(geno, haplo) #put the THRESOLD here in argument
+        geno.select_similar_haplotype(haplo, threshold) #put the THRESOLD here in argument
         geno.number_of_similar_haplotype = len(geno.similar_haplotype) #make n list [0 to n] with the haplotype name (or a dict)
 
 
@@ -212,7 +212,7 @@ if __name__ == "__main__":
 
     #Add new_haplotype which are similar to our genotype no confirmed, in the list of similar_haplotype
     for geno_non_confirmed, new_haplo in it.product(lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter):
-        geno_non_confirmed.select_similar_haplotype(geno_non_confirmed, new_haplo)
+        geno_non_confirmed.select_similar_haplotype(new_haplo, threshold)
         geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype)
 
 

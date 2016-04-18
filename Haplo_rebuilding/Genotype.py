@@ -44,7 +44,7 @@ class Genotype(Haplotype):
 		self._nb_hmz_markers = 0
 		self._nb_htz_markers = 0
 		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
-		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)
+		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)					 # = half_similarity hérité de Haplotype
 		self._number_of_similar_haplotype = 0 #taille de la liste obtenue ci-dessus
 		self._probable_haplotypes_combinaison = [] #liste de liste (ex: [[haplo1, haplo4], [haplo20, haplo79]])
 		self._number_of_probable_haplotypes_combinaison = 0	
@@ -274,7 +274,7 @@ class Genotype(Haplotype):
 
 #Need change, add threshold (default = 0) 
 #if i have a threshold that will be 2n (care need to know the error location)
-	def select_similar_haplotype(self, geno, haplo):
+	def select_similar_haplotype(self, haplo):
 		"""Put in the similar_haplotype list the Haplotype object for which the last index
 		of the compare_two_seq() return is equal to 0. it means that our haplotype can explain
 		our genotype.
@@ -285,13 +285,13 @@ class Genotype(Haplotype):
 
 		"""
 		#We look at the last index (sum of error between the 2 sequences) of the comparative list
-		if geno.compare_two_seq(geno, haplo)[-1] == 0 :
-			geno.similar_haplotype.append(haplo)
+		if self.compare_two_seq(haplo)[-1] == 0 :
+			self.similar_haplotype.append(haplo)
 		else :
 			pass
 
-#surcharge de la fonction du dessus (qui sera a supp quand celle-ci marchera)
-	def select_similar_haplotype(self, geno, haplo, threshold):
+#supp celle du dessus et finir celle-ci pour remplir le dico
+	def select_similar_haplotype(self, haplo, threshold):
 		"""Return nothing
 		Put in the similar_haplotype list the Haplotype object for which the last index
 		of the compare_two_seq() return is equal to threshold. it means that our haplotype can explain
@@ -306,8 +306,8 @@ class Genotype(Haplotype):
 
 		"""
 		#We look at the last index ([-1] summ of missmatch between the 2 sequences) of the comparative list give by 'compare_two_seq' method
-		if geno.compare_two_seq(geno, haplo)[-1] <= threshold :
-			geno.similar_haplotype.append(haplo)
+		if self.compare_two_seq(haplo)[-1] <= int(threshold) :
+			self.similar_haplotype.append(haplo)
 		#voir poly ce que je doit retenir en plus....
 		
 

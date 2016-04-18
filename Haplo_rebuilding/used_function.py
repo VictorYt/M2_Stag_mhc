@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-compare_two_seq
 
 import subprocess
 import os
@@ -70,7 +69,7 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 			for geno, haplo in it.product(firstobjcetlist, secondobjcetlist) :
 				my_otp_writer.writerow(geno.compare_two_seq(haplo))
 
-
+# add threshold here
 def compare_output_result(otp, listofgenoobject):
 	"""Return nothing but give the csv output file with genotypes and them 
 	similar haplotype (0 error find during the comparaison). 
@@ -112,7 +111,7 @@ def compare_output_result(otp, listofgenoobject):
 					my_compare_selection.writerow(haplo_compare_output)
 
 
-
+#change to do it with a dicotionnary
 def new_haplotype(lstofgenoobject):
 	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
 	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
@@ -143,7 +142,7 @@ def new_haplotype(lstofgenoobject):
 
 
 
-#Functionfor created the list of new_haplo and the output
+#Function for created the list of new_haplo and the output
 def new_haplotype_output(otp, lstofgenoobject):
 	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
 	(=candidates)

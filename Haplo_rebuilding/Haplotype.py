@@ -1,7 +1,7 @@
 #!/usr/bin/python3.4
 # -*- coding: utf-8 -*-
 
-#from Genotype import Genotype
+import itertools as it
 
 
 class Haplotype(object):
@@ -227,7 +227,7 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
-	origin = property(_get_origine, _set_origin)
+	origin = property(_get_origin, _set_origin)
 	half_similarity_with = property(_get_half_similarity_with, _set_half_similarity_with)
 	good_combination = property(_get_good_combination, _set_good_combination)
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
@@ -304,6 +304,19 @@ class Haplotype(object):
 			elif same.sequence == self.sequence :
 				lst_similar_new_haplo.append(same)
 				#if 2 Haplotype instance have the same sequence i have the second in the list of similar instance of that i'm looking for
+		return lst_similar_new_haplo
+
+	#a testere par rapport à la fonction du dessus (doit rendre la même chose mais plus vite) pas encore bon 
+	#pb avec ma liste de sorti ....... n'est pas remplie comme je le voudrais
+	def screening_himself2(self, lst_of_new_haplotype):
+		tmp = ""
+		for haplo1, haplo2 in it.permutations(lst_of_new_haplotype, 2) :
+			if haplo1 != tmp :
+				lst_similar_new_haplo = []
+				tmp = haplo1
+			if haplo2.sequence == haplo1.sequence :
+				lst_similar_new_haplo.append(haplo2)
+
 		return lst_similar_new_haplo
 
 	def occurence_new_haplotype(self, lst_of_genotype):
