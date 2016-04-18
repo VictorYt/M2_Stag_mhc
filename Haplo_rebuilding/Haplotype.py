@@ -17,6 +17,7 @@ class Haplotype(object):
 
 		During the first run with our knowned Haplotypes and our Genotypes
 			-a list of genotype instance for which our haplotype instance have a maximum of threshold missmatch with genotype
+			-a list of genotype which are obtain with the combination of this haplotype and another known one.
 
 		During a second run with new haplotypes created, we add to the instance :
 			-a list of the similar new haplotypes (same sequence after their been created)
@@ -239,7 +240,7 @@ class Haplotype(object):
 	################
 
 	#polymorphisme (surcharge) with same function name in Genotype class
-	def compare_two_seq(self, haplo1, haplo2):
+	def compare_two_seq(self, haplo):
 		"""Return a list with the name of the 2 Haplotypes objects,
 		a sequence with booleen (0, 1) and a int
 
@@ -249,27 +250,39 @@ class Haplotype(object):
 		(= number of missmatch).
 
 		Named parameters :
-		haplo1 -- The fisrt Haplotype object to compare
-		haplo2 -- The second Haplotype object to compare
+		haplo -- The Haplotype object to compare with mine
 
 		"""
 		output_line = []
 		count_erreur = 0
-		output_line.append(haplo1.name)
-		output_line.append(haplo2.name)
-		for i in range(len(haplo1.sequence)) :
-			#Equal to 1 in the case of fail or impossible calling for some markers
-			if len(haplo1.sequence[i]) == 1 :
-				if haplo1.sequence[i] == haplo2.sequence[i] :
+		#add ib the output_line list the name of the 2 sequences compared
+		output_line.append(self.name)
+		output_line.append(haplo.name)
+		for i in range(len(self.sequence)) :
+			#traitment of Hmz Markers
+			if len(self.sequence[i]) == 1 :
+				if self.sequence[i] == haplo.sequence[i] :
 					output_line.append(0)
 				else :
 					output_line.append(1)
 					count_erreur += 1
-			#If we have one of them ('--') we concidere there are no differrence 
-			else :
+			#traitment of unknowing base for markers ('--')
+			elif len(self.sequence[i]) == 2 :
 				output_line.append(0)
+			#traitment of Htz markers
+			elif len(self.sequence[i]) == 3 :
+				if self.sequence[i].rsplit("/", 1)[0] != haplo.sequence[i] :
+					if self.sequence[i].rsplit("/", 1)[1] != haplo.sequence[i] :
+						output_line.append(1)
+						count_erreur += 1
+					else :
+						output_line.append(0)
+				else :
+					output_line.append(0)
 		output_line.append(count_erreur)
+		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return output_line
+
 
 	def screening_himself(self, lst_of_new_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 

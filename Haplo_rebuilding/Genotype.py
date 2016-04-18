@@ -272,53 +272,6 @@ class Genotype(Haplotype):
 		"""
 		return self._nbmarkers - self._nb_htz_markers 
 
-	#An overload method
-	def compare_two_seq(self, geno, haplo):
-		"""Overload of the same name method in the Haplotype object
-		Return a list with the name of the Genotype objets and the Haplotypes objects,
-		a sequence with booleen (0, 1) and a int.
-		The difference with the other is the use of a genomic sequence who contain htz markers
-		and fail calling markers ('--').
-
-		0 means no differences between the 2 haplotypes sequence for the selected markers 
-		1 means that there is a difference
-		The int in the end of the returned list is the sum of 1 in the sequence.
-
-		Named parameters :
-		geno -- The Genotype object to compare
-		haplo -- The Haplotype object to compare
-
-		"""
-		output_line = []
-		count_erreur = 0
-		#add ib the output_line list the name of the 2 sequences compared
-		output_line.append(geno.name)
-		output_line.append(haplo.name)
-		for i in range(len(geno.sequence)) :
-			#traitment of Hmz Markers
-			if len(geno.sequence[i]) == 1 :
-				if geno.sequence[i] == haplo.sequence[i] :
-					output_line.append(0)
-				else :
-					output_line.append(1)
-					count_erreur += 1
-			#traitment of unknowing base for markers ('--')
-			elif len(geno.sequence[i]) == 2 :
-				output_line.append(0)
-			#traitment of Htz markers
-			elif len(geno.sequence[i]) == 3 :
-				if geno.sequence[i].rsplit("/", 1)[0] != haplo.sequence[i] :
-					if geno.sequence[i].rsplit("/", 1)[1] != haplo.sequence[i] :
-						output_line.append(1)
-						count_erreur += 1
-					else :
-						output_line.append(0)
-				else :
-					output_line.append(0)
-		output_line.append(count_erreur)
-		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
-		return output_line
-
 #Need change, add threshold (default = 0) 
 #if i have a threshold that will be 2n (care need to know the error location)
 	def select_similar_haplotype(self, geno, haplo):
