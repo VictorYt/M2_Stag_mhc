@@ -13,6 +13,10 @@ class Haplotype(object):
 			-a sequence, 
 			-a size who is the length of markers 
 			-and the list of there markers
+			-a origin (how i obtain it [default: Known])
+
+		During the first run with our knowned Haplotypes and our Genotypes
+			-a list of genotype instance for which our haplotype instance have a maximum of threshold missmatch with genotype
 
 		During a second run with new haplotypes created, we add to the instance :
 			-a list of the similar new haplotypes (same sequence after their been created)
@@ -25,6 +29,10 @@ class Haplotype(object):
 		self._sequence = sequence 
 		self._nbmarkers = len(self.sequence)
 		self._markers = markers
+		self._origin = "Known"
+		#generate during 1st run
+		self._half_similarity_with = {}
+		self._good_combination = []
 		#generate during 2nd run
 		self._similar_new_haplotype = []
 		self._number_of_similar_new_haplotype = 0
@@ -61,6 +69,29 @@ class Haplotype(object):
 		
 		"""
 		return self._markers
+
+	def _get_origin(self):
+		"""Return the attribut origin of the Haplotype class which is
+		a string who is Known by default but can also be "candidate" or "fastPHASE".
+
+		"""
+		return self._origin
+
+	def _get_half_similarity_with(self):
+		"""Return the attribut half_similarity_with of the Haplotype class which is 
+		a dictionary with keys to the range [0; threshold]. The keys have the values, 
+		a list of genotype, for which our haplotype have n missmatch.
+		n = keys values
+
+		"""
+		return self._half_similarity_with
+
+	def _get_good_combination(self):
+		"""Return the attribut good_combination of the Haplotypes class which is
+		a list of Genotypes, which his obtain with our haplotypes and another one (which also have a half_similarity_with the same genotype, and 0 missmatch).
+
+		"""
+		return self._good_combination
 
 	def _get_similar_new_haplotype(self):
 		"""Return the attribut similar_new_haplo of the Haplotype class which is
@@ -124,6 +155,33 @@ class Haplotype(object):
 		"""
 		self._markers = lstmarkers 
 
+	def _set_origin(self, neworigin):
+		"""Change the origin string of our Haplotype object by a new one
+
+		Named parameters :
+		neworigin -- the new origin string selected (here "candidate" or "fastPHASE")
+		
+		"""
+		self._origin = neworigin
+
+	def _set_half_similarity_with(self, dicoofsimilarity):
+		"""Change the half_similarity_with dictionary of our Haplotype object by a new one
+
+		Named parameters :
+		dicoofsimilarity -- the new half_similarity dictionary selected (his size depend of threshold choise in the comande)
+		
+		"""
+		self._half_similarity_with = dicoofsimilarity
+
+	def _set_good_combination(self, listofgoodcombi):
+		"""Change the good_combination list of our Haplotype object by a new one
+
+		Named parameters :
+		dicoofsimilarity -- the new good_combination list selected (this is the genotype obtain by a combination of 2 Known Haplotypes)
+		
+		"""
+		self._good_combination = listofgoodcombi
+
 	def _set_similar_new_haplotype(self, newhaplo):
 		"""Change the candidate haplotype list of our Haplotype object by a new one
 
@@ -168,6 +226,9 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
+	origin = property(_get_origine, _set_origin)
+	half_similarity_with = property(_get_half_similarity_with, _set_half_similarity_with)
+	good_combination = property(_get_good_combination, _set_good_combination)
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
 	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
 	similar_occurence = property(_get_similar_occurence, _set_similar_occurence)
