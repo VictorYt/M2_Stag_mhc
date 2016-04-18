@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-
+compare_two_seq
 
 import subprocess
 import os
@@ -65,10 +65,10 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 
 		if firstobjcetlist == secondobjcetlist :
 			for haplo1, haplo2 in it.combinations(firstobjcetlist, 2) :
-				my_otp_writer.writerow(haplo1.compare_two_seq(haplo1, haplo2))
+				my_otp_writer.writerow(haplo1.compare_two_seq(haplo2))
 		else :
 			for geno, haplo in it.product(firstobjcetlist, secondobjcetlist) :
-				my_otp_writer.writerow(geno.compare_two_seq(geno, haplo))
+				my_otp_writer.writerow(geno.compare_two_seq(haplo))
 
 
 def compare_output_result(otp, listofgenoobject):
