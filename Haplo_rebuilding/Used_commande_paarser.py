@@ -39,12 +39,12 @@ if __name__ == "__main__":
     arguments = docopt(__doc__, version='Haplotype rebuilding 0.3')
     print (arguments)
 
-    distribution = arguments["--dist"]
-    pca = arguments["--ACP"]
-    output = arguments["--output"]
-    threshold = arguments["--threshold"]
     haplotype_file = arguments["--ih"]
     genootype_file = arguments["--ig"]
+    output = arguments["--output"]
+    threshold = arguments["--threshold"]
+    distribution = arguments["--dist"]
+    pca = arguments["--ACP"]
     cytoscape = arguments["--cytoscape"]
 
     
