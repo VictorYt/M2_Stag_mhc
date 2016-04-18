@@ -32,7 +32,7 @@ class Haplotype(object):
 		self._markers = markers
 		self._origin = "Known"
 		#generate during 1st run
-		self._half_similarity_with = {}
+		self._half_similarity_with = None
 		self._good_combination = []
 		#generate during 2nd run
 		self._similar_new_haplotype = []
@@ -283,10 +283,26 @@ class Haplotype(object):
 		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return output_line
 
+
+
+	def similar_with_size(self, threshold):
+		"""Return a empty dictionary with keys equal at [0,threshold]"""
+		for i in range(threshold+1) :
+			dico[i] = []
+		return dico
+
+
+
 #remplir half_similarity with, que ce soit pour haplo et geno. l'un et l'autre avec sont contraire
 #le tout dans un dictionnaire ayant pour clef l'intervalle [0,seuil]
-	def select_similar_with(self, geno, threshold):
-		dico = {}
+	def select_similar_with(self, objects, threshold):
+		#with the previusly created dictionnary :
+		for i in range(threshold+1) :
+			if self.compare_two_seq(objects) == i :
+				dico[i].append(objects)
+		#je parcour threshold+1 fois ma list d'object ici
+
+
 
 
 	def screening_himself(self, lst_of_new_haplotype):
