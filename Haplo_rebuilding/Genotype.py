@@ -230,11 +230,11 @@ class Genotype(Haplotype):
 	nb_hmz_markers = property(_get_nb_hmz_markers, _set_nb_hmz_markers)
 	nb_htz_markers = property(_get_nb_htz_markers, _set_nb_htz_markers)
 	index_htz_markers_in_seq = property(_get_index_htz_markers_in_seq, _set_index_htz_markers_in_seq)
-	similar_haplotype = property(_get_similar_haplotype, _set_similar_haplotype)
-	number_of_similar_haplotype = property(_get_number_of_similar_haplotype, _set_number_of_similar_haplotype)
-	probable_haplotypes_combinaison = property(_get_probable_haplotypes_combinaison, _set_probable_haplotypes_combinaison)
-	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison)
-	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype)
+	similar_haplotype = property(_get_similar_haplotype, _set_similar_haplotype) #va disparait pour être remplacer par la methode que je vais faire dans la class Haplotype
+	number_of_similar_haplotype = property(_get_number_of_similar_haplotype, _set_number_of_similar_haplotype) #probablement aussi celle-ci
+	probable_haplotypes_combinaison = property(_get_probable_haplotypes_combinaison, _set_probable_haplotypes_combinaison) #un surchage de la methode que j'aurais dans la class haplotype
+	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison) #idem
+	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype) #modifié car va prendre les haplo avec 0 missmatch et aussi 1 et 2 et "coriger les fautes"
 	number_of_new_created_haplotype = property(_get_number_of_new_created_haplotype, _set_number_of_new_created_haplotype)
 	probable_haplotypes_combinaison_2_run = property(_get_probable_haplotypes_combinaison_2_run, _set_probable_haplotypes_combinaison_2_run)
 	number_of_probable_haplotypes_combinaison_2_run = property(_get_number_of_probable_haplotypes_combinaison_2_run, _set_number_of_probable_haplotypes_combinaison_2_run)

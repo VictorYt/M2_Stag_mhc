@@ -283,6 +283,11 @@ class Haplotype(object):
 		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return output_line
 
+#remplir half_similarity with, que ce soit pour haplo et geno. l'un et l'autre avec sont contraire
+#le tout dans un dictionnaire ayant pour clef l'intervalle [0,seuil]
+	def select_similar_with(self, geno, threshold):
+		dico = {}
+
 
 	def screening_himself(self, lst_of_new_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 
@@ -304,19 +309,6 @@ class Haplotype(object):
 			elif same.sequence == self.sequence :
 				lst_similar_new_haplo.append(same)
 				#if 2 Haplotype instance have the same sequence i have the second in the list of similar instance of that i'm looking for
-		return lst_similar_new_haplo
-
-	#a testere par rapport à la fonction du dessus (doit rendre la même chose mais plus vite) pas encore bon 
-	#pb avec ma liste de sorti ....... n'est pas remplie comme je le voudrais
-	def screening_himself2(self, lst_of_new_haplotype):
-		tmp = ""
-		for haplo1, haplo2 in it.permutations(lst_of_new_haplotype, 2) :
-			if haplo1 != tmp :
-				lst_similar_new_haplo = []
-				tmp = haplo1
-			if haplo2.sequence == haplo1.sequence :
-				lst_similar_new_haplo.append(haplo2)
-
 		return lst_similar_new_haplo
 
 	def occurence_new_haplotype(self, lst_of_genotype):
