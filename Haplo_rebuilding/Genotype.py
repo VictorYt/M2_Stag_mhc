@@ -346,7 +346,7 @@ class Genotype(Haplotype):
 
 
 #changement de la fonction pour quelle prenne en compte le threshold
-	def combinaison_between_similar_haplotype_in_geno(self):
+	def combinaison_between_similar_haplotype_in_geno2(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.
 
@@ -355,8 +355,9 @@ class Genotype(Haplotype):
 		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers_in_seq list
 		lstZip = []
 		lst_good_combinaison = []
-		if self.number_of_similar_haplotype > 1 :
-			for haplo1, haplo2 in it.combinations(self.similar_haplotype, 2) :
+		#I only combine the haplotype with 
+		if len(self.half_similar_with[0]) > 1 :
+			for haplo1, haplo2 in it.combinations(self.half_similar_with[0], 2) :
 				lst_combinaison = []
 				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
 				count_bad_combinaison = 0
@@ -377,7 +378,7 @@ class Genotype(Haplotype):
 
 
 
-
+#changer ou créer une autre pour les haplotype avec erreurs
 	def create_haplotype(self, haplotype, genotype):
 		"""Return a list of a new haplotype sequence.
 		Which is created by the asociation between a genotype and one of his similar haplotype.  
@@ -443,5 +444,79 @@ class Genotype(Haplotype):
 
 				for i in lst_of_haplotype_who_is_not_combine :
 					lst_new_haplo.append(create_haplotype(i, lst3))""" #here .append the attribut containing the new haplotype list
+
+		return lst_new_haplo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################creation de nouvelle haplotype avec threshold option################
+
+
+
+
+#changer ou créer une autre pour les haplotype avec erreurs
+	def create_haplotype(self, haplotype):
+		"""Return a list of a new haplotype sequence.
+		Which is created by the asociation between a genotype and one of his similar haplotype.  
+
+		Named parameters :
+		haplotype -- The Haplotype object  
+
+		"""
+		new_haplotype = []
+		#we compare each markers to have: 
+		lstZip = list(zip(haplotype.sequence, self.sequence)) 
+		for nt in range(len(self.sequence)) :
+			#when it was a hmz markers, the same one
+			if len(lstZip[nt][1]) == 1 :
+				new_haplotype.append(lstZip[nt][1])########################Je m'en fou de savoir ou est l'erreur je pre
+			#when it was a unknow, a unknow one
+			if len(lstZip[nt][1]) == 2 :
+				new_haplotype.append("--")
+			#when it was a htz markers, the complementary one
+			if len(lstZip[nt][1]) == 3 :
+				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[0]:
+					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[1])
+				if lstZip[nt][0] == lstZip[nt][1].rsplit("/",1)[1]:
+					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
+		return new_haplotype
+
+
+
+
+	#trouver un autre nom a cette fonction
+	def have_new_haplotype(self):
+		"""Return a list of new haplotypes sequences for Genotypes objects who :
+			-have a minimum of 1 similar haplotype
+			-the combination of different similar haplotype can't explain the observed genotype
+
+		"""
+		lst_new_haplo = []
+		for i in range(threshold+1) :
+			#Create a new haplotype for the genotype with a uniq similar haplotype
+			if len(self.half_similar_with[i]) == 1 :
+				lst_new_haplo.append(self.create_haplotype(self.half_similar_with[i][0]))
+			#And for the genotype who have similar haplotype but any of them have a good combination
+			if len(self.half_similar_with[i]) > 1 :
+				if self.number_of_probable_haplotypes_combinaison == 0 :
+					for haplo in self.half_similar_with[i] : 
+						lst_new_haplo.append(self.create_haplotype(haplo)) 
+				else : #because i already have a strong combination with Known Haplotypes
+					pass
 
 		return lst_new_haplo

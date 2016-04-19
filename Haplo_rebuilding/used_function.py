@@ -112,6 +112,7 @@ def compare_output_result(otp, listofgenoobject):
 
 
 #change to do it with a dicotionnary
+#need change this one or a previous one to know when i use haplotype with >0 mismatch 
 def new_haplotype(lstofgenoobject):
 	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
 	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
@@ -340,7 +341,15 @@ def cytoscape_file(outputdir, lstofgenoobject):
 
 
 
+#FUNCTION FOR MY GENERAL SUMMARY
 
+#rappel de la commande utilisée
+#version
+#nombre d'haplotype known candidate fastPHASE
+#nombre de bonne combi avec known seul puis avec candidate
+#nombre de known réellement utilisé (freqs)
+#si possible les haplotypes a conserver après les runs
+	#si freq élevé voir même si bien classé après fastPHASE
 
 #Function for the summary of the résult
 def probable_haplotypes_combinaison_counter(self, lstofhaploobject, lstofgenoobject):
