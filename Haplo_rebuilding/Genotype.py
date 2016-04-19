@@ -55,7 +55,7 @@ class Genotype(Haplotype):
 
 	def __str__(self):
 		"""Like str Haplotype a quick description of our Genotype object"""
-		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Genotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
 
 
 	############
@@ -79,11 +79,11 @@ class Genotype(Haplotype):
 		similar to our genotype
 
 		"""
-		return self._similar_haplotype
+		return self._similar_haplotype#Va disparaitre pour half_similar_with hérité de la class Haplotype
 
 	def _get_number_of_similar_haplotype(self):
 		"""Return the attribute that contains the size of the similar Haplotype object list"""
-		return self._number_of_similar_haplotype
+		return self._number_of_similar_haplotype#va être changer ou disparaitre
 
 	def _get_probable_haplotypes_combinaison(self):
 		"""Return the attribut that contains the list of combination of similar Haplotype object  
@@ -154,7 +154,7 @@ class Genotype(Haplotype):
 		similar_haplotype -- a list (empty by default)
 
 		"""
-		self._similar_haplotype = similar_haplotype
+		self._similar_haplotype = similar_haplotype #Va disparaitre pour half_similar_with hérité de la class Haplotype
 
 	def _set_number_of_similar_haplotype(self, nb_similar_haplotype):
 		"""Changes the number of similar haplotype with our genotype
@@ -163,7 +163,7 @@ class Genotype(Haplotype):
 		nb_similar_haplotype -- a int (default = 0)
 
 		"""
-		self._number_of_similar_haplotype = nb_similar_haplotype
+		self._number_of_similar_haplotype = nb_similar_haplotype #va être changer ou disparaitre
 
 	def _set_probable_haplotypes_combinaison(self, haplo_combinaison):
 		"""Changes the list of probable combination of haplotype which can give our genotype 
@@ -343,6 +343,40 @@ class Genotype(Haplotype):
 					lst_good_combinaison.append([haplo1, haplo2])
 		return lst_good_combinaison
 		#This list can be empty if any combination can explain our genotype
+
+
+#changement de la fonction pour quelle prenne en compte le threshold
+	def combinaison_between_similar_haplotype_in_geno(self):
+		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
+		Which, if they are assembled, explain the observed genotype.
+
+		"""
+		#Use of the index_htz_markers_in_seq
+		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers_in_seq list
+		lstZip = []
+		lst_good_combinaison = []
+		if self.number_of_similar_haplotype > 1 :
+			for haplo1, haplo2 in it.combinations(self.similar_haplotype, 2) :
+				lst_combinaison = []
+				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
+				count_bad_combinaison = 0
+				for val_index in self.index_htz_markers_in_seq :
+					#we only considered the real htz markers ('A/G')
+					if len(lstZip[val_index][2]) == 3 : 
+						tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
+						tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
+						if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
+							lst_combinaison.append(0)
+						else :
+							lst_combinaison.append(1)
+							count_bad_combinaison += 1
+				if count_bad_combinaison == 0 :
+					lst_good_combinaison.append([haplo1, haplo2])
+		return lst_good_combinaison
+		#This list can be empty if any combination can explain our genotype
+
+
+
 
 	def create_haplotype(self, haplotype, genotype):
 		"""Return a list of a new haplotype sequence.

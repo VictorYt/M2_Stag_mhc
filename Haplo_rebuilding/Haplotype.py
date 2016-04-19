@@ -32,7 +32,8 @@ class Haplotype(object):
 		self._markers = markers
 		self._origin = "Known"
 		#generate during 1st run
-		self._half_similarity_with = None
+		self._half_similarity_with = {}
+		self.half_similarity_number = {}
 		self._good_combination = []
 		#generate during 2nd run
 		self._similar_new_haplotype = []
@@ -86,6 +87,12 @@ class Haplotype(object):
 
 		"""
 		return self._half_similarity_with
+
+	def _get_half_similarity_number(self):
+		"""Return the attribut half_similarity_number of the Haplotype class which is
+		a dictionary with keys to the range [0; threshold]. The keys have the values, 
+		the length of the list the attriut half_similarity_with which the same keys."""
+		return self._set_half_similarity_number
 
 	def _get_good_combination(self):
 		"""Return the attribut good_combination of the Haplotypes class which is
@@ -174,6 +181,15 @@ class Haplotype(object):
 		"""
 		self._half_similarity_with = dicoofsimilarity
 
+	def _set_half_similarity_number(self, dicosimnumb):
+		"""Change the half_similarity_number dictionary of our Haplotype object by a new one
+
+		Named parameters :
+		dicosimnumb -- the new half_similarity dictionary selected with length of list in my dico (his size depend of threshold choise in the comande)
+		
+		"""
+		self._half_similarity_number = dicosimnumb
+
 	def _set_good_combination(self, listofgoodcombi):
 		"""Change the good_combination list of our Haplotype object by a new one
 
@@ -229,6 +245,7 @@ class Haplotype(object):
 	markers = property(_get_markers, _set_markers)
 	origin = property(_get_origin, _set_origin)
 	half_similarity_with = property(_get_half_similarity_with, _set_half_similarity_with)
+	half_similarity_number = property(_get_half_similarity_number, _set_half_similarity_number)
 	good_combination = property(_get_good_combination, _set_good_combination)
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
 	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
@@ -239,8 +256,8 @@ class Haplotype(object):
 	#OTHER METHODES#
 	################
 
-	#polymorphisme (surcharge) with same function name in Genotype class
-	def compare_two_seq(self, haplo):
+	#verify if the other work for haplo, geno. if it's work delete this want
+	def compare_two_seq2(self, haplo):
 		"""Return a list with the name of the 2 Haplotypes objects,
 		a sequence with booleen (0, 1) and a int
 
@@ -284,23 +301,102 @@ class Haplotype(object):
 		return output_line
 
 
+	#polymorphisme (surcharge) with same function name in Genotype class
+	def compare_two_seq(self, objects):
+		"""Return a list with the name of the 2 objects,
+		a sequence with booleen (0, 1) and a int.
+
+		0 means no missmatch between the 2 sequences objects for the selected markers 
+		1 means that there is a missmatch
+		The int at the end of the returned list is the sum of 1 in the sequence 
+		(= number of missmatch).
+
+		Named parameters :
+		objects -- The object to compare with mine
+
+		"""
+		output_line = []
+		count_erreur = 0
+		#add ib the output_line list the name of the 2 sequences compared
+		output_line.append(self.name)
+		output_line.append(objects.name)
+		#marche pour comparer 1 geno a un haplo
+		#I look what kind of objets i have
+		#if it's a Haplotype object i look the self.sequence (because it can be my Genotype object, if it's an Haplotype, no prob because my object is a Haplotype Ast condition works)
+		if type(objects) is Haplotype :
+			for i in range(len(self.sequence)) :
+				#traitment of Hmz Markers
+				if len(self.sequence[i]) == 1 : #1st condition
+					if self.sequence[i] == objects.sequence[i] :
+						output_line.append(0)
+					else :
+						output_line.append(1)
+						count_erreur += 1
+				#traitment of unknowing base for markers ('--')
+				elif len(self.sequence[i]) == 2 : #2nd condition
+					output_line.append(0)
+				#traitment of Htz markers
+				elif len(self.sequence[i]) == 3 : #3rd condition
+					if self.sequence[i].rsplit("/", 1)[0] != objects.sequence[i] :
+						if self.sequence[i].rsplit("/", 1)[1] != objects.sequence[i] :
+							output_line.append(1)
+							count_erreur += 1
+						else :
+							output_line.append(0)
+					else :
+						output_line.append(0)
+			output_line.append(count_erreur)
+		#if my objets is a Genotype, i look the object.sequence (because in known that i have a Genotype object here)
+		else :
+			for i in range(len(self.sequence)) :
+				#traitment of Hmz Markers
+				if len(objects.sequence[i]) == 1 :
+					if self.sequence[i] == objects.sequence[i] :
+						output_line.append(0)
+					else :
+						output_line.append(1)
+						count_erreur += 1
+				#traitment of unknowing base for markers ('--')
+				elif len(objects.sequence[i]) == 2 :
+					output_line.append(0)
+				#traitment of Htz markers
+				elif len(objects.sequence[i]) == 3 :
+					if objects.sequence[i].rsplit("/", 1)[0] != self.sequence[i] :
+						if objects.sequence[i].rsplit("/", 1)[1] != self.sequence[i] :
+							output_line.append(1)
+							count_erreur += 1
+						else :
+							output_line.append(0)
+					else :
+						output_line.append(0)
+			output_line.append(count_erreur)
+		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + objects.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
+		return output_line
 
 	def similar_with_size(self, threshold):
-		"""Return a empty dictionary with keys equal at [0,threshold]"""
-		for i in range(threshold+1) :
+		"""Return a empty dictionary with keys equal at [0,threshold]
+		This dictionnary will be fill (for each keys) by the genotype istance who have half of is sequence
+		similar to our haplotype.
+
+		"""
+		dico = {}
+		for i in range(int(threshold)+1) :
 			dico[i] = []
 		return dico
 
 
-
-#remplir half_similarity with, que ce soit pour haplo et geno. l'un et l'autre avec sont contraire
-#le tout dans un dictionnaire ayant pour clef l'intervalle [0,seuil]
 	def select_similar_with(self, objects, threshold):
+		"""Return nothing but fill the dictionnary created before"""
 		#with the previusly created dictionnary :
-		for i in range(threshold+1) :
-			if self.compare_two_seq(objects) == i :
-				dico[i].append(objects)
-		#je parcour threshold+1 fois ma list d'object ici
+		try :
+			sum_mismatch = self.compare_two_seq(objects)[-1]
+			if int(sum_mismatch) <= int(threshold) :
+				self.half_similarity_with[sum_mismatch].append(objects)
+		except KeyError :
+			print ("You have a problem in 'select_similar_with' method, check it")
+			print (self.compare_two_seq(objects))
+			print (self.half_similarity_with)
+			raise
 
 
 

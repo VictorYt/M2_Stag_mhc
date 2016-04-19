@@ -112,6 +112,19 @@ if __name__ == "__main__":
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!
     #Necessary to write the first output
     #Care of this step if we choise a threshold
+
+    #Pour chaqu'une de mes instances (haplo, geno) je créé le dictionnaire adapté en fonction du seuil
+    for geno in lst_of_geno_object :
+        geno.half_similarity_with = geno.similar_with_size(threshold)
+    for haplo in lst_of_haplo_object :
+        haplo.half_similarity_with = haplo.similar_with_size(threshold)
+    #pour chaque combinaision je rempli le dictionnaire à la clef correspondante
+    for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
+        geno.select_similar_with(haplo, threshold)
+    for haplo, geno in it.product(lst_of_haplo_object, lst_of_geno_object) :
+        haplo.select_similar_with(geno, threshold)
+
+    #GOOD ONE IF I NOT HAVE THRESHOLD
     for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
         geno.select_similar_haplotype(haplo, threshold) #put the THRESOLD here in argument
         geno.number_of_similar_haplotype = len(geno.similar_haplotype) #make n list [0 to n] with the haplotype name (or a dict)
@@ -386,3 +399,34 @@ if __name__ == "__main__":
         """The file who can be use for build a network with cytoscape"""
         cytoscape_file(os.path.join(cytoscape, "G_&_H_interaction"), lst_of_geno_object)
         #Here do the function of used_function to have the output file
+
+
+
+
+
+    # Look at cytoscape argument
+    if (fPcompare == True):
+        print ("-f utilisé")
+
+        fPcompare = os.path.join(dirname, "fastPHASE_compare")
+
+        try:
+            os.makedirs(fPcompare)
+        except OSError:
+            if os.path.exists(fPcompare):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+
+    """Construction of the list of Haplotype object (fastPHASE)"""
+    lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
+    #Change origin
+    for fP_halpo in lst_of_fPHASE_object :
+        fP_halpo.origin = "fastPHASE"
+
+
+    """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
+    #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
+    #2- faire un output 
