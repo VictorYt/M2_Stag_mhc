@@ -82,7 +82,7 @@ def compare_output_result(otp, listofgenoobject):
 	with open(otp, 'w') as otp_first_result :
 		my_compare_selection = csv.writer(otp_first_result, delimiter="\t")
 		
-		#First row will be the header one
+		#First row will be the header
 		header =[]
 		header.append("Genotype")
 		header.append("Haplotype")	
@@ -132,13 +132,47 @@ def new_haplotype(lstofgenoobject):
 		if geno.number_of_new_created_haplotype > 0 :
 			for i in range(len(geno.lst_of_new_haplotype)) :
 				my_new_haplo = []
-				my_new_haplo.append("New:{}//{}".format(geno.name, (geno.similar_haplotype[i]).name))
+				my_new_haplo.append("New:{}//{}".format(geno.name, (geno.similar_haplotype[i]).name)) 
+				#pouvoir indiquer ici si mon haplo est corrigé ou non.
 				for values in geno.lst_of_new_haplotype[i] :
 					my_new_haplo.append(values)		
 				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
 				lst_of_haplo_object_expanded.append(A)
 
 	return lst_of_haplo_object_expanded
+
+
+
+
+#
+def new_haplotype_test(lstofgenoobject):
+	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
+	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
+	needed for his construction. Those one are separate by "//"
+
+	Named parameters :
+	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
+
+	"""
+	lst_of_haplo_object_expanded = []
+
+	lst_markers = []
+	for markers in lstofgenoobject[0].markers :
+		lst_markers.append(markers)
+
+	for geno in lstofgenoobject :
+		if geno.number_of_new_created_haplotype > 0 :
+			for i in range(len(geno.lst_of_new_haplotype)) :
+				my_new_haplo = []
+				my_new_haplo.append("New:{}//{}".format(geno.name, "temporaire"+str(i))) #pb ici pour lui donner le nom de l'haplotype (dans un dico)
+				#pouvoir indiquer ici si mon haplo est corrigé ou non.
+				for values in geno.lst_of_new_haplotype[i] :
+					my_new_haplo.append(values)		
+				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
+				lst_of_haplo_object_expanded.append(A)
+
+	return lst_of_haplo_object_expanded
+
 
 
 

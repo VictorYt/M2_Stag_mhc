@@ -33,8 +33,8 @@ class Haplotype(object):
 		self._origin = "Known"
 		#generate during 1st run
 		self._half_similarity_with = {}
-		self.half_similarity_number = {}
-		self._good_combination = []
+		self._half_similarity_number = {} #not use can be deleted i use len(...)
+		self._good_combination = [] #not use now
 		#generate during 2nd run
 		self._similar_new_haplotype = []
 		self._number_of_similar_new_haplotype = 0
@@ -44,7 +44,7 @@ class Haplotype(object):
 
 	def __str__(self):
 		"""Return a description of the created Haplotype object"""
-		return "Haplotype {}, constructed using {} markers, is : {}".format(self._name, self._nbmarkers, self._sequence)
+		return "Haplotype {}, constructed using {} markers, is a {} : {}".format(self._name, self._nbmarkers, self.origin, self._sequence)
 
 	############
 	#ACCESSEURS#
@@ -92,7 +92,7 @@ class Haplotype(object):
 		"""Return the attribut half_similarity_number of the Haplotype class which is
 		a dictionary with keys to the range [0; threshold]. The keys have the values, 
 		the length of the list the attriut half_similarity_with which the same keys."""
-		return self._set_half_similarity_number
+		return self._half_similarity_number
 
 	def _get_good_combination(self):
 		"""Return the attribut good_combination of the Haplotypes class which is
@@ -300,8 +300,7 @@ class Haplotype(object):
 		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + haplo.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return output_line
 
-
-	#polymorphisme (surcharge) with same function name in Genotype class
+	#new method, work with all threshold
 	def compare_two_seq(self, objects):
 		"""Return a list with the name of the 2 objects,
 		a sequence with booleen (0, 1) and a int.
@@ -382,7 +381,7 @@ class Haplotype(object):
 		dico = {}
 		for i in range(int(threshold)+1) :
 			dico[i] = []
-		return dico
+		return dico#change this functoin name
 
 
 	def select_similar_with(self, objects, threshold):
@@ -396,11 +395,11 @@ class Haplotype(object):
 			print ("You have a problem in 'select_similar_with' method, check it")
 			print (self.compare_two_seq(objects))
 			print (self.half_similarity_with)
-			raise
+			raise#ch
 
 
 
-
+	#maybe a way to do this quickly
 	def screening_himself(self, lst_of_new_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 
 		than the sequence of our Haplotype object.
@@ -436,6 +435,7 @@ class Haplotype(object):
 				occurence +=1
 		return occurence
 
+	#do a similar funtion to know what candidates haplotypes are correct during there creation
 	def missing_data_counter(self):
 		"""Return nothing but grow the number of missing data of each Haplotype each time it appear 
 		in the haplotype sequence

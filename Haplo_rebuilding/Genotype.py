@@ -44,8 +44,11 @@ class Genotype(Haplotype):
 		self._nb_hmz_markers = 0
 		self._nb_htz_markers = 0
 		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
+		
+		#supp
 		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)					 # = half_similarity hérité de Haplotype
 		self._number_of_similar_haplotype = 0 #taille de la liste obtenue ci-dessus
+		
 		self._probable_haplotypes_combinaison = [] #liste de liste (ex: [[haplo1, haplo4], [haplo20, haplo79]])
 		self._number_of_probable_haplotypes_combinaison = 0	
 		self._lst_of_new_haplotype = [] #une liste de nouveau(x) (pour le moment liste de la séqeunce seul) haplotype(s) créé à partir de l'objet Génotype en question
@@ -74,6 +77,7 @@ class Genotype(Haplotype):
 		"""Return the attribute that contains a list with the indexs of Hmz markers"""
 		return self._index_htz_markers_in_seq
 	
+	#supp
 	def _get_similar_haplotype(self):
 		"""Return the attribute that contains a Haplotype object list  
 		similar to our genotype
@@ -81,6 +85,7 @@ class Genotype(Haplotype):
 		"""
 		return self._similar_haplotype#Va disparaitre pour half_similar_with hérité de la class Haplotype
 
+	#supp
 	def _get_number_of_similar_haplotype(self):
 		"""Return the attribute that contains the size of the similar Haplotype object list"""
 		return self._number_of_similar_haplotype#va être changer ou disparaitre
@@ -146,7 +151,8 @@ class Genotype(Haplotype):
 
 		"""
 		self._index_htz_markers_in_seq = index_htz_markers
-	
+
+	#supp	
 	def _set_similar_haplotype(self, similar_haplotype):
 		"""Changes the list of similar haplotype with our genotype
 
@@ -156,6 +162,7 @@ class Genotype(Haplotype):
 		"""
 		self._similar_haplotype = similar_haplotype #Va disparaitre pour half_similar_with hérité de la class Haplotype
 
+	#supp
 	def _set_number_of_similar_haplotype(self, nb_similar_haplotype):
 		"""Changes the number of similar haplotype with our genotype
 
@@ -230,8 +237,12 @@ class Genotype(Haplotype):
 	nb_hmz_markers = property(_get_nb_hmz_markers, _set_nb_hmz_markers)
 	nb_htz_markers = property(_get_nb_htz_markers, _set_nb_htz_markers)
 	index_htz_markers_in_seq = property(_get_index_htz_markers_in_seq, _set_index_htz_markers_in_seq)
+	
+	#supp
 	similar_haplotype = property(_get_similar_haplotype, _set_similar_haplotype) #va disparait pour être remplacer par la methode que je vais faire dans la class Haplotype
+	#supp
 	number_of_similar_haplotype = property(_get_number_of_similar_haplotype, _set_number_of_similar_haplotype) #probablement aussi celle-ci
+	
 	probable_haplotypes_combinaison = property(_get_probable_haplotypes_combinaison, _set_probable_haplotypes_combinaison) #un surchage de la methode que j'aurais dans la class haplotype
 	number_of_probable_haplotypes_combinaison = property(_get_number_of_probable_haplotypes_combinaison, _set_number_of_probable_haplotypes_combinaison) #idem
 	lst_of_new_haplotype = property(_get_lst_of_new_haplotype, _set_lst_of_new_haplotype) #modifié car va prendre les haplo avec 0 missmatch et aussi 1 et 2 et "coriger les fautes"
@@ -272,25 +283,30 @@ class Genotype(Haplotype):
 		"""
 		return self._nbmarkers - self._nb_htz_markers 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################BECAME OBSELETTES################
+
+
+
 #Need change, add threshold (default = 0) 
 #if i have a threshold that will be 2n (care need to know the error location)
-	def select_similar_haplotype(self, haplo):
-		"""Put in the similar_haplotype list the Haplotype object for which the last index
-		of the compare_two_seq() return is equal to 0. it means that our haplotype can explain
-		our genotype.
-
-		Named parameters :
-		geno -- The Genotype object 
-		haplo -- The Haplotype object  
-
-		"""
-		#We look at the last index (sum of error between the 2 sequences) of the comparative list
-		if self.compare_two_seq(haplo)[-1] == 0 :
-			self.similar_haplotype.append(haplo)
-		else :
-			pass
-
-#supp celle du dessus et finir celle-ci pour remplir le dico
+#supp celle du dessus et finir celle-ci pour remplir le dico d
 	def select_similar_haplotype(self, haplo, threshold):
 		"""Return nothing
 		Put in the similar_haplotype list the Haplotype object for which the last index
@@ -345,36 +361,7 @@ class Genotype(Haplotype):
 		#This list can be empty if any combination can explain our genotype
 
 
-#changement de la fonction pour quelle prenne en compte le threshold
-	def combinaison_between_similar_haplotype_in_geno2(self):
-		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
-		Which, if they are assembled, explain the observed genotype.
 
-		"""
-		#Use of the index_htz_markers_in_seq
-		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers_in_seq list
-		lstZip = []
-		lst_good_combinaison = []
-		#I only combine the haplotype with 
-		if len(self.half_similar_with[0]) > 1 :
-			for haplo1, haplo2 in it.combinations(self.half_similar_with[0], 2) :
-				lst_combinaison = []
-				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
-				count_bad_combinaison = 0
-				for val_index in self.index_htz_markers_in_seq :
-					#we only considered the real htz markers ('A/G')
-					if len(lstZip[val_index][2]) == 3 : 
-						tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
-						tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
-						if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
-							lst_combinaison.append(0)
-						else :
-							lst_combinaison.append(1)
-							count_bad_combinaison += 1
-				if count_bad_combinaison == 0 :
-					lst_good_combinaison.append([haplo1, haplo2])
-		return lst_good_combinaison
-		#This list can be empty if any combination can explain our genotype
 
 
 
@@ -469,8 +456,40 @@ class Genotype(Haplotype):
 
 
 
+
+#changement de la fonction pour quelle prenne en compte le threshold
+	def combinaison_between_similar_haplotype_in_geno_test(self):
+		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
+		Which, if they are assembled, explain the observed genotype.
+
+		"""
+		#Use of the index_htz_markers_in_seq
+		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers_in_seq list
+		lstZip = []
+		lst_good_combinaison = []
+		#I only combine the haplotype with 
+		if len(self.half_similarity_with[0]) > 1 :
+			for haplo1, haplo2 in it.combinations(self.half_similarity_with[0], 2) :
+				lst_combinaison = []
+				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
+				count_bad_combinaison = 0
+				for val_index in self.index_htz_markers_in_seq :
+					#we only considered the real htz markers ('A/G')
+					if len(lstZip[val_index][2]) == 3 : 
+						tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
+						tmp_bases_combine2 = lstZip[val_index][1] + "/" + lstZip[val_index][0]
+						if tmp_bases_combine == lstZip[val_index][2] or tmp_bases_combine2 == lstZip[val_index][2] :
+							lst_combinaison.append(0)
+						else :
+							lst_combinaison.append(1)
+							count_bad_combinaison += 1
+				if count_bad_combinaison == 0 :
+					lst_good_combinaison.append([haplo1, haplo2])
+		return lst_good_combinaison
+		#This list can be empty if any combination can explain our genotype
+
 #changer ou créer une autre pour les haplotype avec erreurs
-	def create_haplotype(self, haplotype):
+	def create_haplotype_test(self, haplotype):
 		"""Return a list of a new haplotype sequence.
 		Which is created by the asociation between a genotype and one of his similar haplotype.  
 
@@ -484,7 +503,7 @@ class Genotype(Haplotype):
 		for nt in range(len(self.sequence)) :
 			#when it was a hmz markers, the same one
 			if len(lstZip[nt][1]) == 1 :
-				new_haplotype.append(lstZip[nt][1])########################Je m'en fou de savoir ou est l'erreur je pre
+				new_haplotype.append(lstZip[nt][1])########################Je ne fait pas attention s'il y a 1 ou plus d'erreur ici (car erreur ne peut être que sur Hmz SNP)
 			#when it was a unknow, a unknow one
 			if len(lstZip[nt][1]) == 2 :
 				new_haplotype.append("--")
@@ -500,23 +519,29 @@ class Genotype(Haplotype):
 
 
 	#trouver un autre nom a cette fonction
-	def have_new_haplotype(self):
+	def have_new_haplotype_test(self):
 		"""Return a list of new haplotypes sequences for Genotypes objects who :
 			-have a minimum of 1 similar haplotype
 			-the combination of different similar haplotype can't explain the observed genotype
 
 		"""
 		lst_new_haplo = []
-		for i in range(threshold+1) :
-			#Create a new haplotype for the genotype with a uniq similar haplotype
-			if len(self.half_similar_with[i]) == 1 :
-				lst_new_haplo.append(self.create_haplotype(self.half_similar_with[i][0]))
-			#And for the genotype who have similar haplotype but any of them have a good combination
-			if len(self.half_similar_with[i]) > 1 :
-				if self.number_of_probable_haplotypes_combinaison == 0 :
-					for haplo in self.half_similar_with[i] : 
-						lst_new_haplo.append(self.create_haplotype(haplo)) 
-				else : #because i already have a strong combination with Known Haplotypes
-					pass
+		#I run all my dico.keys() heure
+		for i in self.half_similarity_with.keys() :
+			#i create haplotype only if my Genotype isn't confirmed by 2 Known Haplotypes
+			if self.number_of_probable_haplotypes_combinaison == 0 :
+				#Create a new haplotype for the genotype with a uniq similar haplotype
+				if len(self.half_similarity_with[i]) == 1 :
+					lst_new_haplo.append(self.create_haplotype_test(self.half_similarity_with[i][0]))
+				#And for the genotype who have similar haplotype but any of them have a good combination
+				elif len(self.half_similarity_with[i]) > 1 :
+					if self.number_of_probable_haplotypes_combinaison == 0 :
+						for haplo in self.half_similarity_with[i] : 
+							lst_new_haplo.append(self.create_haplotype_test(haplo)) 
+					else : #because i already have a strong combination with Known Haplotypes
+						pass
 
 		return lst_new_haplo
+		#just a list for now, like that i lose the correct haplo
+
+		similar_haplotype

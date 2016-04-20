@@ -406,6 +406,34 @@ if __name__ == "__main__":
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################################Finish this one when it will be termined##################################
     # Compare with fastPhase résult
     if (fPcompare == True):
         print ("-f utilisé")
