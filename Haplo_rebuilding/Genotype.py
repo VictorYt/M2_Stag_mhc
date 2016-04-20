@@ -489,7 +489,7 @@ class Genotype(Haplotype):
 		#This list can be empty if any combination can explain our genotype
 
 #changer ou créer une autre pour les haplotype avec erreurs
-	def create_haplotype_test(self, haplotype):
+	def create_haplotype_test(self, haplotype):#donner le lnom "create_haplotype_seq"
 		"""Return a list of a new haplotype sequence.
 		Which is created by the asociation between a genotype and one of his similar haplotype.  
 
@@ -515,10 +515,7 @@ class Genotype(Haplotype):
 					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
 		return new_haplotype
 
-
-
-
-	#trouver un autre nom a cette fonction
+#trouver un autre nom a cette fonction
 	def have_new_haplotype_test(self):
 		"""Return a list of new haplotypes sequences for Genotypes objects who :
 			-have a minimum of 1 similar haplotype
@@ -543,5 +540,3 @@ class Genotype(Haplotype):
 
 		return lst_new_haplo
 		#just a list for now, like that i lose the correct haplo
-
-		similar_haplotype

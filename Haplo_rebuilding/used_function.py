@@ -144,7 +144,8 @@ def new_haplotype(lstofgenoobject):
 
 
 
-#
+#Important d'avoir le nom de l'haplotype après // pour savoir si il avait une erreur avant
+#pb c'est que je met tous mes nouveaux haplo dans une liste sans savoir s'ils ont une erreur de corrigée ou plus
 def new_haplotype_test(lstofgenoobject):
 	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
 	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
