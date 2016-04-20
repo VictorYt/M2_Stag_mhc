@@ -540,3 +540,16 @@ class Genotype(Haplotype):
 
 		return lst_new_haplo
 		#just a list for now, like that i lose the correct haplo
+
+
+	def have_new_haplotype_test_better(self):
+		lst_new_haplo = []
+		#I run all my dico.keys() heure
+		for i in self.half_similarity_with.keys() :
+			#i create haplotype only if my Genotype isn't confirmed by 2 Known Haplotypes
+			if self.number_of_probable_haplotypes_combinaison == 0 :
+				for haplo in self.half_similarity_with[i] :
+					candidate_name = "New:{}//{}".format(geno.name, haplo.name)
+					candidate_seq =  self.create_haplotype_test(self.half_similarity_with[i][0])
+					candidate_markers = 
+					C = Haplotype(name=candidate_name, sequence=candidate_seq, markers=candidate_markers)
