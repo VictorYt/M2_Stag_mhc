@@ -5,7 +5,7 @@
 """
 usage: 
     __main__.py (--ih <haplo_file>) (--ig <geno_file>)
-    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p] [-c]
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p] [-f <fP_file>] [-c]
 
 options:
     -h, --help                              This help.
@@ -20,6 +20,7 @@ options:
                                             [default: False]
     -p, --ACP                               Produce pca graphics based on inputs and outputs files.
                                             [default: False]
+    -f <fP_file>, --fastPHASE <fP_file>     Compare your result by fastPHASE one
     -c, --cytoscape                         Produce file usable for the construction of an interaction network between G & H
                                             [default: False]
 
@@ -45,6 +46,7 @@ if __name__ == "__main__":
     threshold = arguments["--threshold"]
     distribution = arguments["--dist"]
     pca = arguments["--ACP"]
+    fPcompare = arguments["--fastPHASE"]
     cytoscape = arguments["--cytoscape"]
 
     
@@ -404,7 +406,7 @@ if __name__ == "__main__":
 
 
 
-    # Look at cytoscape argument
+    # Compare with fastPhase résult
     if (fPcompare == True):
         print ("-f utilisé")
 
