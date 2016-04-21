@@ -70,9 +70,14 @@ if __name__ == "__main__":
 
 
 
+                                            ####################################################
+                                            ################### MAIN RUN SCRIPT ################
+                                            ####################################################
 
 
 
+    if threshold != '0' :
+        print ("\nYou use the threshold option")
 
 
 
@@ -152,12 +157,14 @@ if __name__ == "__main__":
         geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno_test()
         geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
         #New Haplotype creation, store in the genotype attribut : lst_of_new_haplotype
-        geno.lst_of_new_haplotype = geno.have_new_haplotype_test() 
+        #geno.lst_of_new_haplotype = geno.have_new_haplotype_test()
+        geno.lst_of_new_haplotype = geno.have_new_haplotype_test_better() 
         geno.number_of_new_created_haplotype = len(geno.lst_of_new_haplotype)
 
 
     #Here the list of candidates Haplotypes objects
-    lst_of_haplo_object_expanded = new_haplotype_test(lst_of_geno_object)
+    #lst_of_haplo_object_expanded = new_haplotype_test(lst_of_geno_object) #remplacer par une autre pethode
+    lst_of_haplo_object_expanded = new_haplotype_test_extend(lst_of_geno_object) #remplacer par celle-ci
     #change the origine of this candidate haplotype
     for candidate_haplotype in lst_of_haplo_object_expanded :
         candidate_haplotype.origin = "candidate"
@@ -182,7 +189,7 @@ if __name__ == "__main__":
 
     """Screening of identical candidates Haplotypes"""
     for new_haplo in lst_of_haplo_object_expanded :
-        new_haplo.similar_new_haplotype = new_haplo.screening_himself(lst_of_haplo_object_expanded)
+        new_haplo.similar_new_haplotype = new_haplo.screening_himself_test(lst_of_haplo_object_expanded)
         new_haplo.number_of_similar_new_haplotype = len(new_haplo.similar_new_haplotype)
     
     lst_of_haplo_object_expanded_filter = []
@@ -255,31 +262,25 @@ if __name__ == "__main__":
 
 
 
-
     ##############
     ##OUTPUT RUN##
     ##############
     run3_start = time.time()
-    print("")
+    print("\nAchivement of outputs")
     
     ###RUN 1###
-    print("")
+    print("First run outputs")
     """Comparison of each genotype with each Hmz haplotype """
     compare_output(os.path.join(output, "run1_GvH"), lst_of_geno_object, lst_of_haplo_object)
-    """A second output to see each similar Hmz haplotype of our Genotype in the Genotype object list"""#modification a faire ici car maintenant j'ai un dico
-    compare_output_result(os.path.join(output, "run1_Compatible_Haplotypes"), lst_of_geno_object)#
-    """A third output to see the new Haplotype created"""
+    """A file to see the candidates Haplotypes created"""
     new_haplotype_output(os.path.join(output, "run1_candidates_Haplotypes"), lst_of_geno_object)# a indiquer combien de corerction il y a eut pour chaque Haplotype
 
     ###RUN 2###
-    #Same output with new haplotype and the list of genotype not confirmed yet
-    compare_output(os.path.join(output, "run2_GvH"), lst_genotype_non_confirmed, lst_of_haplo_object_expanded_filter)
-    compare_output_result(os.path.join(output, "run2_Compatible_Haplotypes"), lst_genotype_non_confirmed)
-
-
-
-
-
+    print("Second run outputs")
+    """Comparison of each unconfirmed genotype with each Candidate haplotype """
+    compare_output(os.path.join(output, "run2_GvH"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded_filter)
+    """A file to see each half similarity (Known & Candidates Haplotypes) with our Genotypes"""
+    compare_output_result_test(os.path.join(output, "Compatible_Haplotypes"), lst_of_geno_object)
 
     ###SUMMARY OUTPUT###
     #create the fonction and put it here
@@ -290,3 +291,140 @@ if __name__ == "__main__":
     time3 = run3_end - run3_start
     print("Output_given")
     print("it's spend {}".format(time3))
+
+
+
+
+
+
+                                            ####################################################
+                                            ################# DISTRIBUTION OPTION ##############
+                                            ####################################################
+
+
+    # Look at distribution argument
+    if (distribution == True):
+        print ("\nDistribution flag used")
+
+        dist = os.path.join(dirname, "Distribution")
+
+        try:
+            os.makedirs(dist)
+        except OSError:
+            if os.path.exists(dist):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+
+    ##############
+    ##OUTPUT RUN##
+    ##############
+        run4_start = time.time()
+
+        """The distribution of the run1_GvkH"""
+        mismatch_distribution_output(os.path.join(dist,"GvH_distribution"), mismatch_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
+        
+        """The distribution of the run1_kHvkH"""
+        compare_output(os.path.join(dist, "run1_HvH"), lst_of_haplo_object, lst_of_haplo_object)
+        mismatch_distribution_output(os.path.join(dist, "HvH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist,"run1_HvH")))
+
+        """The distribution of the run2_GvcH"""
+        compare_output(os.path.join(dist, "run2_GvcH"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded)
+        mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
+
+        """Distribution of the occurence of haplotype hmz during the first run"""
+        haplotype_occurency(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object, lst_of_geno_object)
+
+        """Distribution of the occurrence of new haplotypes during the second run"""
+        new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)
+
+        print ("Distribution output files realized") 
+
+    #############
+    ##GRAPHIQUE##
+    #############
+        #And now the functions using subprocess to collect distribution pdf
+        run_R_file("barplot_distribution.R", dist)
+        #The violin dotplot & occurency of missing data
+        run_R_file("geom_dotplot_violin.R", dist)
+
+        print ("Graphique's output realized")
+
+        run4_end = time.time()
+        time4 = run4_end - run4_start
+        print("it's spend {}".format(time4))
+
+
+
+
+                                            ####################################################
+                                            ##################### PCA OPTION ###################
+                                            ####################################################
+
+
+
+    # Look at pca argument
+    if (pca == True):
+        print ("\nPCA flag used")
+
+        pca = os.path.join(dirname, "ACP")
+
+        try:
+            os.makedirs(pca)
+        except OSError:
+            if os.path.exists(pca):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+    ##############
+    ##OUTPUT RUN##
+    ##############
+        run5_start = time.time()
+
+
+        #TRY
+        run_R_file("pca_script.R",pca)
+        #that does work, i think it's because he don't find the right input files (fail setwd in our R script?)
+        #prob in the R script in the 3rd step
+
+
+        run5_end = time.time()
+        time5 = run5_end - run5_start
+        print("it's spend {}".format(time5))
+
+
+
+
+
+
+
+                                            ####################################################
+                                            ################## CYTOSCAPE OPTION ################
+                                            ####################################################
+
+
+    # Look at cytoscape argument
+    if (cytoscape == True):
+        print ("-c utilisé")
+
+        cytoscape = os.path.join(dirname, "Cytoscape")
+
+        try:
+            os.makedirs(cytoscape)
+        except OSError:
+            if os.path.exists(cytoscape):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+    ##############
+    ##OUTPUT RUN##
+    ##############
+        """The file who can be use for build a network with cytoscape"""
+        cytoscape_file(os.path.join(cytoscape, "G_&_H_interaction"), lst_of_geno_object)
+        #Here do the function of used_function to have the output file
