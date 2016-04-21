@@ -409,7 +409,7 @@ if __name__ == "__main__":
 
     # Look at cytoscape argument
     if (cytoscape == True):
-        print ("-c utilisé")
+        print ("\nCytoscape output option used")
 
         cytoscape = os.path.join(dirname, "Cytoscape")
 
@@ -428,3 +428,45 @@ if __name__ == "__main__":
         """The file who can be use for build a network with cytoscape"""
         cytoscape_file(os.path.join(cytoscape, "G_&_H_interaction"), lst_of_geno_object)
         #Here do the function of used_function to have the output file
+
+        print("Cytoscape output realized")
+
+
+
+
+
+                                            ####################################################
+                                            ############## fastPHASE COMPARE OPTION ############
+                                            ####################################################
+
+
+
+
+    # Compare with fastPhase résult
+    if (fPcompare == True):
+        print ("-f utilisé")
+
+        fPcompare = os.path.join(dirname, "fastPHASE_compare")
+
+        try:
+            os.makedirs(fPcompare)
+        except OSError:
+            if os.path.exists(fPcompare):
+            # We are nearly safe
+                pass
+            else:
+            # There was an error on creation, so make sure we know about it
+                raise
+
+    print("You chose to compare our result by the fastPHASE result for the same data")
+    
+    """Construction of the list of Haplotype object (fastPHASE)"""
+    lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
+    #Change origin
+    for fP_halpo in lst_of_fPHASE_object :
+        fP_halpo.origin = "fastPHASE"
+
+
+    """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
+    #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
+    #2- faire un output 
