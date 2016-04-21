@@ -400,21 +400,21 @@ class Haplotype(object):
 
 
 	#maybe a way to do this quickly
-	def screening_himself(self, lst_of_new_haplotype):
+	def screening_himself(self, lst_of_candidate_haplotype):
 		"""Return a list of Haplotype objects who have the same new haplotye sequence 
 		than the sequence of our Haplotype object.
 
 		"""
 		#Find himself in the list
 		index_me = 0
-		for me in lst_of_new_haplotype:
+		for me in lst_of_candidate_haplotype:
 			if me.name == self.name :
-				index_me = lst_of_new_haplotype.index(me)
+				index_me = lst_of_candidate_haplotype.index(me)
 
 		lst_similar_new_haplo = []
-		for same in lst_of_new_haplotype :
+		for same in lst_of_candidate_haplotype :
 			#if he find himslef i pass
-			if lst_of_new_haplotype.index(same) == index_me :
+			if lst_of_candidate_haplotype.index(same) == index_me :
 				pass
 			#for all the other i compare the sequence
 			elif same.sequence == self.sequence :

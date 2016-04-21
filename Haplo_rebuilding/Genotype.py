@@ -549,7 +549,10 @@ class Genotype(Haplotype):
 			#i create haplotype only if my Genotype isn't confirmed by 2 Known Haplotypes
 			if self.number_of_probable_haplotypes_combinaison == 0 :
 				for haplo in self.half_similarity_with[i] :
-					candidate_name = "New:{}//{}".format(geno.name, haplo.name)
+					candidate_name = "New:{}//{}".format(self.name, haplo.name)
+					print (candidate_name)
 					candidate_seq =  self.create_haplotype_test(self.half_similarity_with[i][0])
-					candidate_markers = 
+					candidate_markers = self.markers
 					C = Haplotype(name=candidate_name, sequence=candidate_seq, markers=candidate_markers)
+					lst_new_haplo.append(C)
+		return lst_new_haplo

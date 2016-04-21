@@ -69,6 +69,25 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 			for geno, haplo in it.product(firstobjcetlist, secondobjcetlist) :
 				my_otp_writer.writerow(geno.compare_two_seq(haplo))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # add threshold here
 def compare_output_result(otp, listofgenoobject):
 	"""Return nothing but give the csv output file with genotypes and them 
@@ -111,6 +130,79 @@ def compare_output_result(otp, listofgenoobject):
 					my_compare_selection.writerow(haplo_compare_output)
 
 
+
+# add threshold here
+def compare_output_result_test(otp, listofgenoobject):
+	"""Return nothing but give the csv output file with genotypes and them 
+	similar haplotype (0 error find during the comparaison). 
+
+	Named parameters :
+	-otp -- The output name
+	-listofgenoobject -- A list of Genotypes objects
+
+	"""
+	with open(otp, 'w') as otp_first_result :
+		my_compare_selection = csv.writer(otp_first_result, delimiter="\t")
+		
+		#First row will be the header
+		header =[]
+		header.append("Genotype")
+		header.append("Haplotype")
+		#header.append("nb_correction")
+		#header.append("index_correction")
+		for markers in listofgenoobject[0].markers :
+			header.append(markers)
+		my_compare_selection.writerow(header)
+
+		#After that we put our geno.name, is number of similar haplo and is sequence
+		for geno in listofgenoobject:
+			geno_compare_output = []
+			geno_compare_output.append(geno.name)
+			geno_compare_output.append(len(geno.half_similarity_with[0]))
+			for values in geno.sequence :
+				geno_compare_output.append(values)
+			my_compare_selection.writerow(geno_compare_output)
+
+		#If my genotype have some similar haplotype (>0)
+		#I put the haplotype name and his sequence under genotype sequence
+			if len(geno.half_similarity_with[0]) > 0 :
+				for candidate_haplo in geno.half_similarity_with[0] :
+					haplo_compare_output = []
+					haplo_compare_output.append(geno.name)
+					haplo_compare_output.append(candidate_haplo.name)
+					#haplo_compare_output.append(candidate_haplo.nb_mismatch)
+					#haplo_compare_output.append(candidate_haplo.index_mismatch)
+					for values in candidate_haplo.sequence :
+						haplo_compare_output.append(values)
+					my_compare_selection.writerow(haplo_compare_output)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #change to do it with a dicotionnary
 #need change this one or a previous one to know when i use haplotype with >0 mismatch 
 def new_haplotype(lstofgenoobject):
@@ -141,9 +233,6 @@ def new_haplotype(lstofgenoobject):
 
 	return lst_of_haplo_object_expanded
 
-
-
-
 #Important d'avoir le nom de l'haplotype après // pour savoir si il avait une erreur avant
 #pb c'est que je met tous mes nouveaux haplo dans une liste sans savoir s'ils ont une erreur de corrigée ou plus
 def new_haplotype_test(lstofgenoobject):
@@ -173,6 +262,24 @@ def new_haplotype_test(lstofgenoobject):
 				lst_of_haplo_object_expanded.append(A)
 
 	return lst_of_haplo_object_expanded
+
+
+#new one to replace the 2 previous
+def new_haplotype_test_extend(lstofgenoobject):
+	extend_lst = []
+	for geno in lstofgenoobject :
+		extend_lst.extend(geno.lst_of_new_haplotype)
+	return extend_lst
+
+
+
+
+
+
+
+
+
+
 
 
 
