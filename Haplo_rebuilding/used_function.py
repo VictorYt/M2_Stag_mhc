@@ -40,7 +40,6 @@ def read_input_file(filename, objecttype, delimit):
 
 	return lst_of_objects
 
-
 def compare_output(otp, firstobjcetlist, secondobjcetlist):
 	"""Return nothing but give the csv output file with the compraison of 
 	one sequence between a list of one. 
@@ -128,8 +127,6 @@ def compare_output_result(otp, listofgenoobject):
 					for values in similar_haplo.sequence :
 						haplo_compare_output.append(values)
 					my_compare_selection.writerow(haplo_compare_output)
-
-
 
 # add threshold here
 def compare_output_result_test(otp, listofgenoobject):
@@ -235,6 +232,7 @@ def new_haplotype(lstofgenoobject):
 
 #Important d'avoir le nom de l'haplotype après // pour savoir si il avait une erreur avant
 #pb c'est que je met tous mes nouveaux haplo dans une liste sans savoir s'ils ont une erreur de corrigée ou plus
+#fonctionne mais difficulter pour accéder au nom de l'haplo
 def new_haplotype_test(lstofgenoobject):
 	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
 	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names

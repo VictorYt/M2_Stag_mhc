@@ -450,6 +450,8 @@ if __name__ == "__main__":
             # There was an error on creation, so make sure we know about it
                 raise
 
+    print("You chose to compare our result by the fastPHASE résult for the same data")
+    
     """Construction of the list of Haplotype object (fastPHASE)"""
     lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
     #Change origin
