@@ -406,7 +406,7 @@ def run_R_file(path2file, outputdir):
 
 ######SUMMARY######
 #Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
-def error_distribution(lstofhaplotype, filetoread):
+def mismatch_distribution(lstofhaplotype, filetoread):
 	"""Soit en utilisant les sorties 1 et 4 
 	ou en refaisant la méthode dans génotype"""
 	distribution_dictionnary = {}
@@ -426,12 +426,12 @@ def error_distribution(lstofhaplotype, filetoread):
 
 	return distribution_dictionnary
 
-def error_distribution_output(otp, distri_dictionary):
+def mismatch_distribution_output(otp, distri_dictionary):
 	"""Return nothing but do the necesary otp for R distribution"""
 	with open(otp, 'w') as distri_otp :
 		my_distri_writer = csv.writer(distri_otp, delimiter="\t")
 
-		header = ['Number_of_error', 'Number_of_error_occurency']
+		header = ['Number_of_mismatch', 'Number_of_mismatch_occurency']
 		my_distri_writer.writerow(header)
 		for key, value in distri_dictionary.items() :
 			my_distri_writer.writerow([key, value])

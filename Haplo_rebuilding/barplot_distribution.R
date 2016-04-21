@@ -17,31 +17,31 @@ distri_candidate <- read.csv2("GvcH_distribution", header = TRUE, sep = '\t')
 
 #GvH_distribution
 pdf("Distribution_of_mismatch_between_G&H.pdf", height = 10, width = 10)
-ggplot(data = distri, aes(x=Number_of_error, y=Number_of_error_occurency)) +
+ggplot(data = distri, aes(x=Number_of_mismatch, y=Number_of_mismatch_occurency)) +
   geom_bar(stat="identity", fill="steelblue",  position=position_dodge()) +
-  geom_text(aes(label=Number_of_error_occurency), vjust=1.6, color="black",  position=position_dodge(0.9), size=2) +
-  ggtitle("Distribution of the number of mismatch in the comparison between the genotypes and the haplotypes") +
+  geom_text(aes(label=Number_of_mismatch_occurency), vjust=1.6, color="black",  position=position_dodge(0.9), size=2) +
+  ggtitle("Distribution of mismatch in the comparison between the genotypes and the haplotypes") +
   theme_gray()
-#barplot(distri$Number_of_error_occurency, names.arg = distri$Number_of_error ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
+#barplot(distri$Number_of_mismatch_occurency, names.arg = distri$Number_of_mismatch ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
 dev.off()
 
 #HvH_distribution
 pdf("Distribution_of_mismatch_between_H&H.pdf", height = 10, width = 10)
-ggplot(data = distri_haplo, aes(x=Number_of_error, y=Number_of_error_occurency)) +
+ggplot(data = distri_haplo, aes(x=Number_of_mismatch, y=Number_of_mismatch_occurency)) +
   geom_bar(stat = "identity", fill="steelblue") +
-  geom_text(aes(label=Number_of_error_occurency), vjust=1.6, color="black", size=2) +
-  ggtitle("Distribution of the number of mismatch in the comparison between the the haplotypes") +
+  geom_text(aes(label=Number_of_mismatch_occurency), vjust=1.6, color="black", size=2) +
+  ggtitle("Distribution of mismatch in the comparison between the the haplotypes") +
   theme_gray()
-#barplot(distri_haplo$Number_of_error_occurency, names.arg = distri_haplo$Number_of_error ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
+#barplot(distri_haplo$Number_of_mismatch_occurency, names.arg = distri_haplo$Number_of_mismatch ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
 dev.off()
 
 
 #GvcH_distribution
 pdf("Distribution_of_mismatch_between_G&cH.pdf", height = 10, width = 10)
-ggplot(data = distri_candidate, aes(x=Number_of_error, y=Number_of_error_occurency)) +
+ggplot(data = distri_candidate, aes(x=Number_of_mismatch, y=Number_of_mismatch_occurency)) +
   geom_bar(stat="identity", fill="steelblue",  position=position_dodge()) +
-  geom_text(aes(label=Number_of_error_occurency), vjust=1.6, color="black",  position=position_dodge(0.9), size=2) +
-  ggtitle("Distribution of the number of mismatch in the comparison between the unconfirmed genotypes and the candidates haplotypes") +
+  geom_text(aes(label=Number_of_mismatch_occurency), vjust=1.6, color="black",  position=position_dodge(0.9), size=2) +
+  ggtitle("Distribution of mismatch in the comparison between the unconfirmed genotypes and the candidates haplotypes") +
   theme_gray()
-#barplot(distri$Number_of_error_occurency, names.arg = distri$Number_of_error ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
+#barplot(distri$Number_of_mismatch_occurency, names.arg = distri$Number_of_mismatch ,main = "Distribution des erreurs entre Haplotypes et Genotypes", xlab="nombre d'erreurs", ylab = "occurences de ce nombre d'erreurs")
 dev.off()
