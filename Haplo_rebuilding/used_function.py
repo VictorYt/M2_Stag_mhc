@@ -14,8 +14,9 @@ import itertools as it
 
 """Functions used for reduicing main size
 ..."""
-
-
+#################
+######INPUT######
+#################
 def read_input_file(filename, objecttype, delimit):
 	"""Return a list of objet by reading your input file,
 	the type is determine by the argument "objecttype"
@@ -40,6 +41,9 @@ def read_input_file(filename, objecttype, delimit):
 
 	return lst_of_objects
 
+##################
+######OUTPUT######
+##################
 def compare_output(otp, firstobjcetlist, secondobjcetlist):
 	"""Return nothing but give the csv output file with the compraison of 
 	one sequence between a list of one. 
@@ -68,26 +72,7 @@ def compare_output(otp, firstobjcetlist, secondobjcetlist):
 			for geno, haplo in it.product(firstobjcetlist, secondobjcetlist) :
 				my_otp_writer.writerow(geno.compare_two_seq(haplo))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# add threshold here
+#a delete (quand threshold sera fini et que tout marchera)
 def compare_output_result(otp, listofgenoobject):
 	"""Return nothing but give the csv output file with genotypes and them 
 	similar haplotype (0 error find during the comparaison). 
@@ -128,7 +113,8 @@ def compare_output_result(otp, listofgenoobject):
 						haplo_compare_output.append(values)
 					my_compare_selection.writerow(haplo_compare_output)
 
-# add threshold here
+#good with threshlod
+#a compléter si a le temps (add 2 colonnes : nb de correction pour les haplotypes candidat issue d'haplotypes corrigé/ et l'index d'où on lieu ces mismatch/correction)
 def compare_output_result_test(otp, listofgenoobject):
 	"""Return nothing but give the csv output file with genotypes and them 
 	similar haplotype (0 error find during the comparaison). 
@@ -174,263 +160,6 @@ def compare_output_result_test(otp, listofgenoobject):
 					my_compare_selection.writerow(haplo_compare_output)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#change to do it with a dicotionnary
-#need change this one or a previous one to know when i use haplotype with >0 mismatch 
-def new_haplotype(lstofgenoobject):
-	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
-	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
-	needed for his construction. Those one are separate by "//"
-
-	Named parameters :
-	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
-
-	"""
-	lst_of_haplo_object_expanded = []
-
-	lst_markers = []
-	for markers in lstofgenoobject[0].markers :
-		lst_markers.append(markers)
-
-	for geno in lstofgenoobject :
-		if geno.number_of_new_created_haplotype > 0 :
-			for i in range(len(geno.lst_of_new_haplotype)) :
-				my_new_haplo = []
-				my_new_haplo.append("New:{}//{}".format(geno.name, (geno.similar_haplotype[i]).name)) 
-				#pouvoir indiquer ici si mon haplo est corrigé ou non.
-				for values in geno.lst_of_new_haplotype[i] :
-					my_new_haplo.append(values)		
-				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
-				lst_of_haplo_object_expanded.append(A)
-
-	return lst_of_haplo_object_expanded
-
-#Important d'avoir le nom de l'haplotype après // pour savoir si il avait une erreur avant
-#pb c'est que je met tous mes nouveaux haplo dans une liste sans savoir s'ils ont une erreur de corrigée ou plus
-#fonctionne mais difficulter pour accéder au nom de l'haplo
-def new_haplotype_test(lstofgenoobject):
-	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
-	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
-	needed for his construction. Those one are separate by "//"
-
-	Named parameters :
-	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
-
-	"""
-	lst_of_haplo_object_expanded = []
-
-	lst_markers = []
-	for markers in lstofgenoobject[0].markers :
-		lst_markers.append(markers)
-
-	for geno in lstofgenoobject :
-		if geno.number_of_new_created_haplotype > 0 :
-			for i in range(len(geno.lst_of_new_haplotype)) :
-				my_new_haplo = []
-				my_new_haplo.append("New:{}//{}".format(geno.name, "temporaire"+str(i))) #pb ici pour lui donner le nom de l'haplotype (dans un dico)
-				#pouvoir indiquer ici si mon haplo est corrigé ou non.
-				for values in geno.lst_of_new_haplotype[i] :
-					my_new_haplo.append(values)		
-				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
-				lst_of_haplo_object_expanded.append(A)
-
-	return lst_of_haplo_object_expanded
-
-
-#new one to replace the 2 previous
-def new_haplotype_test_extend(lstofgenoobject):
-	extend_lst = []
-	for geno in lstofgenoobject :
-		extend_lst.extend(geno.lst_of_new_haplotype)
-	return extend_lst
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Function for created the list of new_haplo and the output
-def new_haplotype_output(otp, lstofgenoobject):
-	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
-	(=candidates)
-
-	Named parameters :
-	-otp -- the output name
-	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
-
-	"""
-	with open(otp, 'w') as otp3 :
-		my_new_H_otp_writer = csv.writer(otp3, delimiter="\t")
-
-		#Creation of the header of my output
-		header = ["Genotype", "Haplotype", "New_Haplotype"]
-		for markers in lstofgenoobject[0].markers :
-			header.append(markers)
-		my_new_H_otp_writer.writerow(header)
-
-		#Add eatch row containing a new haplotype (where he come from, his name and his sequence)
-		for geno in lstofgenoobject :
-			if geno.number_of_new_created_haplotype > 0 :
-				for i in range(len(geno.lst_of_new_haplotype)) :
-					candidate_haplo_output = []
-					candidate_haplo_output.append(geno.name)
-					candidate_haplo_output.append((geno.similar_haplotype[i]).name)
-					candidate_haplo_output.append("New:{}//{}".format( geno.name, (geno.similar_haplotype[i]).name)) 
-					for values in geno.lst_of_new_haplotype[i] :
-						candidate_haplo_output.append(values)
-
-					#I write my output where i can find the sequence of all my new haplotype in row
-					my_new_H_otp_writer.writerow(candidate_haplo_output)
-
-def uniq_candidate_haplo(otp, lstuniqhaplo):
-	with open(otp, 'w') as uniq_new :
-		my_otp_uniq_new_writer = csv.writer(uniq_new, delimiter="\t")
-
-		header = ["candidate_name"]
-		for markers in lstuniqhaplo[0].markers :
-			header.append(markers)
-		my_otp_uniq_new_writer.writerow(header)
-
-		for candidate in lstuniqhaplo :
-			candidate_haplo_output = []
-			candidate_haplo_output.append(candidate.name)
-			for nt in candidate.sequence :
-				candidate_haplo_output.append(nt)
-			my_otp_uniq_new_writer.writerow(candidate_haplo_output)
-
-
-#Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
-def error_distribution(lstofhaplotype, filetoread):
-	"""Soit en utilisant les sorties 1 et 4 
-	ou en refaisant la méthode dans génotype"""
-	distribution_dictionnary = {}
-
-	for i in range(len(lstofhaplotype[0].sequence)+1):
-		distribution_dictionnary[i] = 0
-	
-	with open(filetoread, 'r') as distri_src :
-		my_distri_reader = csv.reader(distri_src, delimiter="\t")
-		
-		header = True
-		for rows in my_distri_reader :
-			if header :
-				header = False
-			else :
-				distribution_dictionnary[int(rows[-1])] +=1
-
-	return distribution_dictionnary
-
-
-def error_distribution_output(otp, distri_dictionary):
-	"""Return nothing but do the necesary otp for R distribution"""
-	with open(otp, 'w') as distri_otp :
-		my_distri_writer = csv.writer(distri_otp, delimiter="\t")
-
-		header = ['Number_of_error', 'Number_of_error_occurency']
-		my_distri_writer.writerow(header)
-		for key, value in distri_dictionary.items() :
-			my_distri_writer.writerow([key, value])
-
-
-
-
-#Les deux fonctions suivantes sont la pour avoir des info sur le nombre de fois qu'un haplotype est trouvé similaire a un génotype
-#Possibilité de la réduire en une avec une condition pour savoir ce que je traite
-def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
-	"""Return nothing but give an output of occurency hmz haplotype be similar 
-	with our genotypes.
-
-	"""
-	with open(otp, 'w') as occurency_src :
-		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
-
-		header =  ['Name', 'run1_occurency']
-		my_occurency_writer.writerow(header)
-		for haplo in lstofhmzhaplo:
-			occurency = []
-			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofgenotype)
-			occurency.append(haplo.name)
-			occurency.append(haplo.similar_occurence)
-			my_occurency_writer.writerow(occurency)
-
-def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
-	"""Return nothing but give an output of occurency the new haplotype be similar 
-	with our genotypes
-
-	"""
-	with open(otp, 'w') as occurency_src :
-		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
-
-		header =  ['Name', 'run1_occurency', 'run2_occurency', 'missing_data']
-		my_occurency_writer.writerow(header)
-		for haplo in lstofscreeninghaplo:
-			occurency = []
-			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
-			occurency.append(haplo.name)
-			occurency.append((haplo.number_of_similar_new_haplotype)+1)
-			occurency.append(haplo.similar_occurence)
-			occurency.append(haplo.missing_data)
-			my_occurency_writer.writerow(occurency)
-
-
-
-
-#Funtion use for read another script language
-def run_R_file(path2file, outputdir):
-	"""This function return the result you obtain with your R file
-
-	Named parameters :
-	-path2file -- the path to the file to read
-	-outputdir -- the path to write the output of the reading file
-
-	"""
-	command = 'Rscript'
-	path2script = os.path.join(os.path.curdir, path2file)
-	setwd = [os.path.abspath(os.path.join(os.path.curdir, outputdir))]
-       
-	cmd = [command, path2script] + setwd
-	x = subprocess.Popen(cmd, stderr=subprocess.PIPE)
-	return x.communicate()
-
-
-
-
-#Penser à faire le fichier de sortie
-#a besoin de savoir ou mettre le fichier de sortie c'est tout
 def cytoscape_file(outputdir, lstofgenoobject):
 	"""Return nothing but give a file that can be open with cytoscape software
 	to see the interaction between genotype & haplotype.
@@ -464,18 +193,248 @@ def cytoscape_file(outputdir, lstofgenoobject):
 
 
 
+
+#Function for created the list of candidate haplo and the output
+def new_haplotype_output(otp, lstofgenoobject):
+	"""Return nothing but give an output with the Haplotype object containing the potential new haplotype
+	(=candidates)
+
+	Named parameters :
+	-otp -- the output name
+	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
+
+	"""
+	with open(otp, 'w') as otp3 :
+		my_new_H_otp_writer = csv.writer(otp3, delimiter="\t")
+
+		#Creation of the header of my output
+		header = ["Genotype", "Haplotype", "Candidate_Haplotype"]
+		for markers in lstofgenoobject[0].markers :
+			header.append(markers)
+		my_new_H_otp_writer.writerow(header)
+
+		#Add eatch row containing a new haplotype (where he come from, his name and his sequence)
+		for geno in lstofgenoobject :
+			if geno.number_of_new_created_haplotype > 0 :
+				for i in range(len(geno.lst_of_new_haplotype)) :
+					candidate_haplo_output = []
+					candidate_haplo_output.append(geno.name)
+					candidate_haplo_output.append((geno.lst_of_new_haplotype[i]).name)
+					candidate_haplo_output.append("New:{}//{}".format( geno.name, (geno.lst_of_new_haplotype[i]).name)) 
+					for values in geno.lst_of_new_haplotype[i].sequence :
+						candidate_haplo_output.append(values)
+
+					#I write my output where i can find the sequence of all my new haplotype in row
+					my_new_H_otp_writer.writerow(candidate_haplo_output)
+
+#this one the filtred candidate haplotype
+def uniq_candidate_haplo(otp, lstuniqhaplo):
+	with open(otp, 'w') as uniq_new :
+		my_otp_uniq_new_writer = csv.writer(uniq_new, delimiter="\t")
+
+		header = ["candidate_name"]
+		for markers in lstuniqhaplo[0].markers :
+			header.append(markers)
+		my_otp_uniq_new_writer.writerow(header)
+
+		for candidate in lstuniqhaplo :
+			candidate_haplo_output = []
+			candidate_haplo_output.append(candidate.name)
+			for nt in candidate.sequence :
+				candidate_haplo_output.append(nt)
+			my_otp_uniq_new_writer.writerow(candidate_haplo_output)
+
+
+
+
+
+
+
+
+
+#change to do it with a dicotionnary
+#need change this one or a previous one to know when i use haplotype with >0 mismatch 
+#A DELETE
+def new_haplotype(lstofgenoobject):
+	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
+	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
+	needed for his construction. Those one are separate by "//"
+
+	Named parameters :
+	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
+
+	"""
+	lst_of_haplo_object_expanded = []
+
+	lst_markers = []
+	for markers in lstofgenoobject[0].markers :
+		lst_markers.append(markers)
+
+	for geno in lstofgenoobject :
+		if geno.number_of_new_created_haplotype > 0 :
+			for i in range(len(geno.lst_of_new_haplotype)) :
+				my_new_haplo = []
+				my_new_haplo.append("New:{}//{}".format(geno.name, (geno.similar_haplotype[i]).name)) 
+				#pouvoir indiquer ici si mon haplo est corrigé ou non.
+				for values in geno.lst_of_new_haplotype[i] :
+					my_new_haplo.append(values)		
+				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
+				lst_of_haplo_object_expanded.append(A)
+
+	return lst_of_haplo_object_expanded
+
+#Important d'avoir le nom de l'haplotype après // pour savoir si il avait une erreur avant
+#pb c'est que je met tous mes nouveaux haplo dans une liste sans savoir s'ils ont une erreur de corrigée ou plus
+#fonctionne mais difficulter pour accéder au nom de l'haplo
+#A DELETE
+def new_haplotype_test(lstofgenoobject):
+	"""Return a list of Haplotype object containing the potential new haplotype (=candidates)
+	We give for this candidate the name with the prefix "New:" and the genotype and haplotype names
+	needed for his construction. Those one are separate by "//"
+
+	Named parameters :
+	-lstofgenoobject -- the list of Genotype object who contain potential new haplotype
+
+	"""
+	lst_of_haplo_object_expanded = []
+
+	lst_markers = []
+	for markers in lstofgenoobject[0].markers :
+		lst_markers.append(markers)
+
+	for geno in lstofgenoobject :
+		if geno.number_of_new_created_haplotype > 0 :
+			for i in range(len(geno.lst_of_new_haplotype)) :
+				my_new_haplo = []
+				my_new_haplo.append("New:{}//{}".format(geno.name, "temporaire"+str(i))) #pb ici pour lui donner le nom de l'haplotype (dans un dico)
+				#pouvoir indiquer ici si mon haplo est corrigé ou non.
+				for values in geno.lst_of_new_haplotype[i] :
+					my_new_haplo.append(values)		
+				A = Haplotype(name=my_new_haplo[0], sequence=my_new_haplo[1:], markers=lst_markers)
+				lst_of_haplo_object_expanded.append(A)
+
+	return lst_of_haplo_object_expanded
+
+#########################
+######FUNCTION HELP######
+#########################
+#a conserver
+#new one to replace the 2 previous
+def new_haplotype_test_extend(lstofgenoobject):
+	extend_lst = []
+	for geno in lstofgenoobject :
+		extend_lst.extend(geno.lst_of_new_haplotype)
+	return extend_lst
+
+
+
+
+#Les deux fonctions suivantes sont la pour avoir des info sur le nombre de fois qu'un haplotype est trouvé similaire a un génotype
+#Possibilité de la réduire en une avec une condition pour savoir ce que je traite
+def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
+	"""Return nothing but give an output of occurency hmz haplotype be similar 
+	with our genotypes.
+
+	"""
+	with open(otp, 'w') as occurency_src :
+		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
+
+		header =  ['Name', 'run1_occurency']
+		my_occurency_writer.writerow(header)
+		for haplo in lstofhmzhaplo:
+			occurency = []
+			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofgenotype)
+			occurency.append(haplo.name)
+			occurency.append(haplo.similar_occurence)
+			my_occurency_writer.writerow(occurency)
+
+#for my violin plot
+def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
+	"""Return nothing but give an output of occurency the new haplotype be similar 
+	with our genotypes
+
+	"""
+	with open(otp, 'w') as occurency_src :
+		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
+
+		header =  ['Name', 'run1_occurency', 'run2_occurency', 'missing_data']
+		my_occurency_writer.writerow(header)
+		for haplo in lstofscreeninghaplo:
+			occurency = []
+			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
+			occurency.append(haplo.name)
+			occurency.append((haplo.number_of_similar_new_haplotype)+1)
+			occurency.append(haplo.similar_occurence)
+			occurency.append(haplo.missing_data)
+			my_occurency_writer.writerow(occurency)
+
+
+#Funtion use for read another script language
+def run_R_file(path2file, outputdir):
+	"""This function return the result you obtain with your R file
+
+	Named parameters :
+	-path2file -- the path to the file to read
+	-outputdir -- the path to write the output of the reading file
+
+	"""
+	command = 'Rscript'
+	path2script = os.path.join(os.path.curdir, path2file)
+	setwd = [os.path.abspath(os.path.join(os.path.curdir, outputdir))]
+       
+	cmd = [command, path2script] + setwd
+	x = subprocess.Popen(cmd, stderr=subprocess.PIPE)
+	return x.communicate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######SUMMARY######
+#Pour les 2 fonctions suivante penser a break quand on a atteint le nombre de génotype
+def error_distribution(lstofhaplotype, filetoread):
+	"""Soit en utilisant les sorties 1 et 4 
+	ou en refaisant la méthode dans génotype"""
+	distribution_dictionnary = {}
+
+	for i in range(len(lstofhaplotype[0].sequence)+1):
+		distribution_dictionnary[i] = 0
 	
+	with open(filetoread, 'r') as distri_src :
+		my_distri_reader = csv.reader(distri_src, delimiter="\t")
+		
+		header = True
+		for rows in my_distri_reader :
+			if header :
+				header = False
+			else :
+				distribution_dictionnary[int(rows[-1])] +=1
 
+	return distribution_dictionnary
 
+def error_distribution_output(otp, distri_dictionary):
+	"""Return nothing but do the necesary otp for R distribution"""
+	with open(otp, 'w') as distri_otp :
+		my_distri_writer = csv.writer(distri_otp, delimiter="\t")
 
-
-
-
-
-
-
-
-
+		header = ['Number_of_error', 'Number_of_error_occurency']
+		my_distri_writer.writerow(header)
+		for key, value in distri_dictionary.items() :
+			my_distri_writer.writerow([key, value])
 
 
 

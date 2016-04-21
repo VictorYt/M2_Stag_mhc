@@ -307,6 +307,7 @@ class Genotype(Haplotype):
 #Need change, add threshold (default = 0) 
 #if i have a threshold that will be 2n (care need to know the error location)
 #supp celle du dessus et finir celle-ci pour remplir le dico d
+#Je n'utilise plus cette fonction
 	def select_similar_haplotype(self, haplo, threshold):
 		"""Return nothing
 		Put in the similar_haplotype list the Haplotype object for which the last index
@@ -331,6 +332,7 @@ class Genotype(Haplotype):
 
 #Because of the change before
 #Need accepte 2*threshold errors (but only at the error marker)
+#fonction du dessous mieux (peut être delete)
 	def combinaison_between_similar_haplotype_in_geno(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.
@@ -366,6 +368,7 @@ class Genotype(Haplotype):
 
 
 #changer ou créer une autre pour les haplotype avec erreurs
+#fonction du dessous mieux (peut être delete)
 	def create_haplotype(self, haplotype, genotype):
 		"""Return a list of a new haplotype sequence.
 		Which is created by the asociation between a genotype and one of his similar haplotype.  
@@ -394,6 +397,7 @@ class Genotype(Haplotype):
 		return new_haplotype
 
 	#trouver un autre nom a cette fonction
+	#fonction du dessous mieux (peut être delete)
 	def have_new_haplotype(self):
 		"""Return a list of new haplotypes sequences for Genotypes objects who :
 			-have a minimum of 1 similar haplotype
@@ -515,7 +519,7 @@ class Genotype(Haplotype):
 					new_haplotype.append(lstZip[nt][1].rsplit("/",1)[0])
 		return new_haplotype
 
-#trouver un autre nom a cette fonction
+#fonction du dessous mieux (a delete)
 	def have_new_haplotype_test(self):
 		"""Return a list of new haplotypes sequences for Genotypes objects who :
 			-have a minimum of 1 similar haplotype
@@ -541,8 +545,13 @@ class Genotype(Haplotype):
 		return lst_new_haplo
 		#just a list for now, like that i lose the correct haplo
 
-
+#a concerver
 	def have_new_haplotype_test_better(self):
+		"""Return a list of new haplotypes instances for Genotypes objects who :
+			-have a minimum of 1 half_similar Haplotype,
+			-the combination between similar haplotype can't explain the observed genotype.
+
+		"""
 		lst_new_haplo = []
 		#I run all my dico.keys() heure
 		for i in self.half_similarity_with.keys() :
