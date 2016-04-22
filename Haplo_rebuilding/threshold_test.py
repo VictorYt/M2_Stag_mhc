@@ -459,15 +459,15 @@ if __name__ == "__main__":
 
 
     # Compare with fastPhase résult
-    if (fPcompare == True):#bad ask because i have a string
+    if (fPcompare != None):#bad ask because i have a string
         print ("\nCompare your Haplotypes vs fastPHASE Haplotypes")
 
-        fPcompare = os.path.join(dirname, "fastPHASE_compare")
+        fastPHASE_dir = os.path.join(dirname, "fastPHASE_compare")
 
         try:
-            os.makedirs(fPcompare)
+            os.makedirs(fastPHASE_dir)
         except OSError:
-            if os.path.exists(fPcompare):
+            if os.path.exists(fastPHASE_dir):
             # We are nearly safe
                 pass
             else:
@@ -475,7 +475,9 @@ if __name__ == "__main__":
                 raise
 
         #print("You chose to compare our result by the fastPHASE result for the same data")
-    
+        run5_start = time.time()
+
+
         """Construction of the list of Haplotype object (fastPHASE)"""
         lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
         #Change origin
@@ -483,7 +485,17 @@ if __name__ == "__main__":
             fP_halpo.origin = "fPHASE"
 
 
-
+        """Distribution of the occurence of haplotype hmz during the first run"""
+         #Creation of the rigth dictionnary
+        for fP_halpo in lst_of_fPHASE_object :
+            fP_halpo.half_similarity_with = fP_halpo.similar_with_size(threshold)
+        #Find the half simmilarity with all the génotype or only the uncorfirmed
+        for fP_halpo, geno in it.product(lst_of_fPHASE_object, lst_unconfirmed_genotype) :
+            fP_halpo.select_similar_with(geno, threshold)
+        for fP_halpo in lst_of_fPHASE_object :
+            fP_halpo.similar_occurence = fP_halpo.similarity_time_with()
+            fP_halpo.frequency= fP_halpo.similarity_frequency(len(lst_of_geno_object))
+        haplotype_redundancy(os.path.join(fastPHASE_dir, "fastPHASE_Haplotypes_redundancy"), lst_of_fPHASE_object)
 
         """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
         #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
@@ -502,3 +514,8 @@ if __name__ == "__main__":
 
         """Venn-Diagramm Known/Candidaite/fastPHASE"""
         #need the 3 list : lst_of_haplo_object, lst_of_haplo_object_expanded_filter, lst_of_fPHASE_object ATTENTION sur quoi je les compare (name, sequence? maybe sequence)
+
+        run5_end = time.time()
+        time5 = run5_end - run5_start
+        print ("Your comparation is over.")
+        print("it's spend {}".format(time5))
