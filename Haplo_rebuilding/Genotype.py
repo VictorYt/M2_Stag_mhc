@@ -326,9 +326,6 @@ class Genotype(Haplotype):
 		if self.compare_two_seq(haplo)[-1] <= int(threshold) :
 			self.similar_haplotype.append(haplo)
 		#voir poly ce que je doit retenir en plus....
-		
-
-
 
 #Because of the change before
 #Need accepte 2*threshold errors (but only at the error marker)
@@ -361,11 +358,6 @@ class Genotype(Haplotype):
 					lst_good_combinaison.append([haplo1, haplo2])
 		return lst_good_combinaison
 		#This list can be empty if any combination can explain our genotype
-
-
-
-
-
 
 #changer ou créer une autre pour les haplotype avec erreurs
 #fonction du dessous mieux (peut être delete)
@@ -458,10 +450,7 @@ class Genotype(Haplotype):
 ################creation de nouvelle haplotype avec threshold option################
 
 
-
-
-
-#changement de la fonction pour quelle prenne en compte le threshold
+#changement de la fonction pour quelle prenne en compte le threshold ==> OK
 	def combinaison_between_similar_haplotype_in_geno_test(self):
 		"""Return a list of 2 Haplotypes objects list or nothing (if it's the case).
 		Which, if they are assembled, explain the observed genotype.
@@ -492,7 +481,7 @@ class Genotype(Haplotype):
 		return lst_good_combinaison
 		#This list can be empty if any combination can explain our genotype
 
-#changer ou créer une autre pour les haplotype avec erreurs
+#changer ou créer une autre pour les haplotype avec erreurs ==> OK
 	def create_haplotype_test(self, haplotype):#donner le lnom "create_haplotype_seq"
 		"""Return a list of a new haplotype sequence.
 		Which is created by the asociation between a genotype and one of his similar haplotype.  
@@ -545,7 +534,7 @@ class Genotype(Haplotype):
 		return lst_new_haplo
 		#just a list for now, like that i lose the correct haplo
 
-#a concerver
+#a concerver ===>OK
 	def have_new_haplotype_test_better(self):
 		"""Return a list of new haplotypes instances for Genotypes objects who :
 			-have a minimum of 1 half_similar Haplotype,
@@ -563,4 +552,4 @@ class Genotype(Haplotype):
 					candidate_markers = self.markers
 					C = Haplotype(name=candidate_name, sequence=candidate_seq, markers=candidate_markers)
 					lst_new_haplo.append(C)
-		return lst_new_haplo
+		return lst_new_haplo 

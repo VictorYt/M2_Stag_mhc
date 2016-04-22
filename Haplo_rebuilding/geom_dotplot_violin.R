@@ -8,7 +8,7 @@ setwd(mysetwd)
 library(ggplot2)
 
 #Read the good input file for each distribution we want
-occu_dist <- read.csv2("new_Haplotypes_occ", header = TRUE, sep = '\t')
+occu_dist <- read.csv2("Candidates_Haplotypes_occ", header = TRUE, sep = '\t')
 occu_dist$run1_occurency <-as.factor(occu_dist$run1_occurency)
 
 

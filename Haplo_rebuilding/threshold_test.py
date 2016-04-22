@@ -35,6 +35,7 @@ if __name__ == "__main__":
     from Haplotype import Haplotype
     from Genotype import Genotype
     from used_function import *
+    #import used_function as usf
  
     # Parse arguments, use file docstring as a parameter definition
     arguments = docopt(__doc__, version='Haplotype rebuilding 0.3')
@@ -359,9 +360,9 @@ if __name__ == "__main__":
 
 
 
-                                            ####################################################
-                                            ##################### PCA OPTION ###################
-                                            ####################################################
+                                            ####################################################****
+                                            ##################### PCA OPTION ###################****
+                                            ####################################################****
 
 
 
@@ -444,7 +445,7 @@ if __name__ == "__main__":
 
     # Compare with fastPhase résult
     if (fPcompare == True):
-        print ("-f utilisé")
+        print ("\nCompare your Haplotypes vs fastPHASE Haplotypes")
 
         fPcompare = os.path.join(dirname, "fastPHASE_compare")
 
@@ -458,15 +459,34 @@ if __name__ == "__main__":
             # There was an error on creation, so make sure we know about it
                 raise
 
-    print("You chose to compare our result by the fastPHASE result for the same data")
+        #print("You chose to compare our result by the fastPHASE result for the same data")
     
-    """Construction of the list of Haplotype object (fastPHASE)"""
-    lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
-    #Change origin
-    for fP_halpo in lst_of_fPHASE_object :
-        fP_halpo.origin = "fastPHASE"
+        """Construction of the list of Haplotype object (fastPHASE)"""
+        lst_of_fPHASE_object = read_input_file(fPcompare, Haplotype, "\t")
+        #Change origin
+        for fP_halpo in lst_of_fPHASE_object :
+            fP_halpo.origin = "fPHASE"
 
 
-    """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
-    #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
-    #2- faire un output 
+
+
+        """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
+        #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
+        #2- faire un output 
+
+        """Output rank of Known/candidate Haplotypes"""
+        #pour chaque listes d'Haplotypes, je rempli haplo.half_similarity_with avec les géno. un len(du dico[0])
+        #est ce que je tiens compte du threshold?
+        for candidate_haplo in lst_of_haplo_object_expanded_filter :
+            candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
+        for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) :
+            candidate_haplo.select_similar_with(geno, threshold)
+
+        """Acp de fastPhase si -p ==True"""
+        #avec le fichier fourni avec -f
+        """distribution GvfH si -d ==True"""
+        #need compare GvfH
+        #need
+
+        """Venn-Diagramm Known/Candidaite/fastPHASE"""
+        #need the 3 list : lst_of_haplo_object, lst_of_haplo_object_expanded_filter, lst_of_fPHASE_object ATTENTION sur quoi je les compare (name, sequence? maybe sequence)
