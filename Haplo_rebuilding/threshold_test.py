@@ -444,7 +444,7 @@ if __name__ == "__main__":
 
 
     # Compare with fastPhase résult
-    if (fPcompare == True):
+    if (fPcompare == True):#bad ask because i have a string
         print ("\nCompare your Haplotypes vs fastPHASE Haplotypes")
 
         fPcompare = os.path.join(dirname, "fastPHASE_compare")
