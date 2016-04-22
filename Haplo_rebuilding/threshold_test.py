@@ -344,7 +344,13 @@ if __name__ == "__main__":
         mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
 
         """Distribution of the occurence of haplotype hmz during the first run"""
+        for haplo in lst_of_haplo_object :
+            haplo.similar_occurence = haplo.similarity_time_with()
+            haplo.frequency= haplo.similarity_frequency(len(lst_of_geno_object))
         haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_redundancy"), lst_of_haplo_object)
+        for candidate_haplo in lst_of_haplo_object_expanded_filter :
+            candidate_haplo.similar_occurence = candidate_haplo.similarity_time_with()
+            candidate_haplo.frequency= candidate_haplo.similarity_frequency(len(lst_unconfirmed_genotype))
         haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_redundancy"), lst_of_haplo_object_expanded_filter)
 
         """Distribution of the occurrence of new haplotypes during the second run"""

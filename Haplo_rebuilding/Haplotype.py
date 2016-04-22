@@ -39,6 +39,7 @@ class Haplotype(object):
 		self._similar_new_haplotype = [] 
 		self._number_of_similar_new_haplotype = 0 
 		self._similar_occurence = 0
+		self._frequency = 0
 		self._missing_data = 0
 
 
@@ -101,6 +102,14 @@ class Haplotype(object):
 		"""
 		return self._good_combination
 
+	def _get_similar_occurence(self):
+		"""Return the number of time our Haplotype is find similar to a genotype"""
+		return self._similar_occurence
+
+	def _get_frequency(self):
+		"""Return the frequence of time our Haplotype is find similar to a genotype"""
+		return self._frequency
+
 	def _get_similar_new_haplotype(self):
 		"""Return the attribut similar_new_haplo of the Haplotype class which is
 		a list of candidate haplotype who have the similar sequence than our haplotype 
@@ -114,10 +123,6 @@ class Haplotype(object):
 		
 		"""
 		return self._number_of_similar_new_haplotype
-
-	def _get_similar_occurence(self):
-		"""Return the number of time our candidate haplotype is find similar to a genotype"""
-		return self._similar_occurence
 
 	def _get_missing_data(self):
 		"""Return the number of missing data find in the candidate haplotype sequence"""
@@ -199,6 +204,24 @@ class Haplotype(object):
 		"""
 		self._good_combination = listofgoodcombi
 
+	def _set_similar_occurence(self, nboccurence):
+		"""Change the number of time the haplotype is find similar with a genotype
+
+		Named parameters :
+		nboccurence -- the new time haplotype be similar with genotype
+
+		"""
+		self._similar_occurence = nboccurence
+
+	def _set_frequency(self, frequence):
+		"""Change the number of time the haplotype is find similar with a genotype
+
+		Named parameters :
+		frequence -- the new haplotype frequence similar with genotype
+
+		"""
+		self._frequency = frequence
+
 	def _set_similar_new_haplotype(self, newhaplo):
 		"""Change the candidate haplotype list of our Haplotype object by a new one
 
@@ -216,15 +239,6 @@ class Haplotype(object):
 		
 		"""
 		self._number_of_similar_new_haplotype = nbnewhaplo
-
-	def _set_similar_occurence(self, nboccurence):
-		"""Change the number of time the haplotype is find similar with a genotype
-
-		Named parameters :
-		nboccurence -- the new time haplotype be similar with genotype
-
-		"""
-		self._similar_occurence = nboccurence
 
 	def _set_missing_data(self, nbmssingdata):
 		"""Change the number of missing data find in the haplotype sequence
@@ -451,6 +465,11 @@ class Haplotype(object):
 		for i in self.half_similarity_with.keys() :
 			number_of_time += len(self.half_similarity_with[i])
 		return number_of_time
+
+	def similarity_frequency(self, lstlength):
+		"""Return a float who is the frequency of time a Haplotype explain one of our Genotype"""
+		return float(frequency) = self.similar_occurence/lstlength
+
 
 	def occurence_candidate_haplotype(self, lst_of_genotype):
 		"""Return the number of time the haplotype is similar with a different genotype

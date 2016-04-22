@@ -339,13 +339,13 @@ def haplotype_redundancy(otp, lstofhaplo):
 	with open(otp, 'w') as redundancy_src :
 		my_redundancy_writer = csv.writer(redundancy_src, delimiter="\t")
 
-		header =  ['Name', 'Redundancy'] #maybe give the freq directly here
+		header =  ['Name', 'Redundancy', 'Frequency'] #maybe give the freq directly here
 		my_redundancy_writer.writerow(header)
 		for haplo in lstofhaplo: #pas très logique ici 
 			redundancy = []
-			haplo.similar_occurence = haplo.similarity_time_with()
 			redundancy.append(haplo.name)
 			redundancy.append(haplo.similar_occurence)
+			redundancy.append(haplo.frequency)
 			my_redundancy_writer.writerow(redundancy)
 
 #for my violin plot
