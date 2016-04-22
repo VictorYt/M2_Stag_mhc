@@ -222,6 +222,14 @@ if __name__ == "__main__":
     run2_start = time.time()
     print ("\nSecond run start")
 
+    #Creation of the rigth dictionnary
+    for candidate_haplo in lst_of_haplo_object_expanded_filter :
+        candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
+    #Find the half simmilarity with all the génotype or only the uncorfirmed
+    for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) :
+        candidate_haplo.select_similar_with(geno, threshold)
+
+    """Count of missing data in Haplotypes sequences"""
     #Here we make a list of all Haplotypes objects
     lst_of_haplo_object_all = lst_of_haplo_object + lst_of_haplo_object_expanded
     #Add to Haplotypes objets missing_data occurence in there sequence
@@ -336,7 +344,8 @@ if __name__ == "__main__":
         mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
 
         """Distribution of the occurence of haplotype hmz during the first run"""
-        haplotype_redundancy(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object)
+        haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_occ"), lst_of_haplo_object)
+        haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter)
 
         """Distribution of the occurrence of new haplotypes during the second run"""
         new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)
@@ -477,10 +486,7 @@ if __name__ == "__main__":
         """Output rank of Known/candidate Haplotypes"""
         #pour chaque listes d'Haplotypes, je rempli haplo.half_similarity_with avec les géno. un len(du dico[0])
         #est ce que je tiens compte du threshold?
-        for candidate_haplo in lst_of_haplo_object_expanded_filter :
-            candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
-        for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) :
-            candidate_haplo.select_similar_with(geno, threshold)
+
 
         """Acp de fastPhase si -p ==True"""
         #avec le fichier fourni avec -f
