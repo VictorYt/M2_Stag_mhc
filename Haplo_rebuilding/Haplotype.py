@@ -468,7 +468,7 @@ class Haplotype(object):
 
 	def similarity_frequency(self, lstlength):
 		"""Return a float who is the frequency of time a Haplotype explain one of our Genotype"""
-		return float(frequency) = self.similar_occurence/lstlength
+		return frequency = float(self.similar_occurence/lstlength)
 
 
 	def occurence_candidate_haplotype(self, lst_of_genotype):
