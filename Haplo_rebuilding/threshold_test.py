@@ -336,7 +336,7 @@ if __name__ == "__main__":
         mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
 
         """Distribution of the occurence of haplotype hmz during the first run"""
-        haplotype_occurency(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object, lst_of_geno_object)
+        haplotype_redundancy(os.path.join(dist, "Haplotypes_occ"), lst_of_haplo_object)
 
         """Distribution of the occurrence of new haplotypes during the second run"""
         new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)
