@@ -226,7 +226,7 @@ if __name__ == "__main__":
     for candidate_haplo in lst_of_haplo_object_expanded_filter :
         candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
     #Find the half simmilarity with all the génotype or only the uncorfirmed
-    for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) :
+    for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) : #on all geno list or only unconfirmed?
         candidate_haplo.select_similar_with(geno, threshold)
 
     """Count of missing data in Haplotypes sequences"""
@@ -344,8 +344,8 @@ if __name__ == "__main__":
         mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
 
         """Distribution of the occurence of haplotype hmz during the first run"""
-        haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_occ"), lst_of_haplo_object)
-        haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter)
+        haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_redundancy"), lst_of_haplo_object)
+        haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_redundancy"), lst_of_haplo_object_expanded_filter)
 
         """Distribution of the occurrence of new haplotypes during the second run"""
         new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)

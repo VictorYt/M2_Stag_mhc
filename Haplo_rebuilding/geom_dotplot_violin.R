@@ -16,6 +16,7 @@ occu_dist$run1_occurency <-as.factor(occu_dist$run1_occurency)
 #Geom_dotplot#
 ##############
 #Generate a violin plot of haplotype occurency after the 1st and 2nd run
+#générate on continue aes x tu add y=x to select our better candidates
 pdf("violin_dotplot_new_Haplotype_occ.pdf", height = 10, width = 10)
 ggplot(data = occu_dist, aes(x=run1_occurency, y=run2_redundancy, color=run1_occurency)) +
   geom_violin(trim = TRUE) +
