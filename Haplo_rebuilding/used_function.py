@@ -357,11 +357,11 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 	with open(otp, 'w') as occurency_src :
 		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
 
-		header =  ['Name', 'run1_occurency', 'run2_occurency', 'missing_data']
+		header =  ['Name', 'run1_occurency', 'run2_redundancy', 'missing_data']
 		my_occurency_writer.writerow(header)
 		for haplo in lstofscreeninghaplo:
 			occurency = []
-			haplo.similar_occurence = haplo.occurence_candidate_haplotype(lstofnoconfirmedgeno)
+			haplo.similar_occurence = haplo.similarity_time_with()
 			occurency.append(haplo.name)
 			occurency.append((haplo.number_of_similar_new_haplotype)+1)
 			occurency.append(haplo.similar_occurence)

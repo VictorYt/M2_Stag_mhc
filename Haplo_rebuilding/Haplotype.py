@@ -452,7 +452,7 @@ class Haplotype(object):
 			number_of_time += len(self.half_similarity_with[i])
 		return number_of_time
 
-	def occurence_candidaite_haplotype(self, lst_of_genotype):
+	def occurence_candidate_haplotype(self, lst_of_genotype):
 		"""Return the number of time the haplotype is similar with a different genotype
 
 		By defaut a new_haplotype must appear at least one time, if he appear more than that 
