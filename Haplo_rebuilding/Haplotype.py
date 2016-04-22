@@ -22,7 +22,7 @@ class Haplotype(object):
 		During a second run with new haplotypes created, we add to the instance :
 			-a list of the similar new haplotypes (same sequence after their been created)
 			-the length of this list
-			-a number of similar occurence (number of time an haplotype is find similar to a genotype)
+			-a number of similar occurence (number of time a Candidate Haplotype is créé by different Haplotypes and Genotypes)
 			-the number of missing data by haplotype sequence
 
 		"""
@@ -36,8 +36,8 @@ class Haplotype(object):
 		self._half_similarity_number = {} #not use can be deleted i use len(...)
 		self._good_combination = [] #not use now
 		#generate during 2nd run
-		self._similar_new_haplotype = []
-		self._number_of_similar_new_haplotype = 0
+		self._similar_new_haplotype = [] 
+		self._number_of_similar_new_haplotype = 0 
 		self._similar_occurence = 0
 		self._missing_data = 0
 
@@ -247,9 +247,9 @@ class Haplotype(object):
 	half_similarity_with = property(_get_half_similarity_with, _set_half_similarity_with)
 	half_similarity_number = property(_get_half_similarity_number, _set_half_similarity_number)
 	good_combination = property(_get_good_combination, _set_good_combination)
+	similar_occurence = property(_get_similar_occurence, _set_similar_occurence)	
 	similar_new_haplotype = property(_get_similar_new_haplotype, _set_similar_new_haplotype)
 	number_of_similar_new_haplotype = property(_get_number_of_similar_new_haplotype, _set_number_of_similar_new_haplotype)
-	similar_occurence = property(_get_similar_occurence, _set_similar_occurence)
 	missing_data = property(_get_missing_data, _set_missing_data)
 
 	################
@@ -445,7 +445,14 @@ class Haplotype(object):
 				#if 2 Haplotype instance have the same sequence i have the second in the list of similar instance of that i'm looking for
 		return lst_similar_new_haplo
 
-	def occurence_new_haplotype(self, lst_of_genotype):
+	def similarity_time_with(self):
+		"""Return a int who is the number of time this Haplotype is find Half_similar with a Genotype"""
+		number_of_time = 0
+		for i in self.half_similarity_with.keys() :
+			number_of_time += len(self.half_similarity_with[i])
+		return number_of_time
+
+	def occurence_candidaite_haplotype(self, lst_of_genotype):
 		"""Return the number of time the haplotype is similar with a different genotype
 
 		By defaut a new_haplotype must appear at least one time, if he appear more than that 

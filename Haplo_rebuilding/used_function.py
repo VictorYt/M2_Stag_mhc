@@ -331,22 +331,22 @@ def new_haplotype_test_extend(lstofgenoobject):
 
 #Les deux fonctions suivantes sont la pour avoir des info sur le nombre de fois qu'un haplotype est trouvé similaire a un génotype
 #Possibilité de la réduire en une avec une condition pour savoir ce que je traite
-def haplotype_occurency(otp, lstofhmzhaplo, lstofgenotype):
+def haplotype_redundancy(otp, lstofhaplo):
 	"""Return nothing but give an output of occurency hmz haplotype be similar 
 	with our genotypes.
 
 	"""
-	with open(otp, 'w') as occurency_src :
-		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
+	with open(otp, 'w') as redundancy_src :
+		my_redundancy_writer = csv.writer(redundancy_src, delimiter="\t")
 
-		header =  ['Name', 'run1_occurency']
-		my_occurency_writer.writerow(header)
-		for haplo in lstofhmzhaplo:
-			occurency = []
-			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofgenotype)
-			occurency.append(haplo.name)
-			occurency.append(haplo.similar_occurence)
-			my_occurency_writer.writerow(occurency)
+		header =  ['Name', 'run1_redundancy'] #maybe give the freq directly here
+		my_redundancy_writer.writerow(header)
+		for haplo in lstofhaplo: #pas très logique ici 
+			redundancy = []
+			haplo.similar_occurence = haplo.similarity_time_with()
+			redundancy.append(haplo.name)
+			redundancy.append(haplo.similar_occurence)
+			my_redundancy_writer.writerow(redundancy)
 
 #for my violin plot
 def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
@@ -361,7 +361,7 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 		my_occurency_writer.writerow(header)
 		for haplo in lstofscreeninghaplo:
 			occurency = []
-			haplo.similar_occurence = haplo.occurence_new_haplotype(lstofnoconfirmedgeno)
+			haplo.similar_occurence = haplo.occurence_candidate_haplotype(lstofnoconfirmedgeno)
 			occurency.append(haplo.name)
 			occurency.append((haplo.number_of_similar_new_haplotype)+1)
 			occurency.append(haplo.similar_occurence)
