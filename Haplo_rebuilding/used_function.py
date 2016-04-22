@@ -339,7 +339,7 @@ def haplotype_redundancy(otp, lstofhaplo):
 	with open(otp, 'w') as redundancy_src :
 		my_redundancy_writer = csv.writer(redundancy_src, delimiter="\t")
 
-		header =  ['Name', 'run1_redundancy'] #maybe give the freq directly here
+		header =  ['Name', 'Redundancy'] #maybe give the freq directly here
 		my_redundancy_writer.writerow(header)
 		for haplo in lstofhaplo: #pas très logique ici 
 			redundancy = []

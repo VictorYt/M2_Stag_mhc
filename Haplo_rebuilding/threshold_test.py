@@ -226,7 +226,7 @@ if __name__ == "__main__":
     for candidate_haplo in lst_of_haplo_object_expanded_filter :
         candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
     #Find the half simmilarity with all the génotype or only the uncorfirmed
-    for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_of_geno_object) : #on all geno list or only unconfirmed?
+    for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype) :
         candidate_haplo.select_similar_with(geno, threshold)
 
     """Count of missing data in Haplotypes sequences"""
