@@ -334,6 +334,9 @@ if __name__ == "__main__":
 
         """The distribution of the run1_GvkH"""
         mismatch_distribution_output(os.path.join(dist,"GvH_distribution"), mismatch_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
+
+        """The repartition of the mismatch between Genotype and haplotype"""
+        #comme le précédent lecture de GvH distribution et écriture du fichier (sommes des colones pour chaques marqueurs)
         
         """The distribution of the run1_kHvkH"""
         compare_output(os.path.join(dist, "run1_HvH"), lst_of_haplo_object, lst_of_haplo_object)

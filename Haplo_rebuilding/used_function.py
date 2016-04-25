@@ -437,6 +437,25 @@ def mismatch_distribution_output(otp, distri_dictionary):
 			my_distri_writer.writerow([key, value])
 
 
+def mismatch_location(lstofhaplotype, filetoread):
+	"""Return un dictionnaire avec par marqueur le nombre de mismatch observé"""
+	distri_loca_dico = {}
+
+	#dictionary who have a number of keys equal to the marker number
+	for imarker in range((lstofhaplotype[0].nbmarkers)+1) :
+		# +2 to have the column of the markers
+		distri_loca_dico[imarker+2] = 0
+
+	with open(filetoread) as distri_loca_src :
+		my_distri_loca_dico_writer = csv.reader(distri_loca_src, delimiter="\t")
+
+		header=True
+		for rows in my_distri_loca_dico_writer :
+			if header:
+				header=False
+			elif :
+				for marker in rows[2:-1] :
+					if marker == "1" :
 
 
 
