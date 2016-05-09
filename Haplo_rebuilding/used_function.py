@@ -437,6 +437,9 @@ def mismatch_distribution_output(otp, distri_dictionary):
 			my_distri_writer.writerow([key, value])
 
 
+
+
+
 def mismatch_location(lstofhaplotype, filetoread):
 	"""Return un dictionnaire avec par marqueur le nombre de mismatch observé"""
 	distri_loca_dico = {}
@@ -457,6 +460,16 @@ def mismatch_location(lstofhaplotype, filetoread):
 				for marker in rows[2:-1] :
 					if marker == "1" :
 						distri_loca_dico[marker] += 1
+
+	return distri_loca_dico
+
+
+def mismatch_location_output(otp, loca_dictionary):
+	"""Return nothing but give us the necesary output for R distribution """
+	with open(otp, 'w') as loca_otp :
+		my_loca_otp = csv.writer(loca_otp, delimiter="\t")
+
+		header = []
 
 
 
