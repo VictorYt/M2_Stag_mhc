@@ -20,7 +20,7 @@ class Haplotype(object):
 		self._sequence = sequence 
 		self._nbmarkers = len(self.sequence)
 		self._markers = markers
-		self._candidate = False
+		self._origin = None
 
 
 
@@ -54,7 +54,7 @@ class Haplotype(object):
 		"""
 		return self._markers
 
-	def _get_candidate(self):
+	def _get_origin(self):
 		"""Return True or Flase,
 		False if the haplotype come from Homozygous Genotypes
 		True if we find it previously by or Haplotype_rebuilding METHODES
@@ -102,14 +102,14 @@ class Haplotype(object):
 		"""
 		self._markers = lstmarkers 
 
-	def _set_candidate(self, TorF):
-		"""Switch the False by a True if our haplotype his a candidate one
+	def _set_origin(self, KorC):
+		"""Return Known or Candidate by looking préfixe
 
 		Named parameters :
 		TorF -- a booleen False of True
 
 		"""
-		self._candidate = TorF
+		self._candidate = KorC
 
 	############
 	#PROPERTIES#
@@ -119,13 +119,19 @@ class Haplotype(object):
 	nbmarkers = property(_get_nbmarkers, _set_nbmarkers)
 	sequence = property(_get_sequence, _set_sequence)
 	markers = property(_get_markers, _set_markers)
-	candidate = property(_get_candidate, _set_candidate)
+	_origin = property(_get_origin, _set_origin)
 
 	################
 	#OTHER METHODES#
 	################
 
-	def is_it_candidate(self):
+	def come_from(self):
 		"""Return True if the haplotype have the prefix "New:", esle that return False"""
+		origin = ""
+
 		if "New:" in self.name:
-			return True
+			origin =  "Known"
+		else :
+			origin = "Candidate"
+
+		return origin 
