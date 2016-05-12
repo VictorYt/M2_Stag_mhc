@@ -62,7 +62,7 @@ if __name__ == "__main__":
     def line_maker(seq):
         """Return a list of allele format we want"""
         geno = []
-        asso = ['AG','AG','AT','CG','CT','TG']
+        asso = ['AC','AG','AT','CG','CT','GT']
 
         for allele in piece(seq,2) :
             A1 = allele[0]
