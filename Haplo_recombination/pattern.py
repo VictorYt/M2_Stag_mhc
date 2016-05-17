@@ -11,7 +11,8 @@ class Pattern(object):
 			-A name, 
 			-a sequence, 
 			-a size who is the length of the sequence 
-			-and haplotype origin.
+			-a haplotype origin.
+			-and a haplotype who it look like
 
 
 		"""
@@ -19,6 +20,7 @@ class Pattern(object):
 		self._pattern_seq = pattern_seq 
 		self._size = len(self.pattern_seq)
 		self._haplo_ori = haplo_ori
+		self._
 
 
 

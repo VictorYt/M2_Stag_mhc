@@ -25,14 +25,14 @@ if __name__ == "__main__":
     import time
     #from Object import ClassName, function ...
     from HaplotypeR import Haplotype
-    from test_windows import *
+    import test_windows as tw
  
     # Parse arguments, use file docstring as a parameter definition
     arguments = docopt(__doc__, version='Recombinaison finding 0.1')
     print (arguments)
 
 
-    windows_size = arguments["--windows"]
+    windows_size = int(arguments["--windows"])
     output = arguments["--output"]
     threshold = arguments["--threshold"]
     haplotype_file = arguments["--ih"]
@@ -58,11 +58,32 @@ if __name__ == "__main__":
 
     #lecture du fichier
     """Construction of the list of Haplotype object"""
-    lst_of_haplo_object = read_input_file(haplotype_file, Haplotype, "\t")
+    lst_of_haplo_object = tw.read_input_file(haplotype_file, Haplotype, "\t")
 
 
+    #test
+    lst_pattern_haplo1 = []
+    haplo1 = lst_of_haplo_object[0].sequence
+    chain = range(windows_size +1)
+
+    for s in reversed(chain) :
+        print ("#"*10, s, "#"*10)
+        for pattern in tw.windows(haplo1, s):
+            print (pattern)
+            lst_pattern_haplo1.append(pattern)
+        print(len(lst_pattern_haplo1))
+
+
+
+"""
     #plus qu'a appeler le fonction comme ça
+    chain = range(windows_size +1)
     for haplo in lst_of_haplo_object :
-        for haplox in windows(haplo.sequence, windows_size):
-            print(haplox)
+        for s in reversed(chain) :
+            print (s)
+            for haplox in tw.windows(haplo.sequence, s):
+                print (haplox)
+                if tw.KnuthMorrisPratt(haplo, haplox):
+                    print ("OK")
         print("################")
+"""

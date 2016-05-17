@@ -84,4 +84,4 @@ def KnuthMorrisPratt(text, pattern):
 			matchLen -= shifts[matchLen]
 		matchLen += 1
 		if matchLen == len(pattern) :
-			yeild startPos
+			yield startPos
