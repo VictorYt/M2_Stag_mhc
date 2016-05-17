@@ -60,19 +60,39 @@ if __name__ == "__main__":
     """Construction of the list of Haplotype object"""
     lst_of_haplo_object = tw.read_input_file(haplotype_file, Haplotype, "\t")
 
-
+    """
     #test
     lst_pattern_haplo1 = []
     haplo1 = lst_of_haplo_object[0].sequence
     chain = range(windows_size +1)
 
-    for s in reversed(chain) :
+    for s in reversed(chain[2:]) :
         print ("#"*10, s, "#"*10)
         for pattern in tw.windows(haplo1, s):
             print (pattern)
             lst_pattern_haplo1.append(pattern)
         print(len(lst_pattern_haplo1))
 
+
+    lst_test =  lst_of_haplo_object[:5]
+    chain = range(windows_size +1)
+    #test2 
+    for haplo in lst_test :
+        for s in reversed(chain[2:]) :
+            for pattern in tw.windows(haplo.sequence, s) :
+                for other_haplo in lst_test :
+                    if tw.KnuthMorrisPratt(other_haplo.sequence, pattern) :
+                        print (tw.KnuthMorrisPratt(other_haplo, pattern))
+    """
+
+
+    lst_test =  lst_of_haplo_object[:5]
+    #test3
+    for haplo in lst_test :
+        for pattern in tw.windows(haplo.sequence, windows_size) :
+            for other_haplo in lst_test :
+                if tw.KnuthMorrisPratt(other_haplo.sequence, pattern) :
+                    print (tw.KnuthMorrisPratt(other_haplo, pattern))
 
 
 """

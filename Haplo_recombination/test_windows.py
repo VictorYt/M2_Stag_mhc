@@ -56,7 +56,7 @@ def read_input_file(filename, objecttype, delimit):
 
 
 def KnuthMorrisPratt(text, pattern):
-	"""Yields all starting positions of copies of the pattern in th text. 
+	"""Yields all starting positions of copies of the pattern in the text. 
 	Calling conventions are similar to string.find, but it's arguments can be lists
 	or iterators, not just strings, it returns all matches, no just the first one,
 	and it does not need the whole text in memory at once. 
