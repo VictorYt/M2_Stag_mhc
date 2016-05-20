@@ -89,10 +89,13 @@ if __name__ == "__main__":
     lst_test =  lst_of_haplo_object[:5]
     #test3
     for haplo in lst_test :
+        print (haplo.sequence)
         pattern = tw.windows(haplo.sequence, windows_size)
         for other_haplo in lst_test :
-            if tw.KnuthMorrisPratt(other_haplo.sequence, pattern) :
-                print (tw.KnuthMorrisPratt(other_haplo, pattern))
+            for p in pattern :
+                print ("#"*10)
+                for index in tw.KnuthMorrisPratt(other_haplo.sequence, p) :
+                    print(index)
 
 
 """
