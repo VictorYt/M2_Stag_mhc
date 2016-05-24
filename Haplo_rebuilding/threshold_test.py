@@ -462,7 +462,7 @@ if __name__ == "__main__":
 
 
     # Compare with fastPhase résult
-    if (fPcompare != None):#bad ask because i have a string
+    if (fPcompare != None):
         print ("\nCompare your Haplotypes vs fastPHASE Haplotypes")
 
         fastPHASE_dir = os.path.join(dirname, "fastPHASE_compare")
@@ -497,11 +497,13 @@ if __name__ == "__main__":
             fP_halpo.select_similar_with(geno, threshold)
         for fP_halpo in lst_of_fPHASE_object :
             fP_halpo.similar_occurence = fP_halpo.similarity_time_with()
-            fP_halpo.frequency= fP_halpo.similarity_frequency(len(lst_of_geno_object))
+            fP_halpo.frequency = fP_halpo.similarity_frequency(len(lst_of_geno_object))
         haplotype_redundancy(os.path.join(fastPHASE_dir, "fastPHASE_Haplotypes_redundancy"), lst_of_fPHASE_object)
 
         """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
         #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
+        #for fP_haplo, K_haplo in it.product(lst_of_fPHASE_object, lst_of_haplo_object) :
+            #selecionné ce à 0 différence et trouvé un output a faire
         #2- faire un output 
 
         """Output rank of Known/candidate Haplotypes"""
@@ -511,9 +513,11 @@ if __name__ == "__main__":
 
         """Acp de fastPhase si -p ==True"""
         #avec le fichier fourni avec -f
+        #prendre en compte le bonne argument, faire le script (peut-être refaire le script pca_script pour l'adapter à celui-ci quitte a lancer 3fois la lecture)
         """distribution GvfH si -d ==True"""
         #need compare GvfH
-        #need
+        #prendre en compte le t choisi?
+        
 
         """Venn-Diagramm Known/Candidaite/fastPHASE"""
         #need the 3 list : lst_of_haplo_object, lst_of_haplo_object_expanded_filter, lst_of_fPHASE_object ATTENTION sur quoi je les compare (name, sequence? maybe sequence)
