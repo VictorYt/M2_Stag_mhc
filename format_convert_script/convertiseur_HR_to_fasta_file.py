@@ -7,11 +7,11 @@ usage:
     __main__.py (-i <geno_file>) [-o <fasta_filename>]
 
 options:
-    -h, --help                              				This help.
-    -v, --version                           				Displays program's version.
+    -h, --help                                              This help.
+    -v, --version                                           Displays program's version.
     -i <geno_file>, --input <geno_file>                     Haplotype input filenmane
-    -o <fasta_filename>, --output <fasta_filename>      	Output Name
-                                            				[default: Fasta_data]
+    -o <fasta_filename>, --output <fasta_filename>          Output Name
+                                                            [default: Fasta_data]
 
 """
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     from docopt import docopt
     import csv
     
-    arguments = docopt(__doc__, version='Tab_to_fasta_file 0.2')
+    arguments = docopt(__doc__, version='HR_to_fasta_file 0.2')
     print (arguments)
 
     genotype_file = arguments["--input"]
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
 
 
-#1) Lire le fichier tabule
+
     with open(genotype_file, 'r') as geno_src , open(fasta, 'w') as fasta_output:
         my_geno_reader = csv.reader(geno_src, delimiter="\t")
         
@@ -70,6 +70,6 @@ if __name__ == "__main__":
             else :
                 fasta_output.write(">"+rows[0]+"\n")
                 sequence = rows[1:]
-                for values in sequence :
+                for values in line_maker(sequence) :
                     fasta_output.write(values)
                 fasta_output.write("\n")
