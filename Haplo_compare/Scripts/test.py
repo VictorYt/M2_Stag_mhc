@@ -44,8 +44,35 @@ if __name__ == "__main__":
         for rows in my_haploC_reader :
             if header :
                 #creation du dicotionaire ou je vais compter le nombre de fenêtre contigues
-                marker_size = len(rows[2:])
-                for x in range(marker_size) :
+                marker_size = len(rows[2:-1])
+                for x in range(marker_size+1) :
                     dico_SNP_contigue[x] = 0
                 header = False
-        print (dico_SNP_contigue)
+            else :
+                pattern = rows[2:-1]
+                for match in pattern :
+                    if match == 0 :
+                        
+
+                #remplir les valeur du dico now
+
+    pattern = list(pattern) #attention je lui donnerai dejà une liste
+
+    #build table of shift amounts
+    shifts = [1] * (len(pattern) +1)
+    shift = 1
+    for pos in range(len(pattern)):
+        while shift <= pos and pattern[pos] != pattern[pos-shift]:
+            shift += shifts[pos-shift]
+        shifts[pos+1] = shift
+
+    #do the actual search
+    startPos = 0
+    matchLen = 0
+    for c in text :
+        while matchLen == len(pattern) or matchLen >= 0 and pattern[matchLen] != c :
+            startPos += shifts[matchLen]
+            matchLen -= shifts[matchLen]
+        matchLen += 1
+        if matchLen == len(pattern) :
+            yield (startPos)
