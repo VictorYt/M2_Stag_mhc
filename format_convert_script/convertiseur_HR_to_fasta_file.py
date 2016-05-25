@@ -30,8 +30,49 @@ if __name__ == "__main__":
     #     '--output': fasta_filename,
     #     '--version': False}
 
-    def function():
-        pass
+    def piece(iterable, size, format=tuple):
+        """Sliding window of variable size
+
+        Named parameters :
+        iterable -- the sequence that i want to cut in piece of 2 alleles
+        size -- size of the iterable that we want (here 2)
+
+        """
+        my_it = iter(iterable)
+        while True :
+            yield format(it.chain((next(my_it),), it.islice(my_it,size -1)))
+
+    def line_maker(seq):
+        """Return a list of allele format we want
+
+        Named parameters :
+        seq -- the sequence that i want to change the format
+
+        """
+        geno = []
+        #asso = ['AC','AG','AT','CG','CT','GT']
+        dico_multiphasta = {'A/C':'M','A/G':'R','A/T':'W','C/G':'S','C/T':'Y','G/T':'K'}
+
+        for allele in piece(seq,2) :
+            A1 = allele[0]
+            A2 = allele[1]
+            #possible cases
+            #missing data
+            if A1 == '0' and A2 == '0' :
+                geno.append("?")
+            #Hmz alleles
+            elif A1 == A2 :
+                geno.append(A1)
+            #Htz alleles
+            #elif dico_multiphasta.has_key(str(A1+A2)) :
+            elif str(A1+A2) not in dico_multiphasta.keys() :
+                allele = str(A2+A1)
+                geno.append(dico_multiphasta[allele])
+            else :
+                allele = str(A1+A2)
+                geno.append(dico_multiphasta[allele])
+
+        return geno
 
 
 
