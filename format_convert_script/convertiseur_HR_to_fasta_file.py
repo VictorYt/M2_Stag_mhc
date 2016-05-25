@@ -22,7 +22,7 @@ if __name__ == "__main__":
     arguments = docopt(__doc__, version='Tab_to_fasta_file 0.2')
     print (arguments)
 
-    genotypefile = arguments["--input"]
+    genotype_file = arguments["--input"]
     fasta = arguments["--output"]+".fas" #A fisrt one for the homozygous genotype
 
     #    {'--help': False,
@@ -30,17 +30,7 @@ if __name__ == "__main__":
     #     '--output': fasta_filename,
     #     '--version': False}
 
-    def piece(iterable, size, format=tuple):
-        """Sliding window of variable size
 
-        Named parameters :
-        iterable -- the sequence that i want to cut in piece of 2 alleles
-        size -- size of the iterable that we want (here 2)
-
-        """
-        my_it = iter(iterable)
-        while True :
-            yield format(it.chain((next(my_it),), it.islice(my_it,size -1)))
 
     def line_maker(seq):
         """Return a list of allele format we want
@@ -53,31 +43,24 @@ if __name__ == "__main__":
         #asso = ['AC','AG','AT','CG','CT','GT']
         dico_multiphasta = {'A/C':'M','A/G':'R','A/T':'W','C/G':'S','C/T':'Y','G/T':'K'}
 
-        for allele in piece(seq,2) :
-            A1 = allele[0]
-            A2 = allele[1]
+        for allele in seq :
             #possible cases
             #missing data
-            if A1 == '0' and A2 == '0' :
+            if allele == '--' :
                 geno.append("?")
             #Hmz alleles
-            elif A1 == A2 :
-                geno.append(A1)
+            elif len(allele) == 1 :
+                geno.append(allele)
             #Htz alleles
-            #elif dico_multiphasta.has_key(str(A1+A2)) :
-            elif str(A1+A2) not in dico_multiphasta.keys() :
-                allele = str(A2+A1)
-                geno.append(dico_multiphasta[allele])
             else :
-                allele = str(A1+A2)
-                geno.append(dico_multiphasta[allele])
+                geno.append(dico_multiphasta[str(allele)])
 
         return geno
 
 
 
 #1) Lire le fichier tabule
-    with open(genotypefile, 'r') as geno_src , open(fasta, 'w') as fasta_output:
+    with open(genotype_file, 'r') as geno_src , open(fasta, 'w') as fasta_output:
         my_geno_reader = csv.reader(geno_src, delimiter="\t")
         
         header = True
