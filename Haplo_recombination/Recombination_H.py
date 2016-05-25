@@ -59,32 +59,7 @@ if __name__ == "__main__":
     #lecture du fichier
     """Construction of the list of Haplotype object"""
     lst_of_haplo_object = tw.read_input_file(haplotype_file, Haplotype, "\t")
-
-    """
-    #test
-    lst_pattern_haplo1 = []
-    haplo1 = lst_of_haplo_object[0].sequence
-    chain = range(windows_size +1)
-
-    for s in reversed(chain[2:]) :
-        print ("#"*10, s, "#"*10)
-        for pattern in tw.windows(haplo1, s):
-            print (pattern)
-            lst_pattern_haplo1.append(pattern)
-        print(len(lst_pattern_haplo1))
-
-
-    lst_test =  lst_of_haplo_object[:5]
-    chain = range(windows_size +1)
-    #test2 
-    for haplo in lst_test :
-        for s in reversed(chain[2:]) :
-            for pattern in tw.windows(haplo.sequence, s) :
-                for other_haplo in lst_test :
-                    if tw.KnuthMorrisPratt(other_haplo.sequence, pattern) :
-                        print (tw.KnuthMorrisPratt(other_haplo, pattern))
-    """
-
+    
 
     lst_test =  lst_of_haplo_object[:5]
     #test3
@@ -96,17 +71,7 @@ if __name__ == "__main__":
                 print ("#"*10)
                 for index in tw.KnuthMorrisPratt(other_haplo.sequence, p) :
                     print(index)
+    #PAS BON IL FAUT QUE JE GARDE LES MÊME INDEX DE FENÊTRE A CHAQUE FOIS (BIEN CAR PLUS DE RECHERCHE MAIS JUSTE DE LA COMPARAISON D'ALIGNEMENT)
 
 
-"""
-    #plus qu'a appeler le fonction comme ça
-    chain = range(windows_size +1)
-    for haplo in lst_of_haplo_object :
-        for s in reversed(chain) :
-            print (s)
-            for haplox in tw.windows(haplo.sequence, s):
-                print (haplox)
-                if tw.KnuthMorrisPratt(haplo, haplox):
-                    print ("OK")
-        print("################")
-"""
+
