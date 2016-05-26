@@ -45,65 +45,91 @@ if __name__ == "__main__":
 
         #parcour du fichier d'alignement ligne par ligne
         for rows in my_haploC_reader :
+            id1 = rows[0]
+            id2 = rows[1]
+
             #traitement pendant la ligne d'en-tête
             if header :
                 #creation du dicotionaire ou je vais ranger chaque portion de SNP contigues (id1, id2, startPos, endPos) commum en fonction de leur longeur (clef)
-                marker_size = len(rows[2:-1])
-                for x in range(marker_size+1) :
+                for windows_size in range(len(rows[2:-1]) +1) :
                     #instanciation du dictionnaire par une liste vide.
-                    dico_SNP_contigue[x] = []
+                    dico_SNP_contigue[windows_size] = []
                 header = False
+            
             else :
-                #create the future output line
-                line = [rows[0], rows[1]]
                 #séquence résultat de l'alignement des deux séquences rows[0] et rows[1]
                 pattern = rows[2:-1]
-                #compteur des SNPs contigues
-                contigues = 0
-                #compteur de SNP (index)
+                #compteurs et index
                 count = 0
+                startPos = 0
+                endPos = 0
+                contig_0 = 0
+                contig_1 = 0
+                line = []
+                
 
                 #parcour de la séquence pattern SNP par SNP
                 for snp_allele in pattern :
                     count +=1
 
-                    #cas du 79ème SNP
-                    if count == len(pattern) :
-                        if snp_allele == "0" :
-                            if contigues == 0 :
-                                #create the fuure output line
-                                line = [rows[0], rows[1]]
-                                line.append(count)
-                                line.append(count)
-                                contigues += 1
-                                dico_SNP_contigue[contigues].append(line)
-                            else :
-                                contigues += 1
-                                line.append(count)
-                                dico_SNP_contigue[contigues].append(line)
 
-
-                    #cas du SNP contigue
-                    elif snp_allele == "0" :
-                        if contigues == 0 :
-                            #create the fuure output line
-                            line = [rows[0], rows[1]]
-                            line.append(count)
-                            contigues += 1
+                    #cas du premier marqueur
+                    if count == 1 :
+                        if snp_allele == "1":
+                            contig_1 += 1
                         else :
-                            contigues +=1
+                            contig_0 += 1
+                            startPos = count
+                            line.append(id1)
+                            line.append(id2)
+                            line.append(startPos)
 
-                    #cas du SNP non contigue
-                    else :
-                        line.append(count-1)
-                        dico_SNP_contigue[contigues].append(line)
-                        contigues = 0
-                        #cas particulier de la clef 0 du dico_SNP_contigue. Y sera présent l'index du la endPos seulement
+                    #cas des marqueur entre le second et l'avant dernier
+                    elif count >1 and count < len(pattern) :
+                        if snp_allele == "0" and contig_0 > 0 :
+                            contig_0 += 1
+                        elif snp_allele == "0" and contig_0 == 0 :
+                            contig_1 = 0
+                            contig_0 += 1
+                            startPos = count
+                            line.append(id1)
+                            line.append(id2)
+                            line.append(startPos)
+                        elif snp_allele == "1" and contig_1 > 0 :
+                            contig_1 += 1
+                        else : #si snp_allele == "1" and contig_1 == 0 
+                            contig_1 += 1
+                            endPos = count - 1
+                            line.append(endPos)
+                            dico_SNP_contigue[contig_0].append(line)
+                            contig_0 = 0
+                            line = []
+
+                    #cas du dernier marqueur
+                    else : #count == len(pattern)
+                        if snp_allele == "0" and contig_0 > 0 :
+                            contig_0 +=1 
+                            endPos = count #ou len(pattern)
+                            line.append(endPos)
+                            dico_SNP_contigue[contig_0].append(line)
+                        elif snp_allele == "1"and contig_1 == 0 :
+                            endPos = count - 1
+                            line.append(endPos)
+                            dico_SNP_contigue[contig_0].append(line)
+                        else :
+                            contig_0 += 1
+                            startPos = endPos = count
+                            line.append(id1)
+                            line.append(id2)
+                            line.append(startPos)
+                            line.append(endPos)
+                            dico_SNP_contigue[contig_0].append(line)
 
 
 
         #écriture du fichier de sortie
+        head_output = ["id1","id2", "start", "end"]
+        my_otp_writer.writerow(head_output)
         for key, val in dico_SNP_contigue.items() :
             for lst in val :
                 my_otp_writer.writerow(lst)
-            print(lst)
