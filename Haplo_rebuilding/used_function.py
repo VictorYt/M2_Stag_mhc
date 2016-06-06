@@ -456,7 +456,7 @@ def mismatch_location(lstofhaplotype, filetoread):
 		for rows in my_distri_loca_dico_writer :
 			if header:
 				header=False
-			elif :
+			else :
 				for marker in rows[2:-1] :
 					if marker == "1" :
 						distri_loca_dico[marker] += 1
