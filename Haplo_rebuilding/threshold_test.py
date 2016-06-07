@@ -5,7 +5,7 @@
 """
 usage: 
     __main__.py (--ih <haplo_file>) (--ig <geno_file>)
-    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-p] [-f <fP_file>] [-c]
+    __main__.py (--ih <haplo_file>) (--ig <geno_file>) [-o <filename>] [-t <nb>] [-d] [-f <fP_file>]
 
 options:
     -h, --help                              This help.
@@ -17,8 +17,6 @@ options:
     -t <nb>, --threshold <nb>               Threshold of accepted errors during haplotype and genotype comparaison 
                                             [default: 0]
     -d, --dist                              Produce distribution graphics based on inputs and outputs files. 
-                                            [default: False]
-    -p, --ACP                               Produce pca graphics based on inputs and outputs files.
                                             [default: False]
     -f <fP_file>, --fastPHASE <fP_file>     Compare your result by fastPHASE one
 
@@ -44,7 +42,6 @@ if __name__ == "__main__":
     output = arguments["--output"]
     threshold = arguments["--threshold"]
     distribution = arguments["--dist"]
-    pca = arguments["--ACP"]
     fPcompare = arguments["--fastPHASE"]
 
     
@@ -374,43 +371,6 @@ if __name__ == "__main__":
 
 
 
-
-                                            ####################################################****
-                                            ##################### PCA OPTION ###################****
-                                            ####################################################****
-
-
-
-    # Look at pca argument
-    if (pca == True):
-        print ("\nPCA flag used")
-
-        pca = os.path.join(dirname, "ACP")
-
-        try:
-            os.makedirs(pca)
-        except OSError:
-            if os.path.exists(pca):
-            # We are nearly safe
-                pass
-            else:
-            # There was an error on creation, so make sure we know about it
-                raise
-    ##############
-    ##OUTPUT RUN##
-    ##############
-        run5_start = time.time()
-
-
-        #TRY
-        run_R_file("pca_script.R",pca)
-        #that does work, i think it's because he don't find the right input files (fail setwd in our R script?)
-        #prob in the R script in the 3rd step
-
-
-        run5_end = time.time()
-        time5 = run5_end - run5_start
-        print("it's spend {}".format(time5))
 
 
                                             ####################################################
