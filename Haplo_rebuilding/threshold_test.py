@@ -21,8 +21,6 @@ options:
     -p, --ACP                               Produce pca graphics based on inputs and outputs files.
                                             [default: False]
     -f <fP_file>, --fastPHASE <fP_file>     Compare your result by fastPHASE one
-    -c, --cytoscape                         Produce file usable for the construction of an interaction network between G & H
-                                            [default: False]
 
 """
 
@@ -48,7 +46,6 @@ if __name__ == "__main__":
     distribution = arguments["--dist"]
     pca = arguments["--ACP"]
     fPcompare = arguments["--fastPHASE"]
-    cytoscape = arguments["--cytoscape"]
 
     
     #    {'--help': False,
@@ -414,44 +411,6 @@ if __name__ == "__main__":
         run5_end = time.time()
         time5 = run5_end - run5_start
         print("it's spend {}".format(time5))
-
-
-
-
-
-
-
-                                            ####################################################
-                                            ################## CYTOSCAPE OPTION ################
-                                            ####################################################
-
-
-    # Look at cytoscape argument
-    if (cytoscape == True):
-        print ("\nCytoscape output option used")
-
-        cytoscape = os.path.join(dirname, "Cytoscape")
-
-        try:
-            os.makedirs(cytoscape)
-        except OSError:
-            if os.path.exists(cytoscape):
-            # We are nearly safe
-                pass
-            else:
-            # There was an error on creation, so make sure we know about it
-                raise
-    ##############
-    ##OUTPUT RUN##
-    ##############
-        """The file who can be use for build a network with cytoscape"""
-        cytoscape_file(os.path.join(cytoscape, "G_&_H_interaction"), lst_of_geno_object)
-        #Here do the function of used_function to have the output file
-
-        print("Cytoscape output realized")
-
-
-
 
 
                                             ####################################################
