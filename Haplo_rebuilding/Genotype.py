@@ -291,15 +291,6 @@ class Genotype(Haplotype):
 
 
 
-
-
-
-
-
-
-
-
-
 ################BECAME OBSELETTES################
 
 
@@ -429,14 +420,6 @@ class Genotype(Haplotype):
 					lst_new_haplo.append(create_haplotype(i, lst3))""" #here .append the attribut containing the new haplotype list
 
 		return lst_new_haplo
-
-
-
-
-
-
-
-
 
 
 

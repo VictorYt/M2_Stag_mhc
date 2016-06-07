@@ -1,7 +1,6 @@
 #!/usr/bin/python3.4
 # -*- coding: utf-8 -*-
 
-
 from Haplotype import Haplotype
 import itertools as it
 
