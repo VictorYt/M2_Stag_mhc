@@ -270,6 +270,21 @@ class Haplotype(object):
 	#OTHER METHODES#
 	################
 
+	# If -t option used up the number of keys
+	def compatible_with_size(self, threshold):
+		"""Return a empty dictionary with keys equal at [0,threshold]
+		This dictionnary will be fill (for each keys) by the genotype istance who have half of is sequence
+		similar to our haplotype.
+
+		"""
+		dico = {}
+		for i in range(int(threshold)+1) :
+			dico[i] = []
+		return dico#change this functoin name
+
+
+
+
 	#verify if the other work for haplo, geno. if it's work delete this want
 	def compare_two_seq2(self, haplo):
 		"""Return a list with the name of the 2 Haplotypes objects,
@@ -386,19 +401,9 @@ class Haplotype(object):
 		#print (len(output_line)) #--> need be equal to (len(markers) + geno.name(=1) + objects.name(=1) + sum(count_erreur)(=1) so len(markers)+3)
 		return output_line
 
-	def similar_with_size(self, threshold):
-		"""Return a empty dictionary with keys equal at [0,threshold]
-		This dictionnary will be fill (for each keys) by the genotype istance who have half of is sequence
-		similar to our haplotype.
 
-		"""
-		dico = {}
-		for i in range(int(threshold)+1) :
-			dico[i] = []
-		return dico#change this functoin name
-
-
-	def select_similar_with(self, objects, threshold):
+	# Step 1 - Compatible objects
+	def select_compatible_with(self, objects, threshold):
 		"""Return nothing but fill the dictionnary created before"""
 		#with the previusly created dictionnary :
 		try :
@@ -406,10 +411,11 @@ class Haplotype(object):
 			if int(sum_mismatch) <= int(threshold) :
 				self.half_similarity_with[sum_mismatch].append(objects)
 		except KeyError :
-			print ("You have a problem in 'select_similar_with' method, check it")
+			print ("You have a problem in 'select_compatible_with' method, check it")
 			print (self.compare_two_seq(objects))
 			print (self.half_similarity_with)
 			raise#ch
+
 
 
 

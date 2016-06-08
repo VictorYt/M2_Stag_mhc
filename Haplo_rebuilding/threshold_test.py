@@ -104,48 +104,36 @@ if __name__ == "__main__":
     """For each genotype, recovering the number of markers: Hmz, Htz and index them"""
     #print ("Markers are {}:".format(lst_of_geno_object[1].markers))
     for geno in lst_of_geno_object :
-        geno.index_htz_markers_in_seq = (geno.position_htz_markers())
+        geno.index_htz_markers_in_seq = geno.position_htz_markers()
         geno.nb_htz_markers = geno.have_nb_htz_markers()
         geno.nb_hmz_markers = geno.have_nb_hmz_markers()
         #print ("There is {} Hmz and {} Htz markers".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
 
 
+    ###################################################
+    # Step 1 : Compatible Haplotype for each Genotype #
+    ###################################################
+    """Try to find each compatible Haplotype to each Genotype"""
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #Necessary to write the first output
-    #Care of this step if we choise a threshold
-
-    #Pour chaqu'une de mes instances (haplo, geno) je créé le dictionnaire adapté en fonction du seuil
+    #For each instances (Haplotype, Genotye) i creat a dictionnary well adapte in size (it depend of which threshold option we chose)
     for geno in lst_of_geno_object :
-        geno.half_similarity_with = geno.similar_with_size(threshold)
+        geno.half_similarity_with = geno.compatible_with_size(threshold)
     for haplo in lst_of_haplo_object :
-        haplo.half_similarity_with = haplo.similar_with_size(threshold)
-    #pour chaque combinaision je rempli le dictionnaire à la clef correspondante
+        haplo.half_similarity_with = haplo.compatible_with_size(threshold)
+    #For each compatibility test (between Genotype and Haplotype) i fill the previous dictionnary (where compaibility error = dictionnary key)
     for geno, haplo in it.product(lst_of_geno_object, lst_of_haplo_object):
-        geno.select_similar_with(haplo, threshold)
+        geno.select_compatible_with(haplo, threshold)
     for haplo, geno in it.product(lst_of_haplo_object, lst_of_geno_object) :
-        haplo.select_similar_with(geno, threshold)
-
-
-#    # Look at threshold argument
-#    if (threshold != 0):
-#        print ("-t used")
-#        print (threshold)
-#        #blabla 
-#    else :
-#        print ("-t no used")
-#        arguments["-t"] = 0
-#   #Ne sera peut être incorporé au code car apparterait trop de faux positif
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!
-   
+        haplo.select_compatible_with(geno, threshold)
 
 
 
-
-    """After finding similar haplotypes to our genotypes, 
-    we combine these haplotypes to see if they explain our genotype."""
-    #New Haplotype creation and store in lst_of_haplo_object_expanded
+    #############################################################
+    # Step 2 : Combination between Haplotypes for each Genotype #
+    #############################################################
+    """After finding compatible haplotypes to our genotypes, 
+    we combine these Haplotypes to see if combination explain our Genotype."""
 
     for geno in lst_of_geno_object :
         #What haplotypes combined with another give us our genotype
@@ -218,7 +206,7 @@ if __name__ == "__main__":
 
     #Creation of the rigth dictionnary
     for candidate_haplo in lst_of_haplo_object_expanded_filter :
-        candidate_haplo.half_similarity_with = candidate_haplo.similar_with_size(threshold)
+        candidate_haplo.half_similarity_with = candidate_haplo.compatible_with_size(threshold)
     #Find the half simmilarity with all the génotype or only the uncorfirmed
     for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype) :
         candidate_haplo.select_similar_with(geno, threshold)
@@ -410,7 +398,7 @@ if __name__ == "__main__":
         """Distribution of the occurence of haplotype hmz during the first run"""
          #Creation of the rigth dictionnary
         for fP_halpo in lst_of_fPHASE_object :
-            fP_halpo.half_similarity_with = fP_halpo.similar_with_size(threshold)
+            fP_halpo.half_similarity_with = fP_halpo.compatible_with_size(threshold)
         #Find the half simmilarity with all the génotype or only the uncorfirmed
         for fP_halpo, geno in it.product(lst_of_fPHASE_object, lst_unconfirmed_genotype) :
             fP_halpo.select_similar_with(geno, threshold)
