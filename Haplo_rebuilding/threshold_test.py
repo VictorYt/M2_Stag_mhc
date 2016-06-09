@@ -139,6 +139,9 @@ if __name__ == "__main__":
             geno_1_compatible += 1
         else :
             geno_more_than_1_compatible += 1
+    print ("Number of genotype explain by 0 compatible : {}".format(geno_0_compatible))
+    print ("Number of genotype explain by 1 compatible : {}".format(geno_1_compatible))
+    print ("Number of genotype explain by >1 compatible : {}".format(geno_more_than_1_compatible))
 
 
     #############################################################
@@ -149,7 +152,7 @@ if __name__ == "__main__":
 
     for geno in lst_of_geno_object :
         #What haplotypes combined with another give us our genotype
-        geno.probable_haplotypes_combinaison = geno.combinaison_between_similar_haplotype_in_geno_test()
+        geno.probable_haplotypes_combinaison = geno.combinaison_between_compatible_haplotype_in_geno_test()
         geno.number_of_probable_haplotypes_combinaison = len(geno.probable_haplotypes_combinaison)
         #New Haplotype creation, store in the genotype attribut : lst_of_new_haplotype
         #geno.lst_of_new_haplotype = geno.have_new_haplotype_test()
@@ -221,7 +224,7 @@ if __name__ == "__main__":
         candidate_haplo.half_similarity_with = candidate_haplo.compatible_with_size(threshold)
     #Find the half simmilarity with all the génotype or only the uncorfirmed
     for candidate_haplo, geno in it.product(lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype) :
-        candidate_haplo.select_similar_with(geno, threshold)
+        candidate_haplo.select_compatible_with(geno, threshold)
 
     """Count of missing data in Haplotypes sequences"""
     #Here we make a list of all Haplotypes objects
@@ -234,13 +237,13 @@ if __name__ == "__main__":
     But this time we only takes Haplotypes without mismatch"""
     #Add candidates Haplotypes which are similar to our genotype no confirmed, in the dictionary attribut of half_similary_with
     for geno_non_confirmed, candidates_haplo in it.product(lst_unconfirmed_genotype, lst_of_haplo_object_expanded_filter):
-        geno_non_confirmed.select_similar_with(candidates_haplo, 0)
+        geno_non_confirmed.select_compatible_with(candidates_haplo, 0)
         #geno_non_confirmed.number_of_similar_haplotype = len(geno_non_confirmed.similar_haplotype) #plus besoin de compter la taille de cette liste car devenu un dictionnaire (et pas d'interet)
 
     """Again we combine Haplotypes (Known and candidate this time) to see if they explain unconfirmed genotype"""
     for geno in lst_of_geno_object :
         #What haplotypes combined with another give us our genotype
-        geno.probable_haplotypes_combinaison_2_run = geno.combinaison_between_similar_haplotype_in_geno_test()
+        geno.probable_haplotypes_combinaison_2_run = geno.combinaison_between_compatible_haplotype_in_geno_test()
         geno.number_of_probable_haplotypes_combinaison_2_run = len(geno.probable_haplotypes_combinaison_2_run)
 
 
@@ -274,16 +277,16 @@ if __name__ == "__main__":
     ###RUN 1###
     print("First run outputs")
     """Comparison of each genotype with each Hmz haplotype """
-    compare_output(os.path.join(output, "run1_GvH"), lst_of_geno_object, lst_of_haplo_object)
+    compare_output(os.path.join(output, "run1_GvH.csv"), lst_of_geno_object, lst_of_haplo_object)
     """A file to see the candidates Haplotypes created"""
-    new_haplotype_output(os.path.join(output, "run1_candidates_Haplotypes"), lst_of_geno_object)# a indiquer combien de corerction il y a eut pour chaque Haplotype
+    new_haplotype_output(os.path.join(output, "run1_candidates_Haplotypes.csv"), lst_of_geno_object)# a indiquer combien de corerction il y a eut pour chaque Haplotype
 
     ###RUN 2###
     print("Second run outputs")
     """Comparison of each unconfirmed genotype with each Candidate haplotype """
-    compare_output(os.path.join(output, "run2_GvH"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded_filter)
+    compare_output(os.path.join(output, "run2_GvH.csv"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded_filter)
     """A file to see each half similarity (Known & Candidates Haplotypes) with our Genotypes"""
-    compare_output_result_test(os.path.join(output, "Compatible_Haplotypes"), lst_of_geno_object)
+    compare_output_result_test(os.path.join(output, "Compatible_Haplotypes.csv"), lst_of_geno_object)
 
     ###SUMMARY OUTPUT###
     #create the fonction and put it here
@@ -327,31 +330,31 @@ if __name__ == "__main__":
         run4_start = time.time()
 
         """The distribution of the run1_GvkH"""
-        mismatch_distribution_output(os.path.join(dist,"GvH_distribution"), mismatch_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
+        mismatch_distribution_output(os.path.join(dist,"GvH_distribution.csv"), mismatch_distribution(lst_of_haplo_object, os.path.join(output,"run1_GvH")))
 
         """The repartition of the mismatch between Genotype and haplotype"""
         #comme le précédent lecture de GvH distribution et écriture du fichier (sommes des colones pour chaques marqueurs)
         
         """The distribution of the run1_kHvkH"""
-        compare_output(os.path.join(dist, "run1_HvH"), lst_of_haplo_object, lst_of_haplo_object)
-        mismatch_distribution_output(os.path.join(dist, "HvH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist,"run1_HvH")))
+        compare_output(os.path.join(dist, "run1_HvH.csv"), lst_of_haplo_object, lst_of_haplo_object)
+        mismatch_distribution_output(os.path.join(dist, "HvH_distribution.csv"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist,"run1_HvH")))
 
         """The distribution of the run2_GvcH"""
-        compare_output(os.path.join(dist, "run2_GvcH"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded)
-        mismatch_distribution_output(os.path.join(dist,"GvcH_distribution"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
+        compare_output(os.path.join(dist, "run2_GvcH.csv"), lst_unconfirmed_genotype, lst_of_haplo_object_expanded)
+        mismatch_distribution_output(os.path.join(dist,"GvcH_distribution.csv"), mismatch_distribution(lst_of_haplo_object_expanded_filter, os.path.join(dist, "run2_GvcH")))
 
         """Distribution of the occurence of haplotype hmz during the first run"""
         for haplo in lst_of_haplo_object :
             haplo.similar_occurence = haplo.similarity_time_with()
             haplo.frequency= haplo.similarity_frequency(len(lst_of_geno_object))
-        haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_redundancy"), lst_of_haplo_object)
+        haplotype_redundancy(os.path.join(dist, "Known_Haplotypes_redundancy.csv"), lst_of_haplo_object)
         for candidate_haplo in lst_of_haplo_object_expanded_filter :
             candidate_haplo.similar_occurence = candidate_haplo.similarity_time_with()
             candidate_haplo.frequency= candidate_haplo.similarity_frequency(len(lst_unconfirmed_genotype))
-        haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_redundancy"), lst_of_haplo_object_expanded_filter)
+        haplotype_redundancy(os.path.join(dist, "Candidates_Haplotypes_redundancy.csv"), lst_of_haplo_object_expanded_filter)
 
         """Distribution of the occurrence of new haplotypes during the second run"""
-        new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)
+        new_haplotype_occurency(os.path.join(dist, "Candidates_Haplotypes_occ.csv"), lst_of_haplo_object_expanded_filter, lst_unconfirmed_genotype)
 
         print ("Distribution output files realized") 
 
@@ -417,7 +420,7 @@ if __name__ == "__main__":
         for fP_halpo in lst_of_fPHASE_object :
             fP_halpo.similar_occurence = fP_halpo.similarity_time_with()
             fP_halpo.frequency = fP_halpo.similarity_frequency(len(lst_of_geno_object))
-        haplotype_redundancy(os.path.join(fastPHASE_dir, "fastPHASE_Haplotypes_redundancy"), lst_of_fPHASE_object)
+        haplotype_redundancy(os.path.join(fastPHASE_dir, "fastPHASE_Haplotypes_redundancy.csv"), lst_of_fPHASE_object)
 
         """Find which fP_haplo look like a Known Haplotype and a Candidate Haplotype"""
         #1- compare sequence (si = mettre dans un attribut l'instance de l'Haplotype Known, idem pour Candidate)
