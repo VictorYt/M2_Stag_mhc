@@ -127,6 +127,18 @@ if __name__ == "__main__":
     for haplo, geno in it.product(lst_of_haplo_object, lst_of_geno_object) :
         haplo.select_compatible_with(geno, threshold)
 
+    """Output the number of genotype with 0, 1 and more compatible haplotype"""
+    #marche que avec t = 0
+    geno_0_compatible = 0
+    geno_1_compatible = 0
+    geno_more_than_1_compatible = 0
+    for geno in lst_of_geno_object :
+        if len(geno.half_similarity_with[0]) == 0 :
+            geno_0_compatible += 1
+        elif len(geno.half_similarity_with[0]) == 1 :
+            geno_1_compatible += 1
+        else :
+            geno_more_than_1_compatible += 1
 
 
     #############################################################
