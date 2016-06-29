@@ -143,7 +143,7 @@ if __name__ == "__main__":
     print ("Number of genotype explain by 1 compatible : {}".format(geno_1_compatible))
     print ("Number of genotype explain by >1 compatible : {}".format(geno_more_than_1_compatible))
 
-    #ajouter ici la création de la sortie 1
+    #voir si je rajoute ici la sortie sur les compatibilités (voir pour une option si cette sortie n'arrange pas)
 
     #############################################################
     # Step 2 : Combination between Haplotypes for each Genotype #
