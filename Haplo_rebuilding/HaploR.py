@@ -159,6 +159,9 @@ if __name__ == "__main__":
         geno.lst_of_new_haplotype = geno.have_new_haplotype_test_better() 
         geno.number_of_new_created_haplotype = len(geno.lst_of_new_haplotype)
 
+    #################################################
+    # Step 3 : Deduction of the Candidate haplotype #
+    #################################################
 
     #Here the list of candidates Haplotypes objects
     #lst_of_haplo_object_expanded = new_haplotype_test(lst_of_geno_object) #remplacer par une autre pethode
@@ -210,7 +213,9 @@ if __name__ == "__main__":
     print("1st run is over. \nIt lasted {} sec".format(time1))
 
 
-
+    ##################################################
+    # Step 4 : Validation of the Candidate haplotype #
+    ##################################################
 
 
     ##############
