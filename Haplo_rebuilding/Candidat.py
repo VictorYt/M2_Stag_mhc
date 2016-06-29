@@ -62,3 +62,10 @@ class Candidat(Haplotype):
 		
 		"""
 		self._haplo_ori = newHaploOri
+
+	############
+	#PROPERTIES#
+	############
+
+	geno_ori = property(_get_geno_ori, _set_geno_ori)
+	haplo_ori = property(_get_haplo_ori, _set_haplo_ori)
