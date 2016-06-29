@@ -34,11 +34,11 @@ class Candidat(Haplotype):
 	############
 
 	def _get_geno_ori(self):
-		"""Return the attribut name of the Haplotype class"""
+		"""Return the attribut geno_ori of the Candidat class"""
 		return self._geno_ori
 
 	def _get_haplo_ori(self):
-		"""Return the attribut sequence of the Haplotype class"""
+		"""Return the attribut sequence of the Candidat class"""
 		return self._haplo_ori
 	
 	###########
@@ -46,19 +46,19 @@ class Candidat(Haplotype):
 	###########
 
 	def _set_geno_ori (self, newGenoOri):
-		"""Change the name of our Haplotype object by a new one
+		"""Change the genotype origine name of our Candidat object by a new one
 
 		Named parameters :
-		newname -- the new name selected (here first row of the input)
+		newGenoOri -- the new genotype origine name of our candidat haplotype
 		
 		"""
 		self._geno_ori = newGenoOri
 
 	def _set_haplo_ori(self, newHaploOri):
-		"""Change the sequence list of our Haplotype object by a new one
+		"""Change the haplotype origine name of our Candidat object by a new one
 
 		Named parameters :
-		newsequence -- the new sequence list selected (here the end of the row in our input)
+		newHaploOri -- the new haplotype origine name of our candidat haplotype
 		
 		"""
 		self._haplo_ori = newHaploOri
