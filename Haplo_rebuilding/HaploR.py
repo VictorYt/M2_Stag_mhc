@@ -94,15 +94,14 @@ if __name__ == "__main__":
     run1_start = time.time()
     print ("\nFirst run start")
 
-    """Construction of the list of Haplotype object"""
+    """Construction of the Haplotype object list"""
     lst_of_haplo_object = read_input_file(haplotype_file, Haplotype, "\t")
     #print ("Haplotype number :",len(lst_of_haplo_object))
-    """Construction of my list of Genotype object"""
+    """Construction of the Genotype object list"""
     lst_of_geno_object = read_input_file(genootype_file, Genotype, "\t")
     #print ("Genotype number :",len(lst_of_geno_object))
 
     """For each genotype, recovering the number of markers: Hmz, Htz and index them"""
-    #print ("Markers are {}:".format(lst_of_geno_object[1].markers))
     for geno in lst_of_geno_object :
         geno.index_htz_markers_in_seq = geno.position_htz_markers()
         geno.nb_htz_markers = geno.have_nb_htz_markers()
@@ -127,7 +126,8 @@ if __name__ == "__main__":
     for haplo, geno in it.product(lst_of_haplo_object, lst_of_geno_object) :
         haplo.select_compatible_with(geno, threshold)
 
-    """Output the number of genotype with 0, 1 and more compatible haplotype"""
+    """Output the number of genotype with 0, 1 and more compatible haplotype""" # ===> LOG Compaibility
+
     #marche que avec t = 0
     geno_0_compatible = 0
     geno_1_compatible = 0
@@ -143,6 +143,7 @@ if __name__ == "__main__":
     print ("Number of genotype explain by 1 compatible : {}".format(geno_1_compatible))
     print ("Number of genotype explain by >1 compatible : {}".format(geno_more_than_1_compatible))
 
+    #ajouter ici la création de la sortie 1
 
     #############################################################
     # Step 2 : Combination between Haplotypes for each Genotype #
@@ -384,7 +385,7 @@ if __name__ == "__main__":
                                             ####################################################
                                             ############## fastPHASE COMPARE OPTION ############
                                             ####################################################
-
+                                            #pas encore au point
 
 
 

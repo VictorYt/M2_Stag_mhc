@@ -160,37 +160,6 @@ def compare_output_result_test(otp, listofgenoobject):
 					my_compare_selection.writerow(haplo_compare_output)
 
 
-def cytoscape_file(outputdir, lstofgenoobject):
-	"""Return nothing but give a file that can be open with cytoscape software
-	to see the interaction between genotype & haplotype.
-
-	We maybe can see quickly haplotypes of interest (with multiple interaction with genotypes & haplotypes)
-
-	"""
-	#check the output file needed for the cytoscape software and my représentation 
-	#did i need to specify a new column for haplo-haplo combinaison?
-	with open(outputdir, 'w') as cyto_output :
-		my_cytotp_writer = csv.writer(cyto_output, delimiter="\t")
-
-		header = ['Source', 'Interaction_type', 'Target', 'Nb_of_missing_data', 'Haplo_origin']
-		my_cytotp_writer.writerow(header)
-		
-		for geno in lstofgenoobject :
-			if geno.number_of_similar_haplotype > 0 :
-				for haplo in geno.similar_haplotype :
-					source_target = [geno.name]
-					source_target.append("g:h")
-					source_target.append(haplo.name)
-					source_target.append(haplo.missing_data)
-					if "New" in haplo.name :
-						source_target.append("new")
-					else :
-						source_target.append("known")
-					my_cytotp_writer.writerow(source_target)
-			else :
-				source_target = [geno.name]
-				my_cytotp_writer.writerow(source_target)
-
 
 
 
@@ -357,6 +326,8 @@ def new_haplotype_occurency(otp, lstofscreeninghaplo, lstofnoconfirmedgeno):
 	with open(otp, 'w') as occurency_src :
 		my_occurency_writer = csv.writer(occurency_src, delimiter="\t")
 
+		#changer run1_occurencey en prédiction
+		#changer run2_occurencey en validation
 		header =  ['Name', 'run1_occurency', 'run2_redundancy', 'missing_data']
 		my_occurency_writer.writerow(header)
 		for haplo in lstofscreeninghaplo:
