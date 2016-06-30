@@ -116,9 +116,12 @@ if __name__ == "__main__":
     ###################################################
     # Step 1 : Compatible Haplotype for each Genotype #
     ###################################################
-    """Try to find each compatible Haplotype to each Genotype"""
+    step1_start = time.time()
+    print ("\nStep 1: Search compatibility between Genotypes and haplotypes known")
 
-    #For each instances (Haplotype, Genotye) i creat a dictionnary well adapte in size (it depend of which threshold option we chose)
+
+    """Try to find each compatible Haplotype to each Genotype"""
+    #For each instances (Haplotype, Genotye) i creat a dictionnary well adapte in size (it depend of which threshold option (-t<threshold>) we chose)
     for geno in lst_of_geno_object :
         geno.half_similarity_with = geno.compatible_with_size(threshold)
     for haplo in lst_of_haplo_object :
@@ -129,8 +132,13 @@ if __name__ == "__main__":
     for haplo, geno in it.product(lst_of_haplo_object, lst_of_geno_object) :
         haplo.select_compatible_with(geno, threshold)
 
-    """Output the number of genotype with 0, 1 and more compatible haplotype""" # ===> LOG Compaibility
 
+    step1_end = time.time()
+    step1_time = step1_end - step1_start
+    print ("\nStep 1: Search compatibility between Genotypes and haplotypes known")
+
+
+    """Output the number of genotype with 0, 1 and more compatible haplotype""" # ===> LOG Compaibility
     #marche que avec t = 0
     geno_0_compatible = 0
     geno_1_compatible = 0
