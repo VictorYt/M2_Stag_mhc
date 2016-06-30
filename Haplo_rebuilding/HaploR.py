@@ -94,9 +94,10 @@ if __name__ == "__main__":
     ###########
     ## START ##
     ###########
-
-    run1_start = time.time()
+    run_start = time.time()
     print ("\nCreating instances : Haplotype & Genotype")
+
+
 
     """Construction of the Haplotype & Genotype objects lists"""
     #Haplotype objects list
@@ -211,9 +212,7 @@ if __name__ == "__main__":
 
 
 
-    run1_end = time.time()
-    time1 = run1_end - run1_start
-    print("1st run is over. \nIt lasted {} sec".format(time1))
+
 
 
     ##################################################
@@ -456,3 +455,9 @@ if __name__ == "__main__":
         time5 = run5_end - run5_start
         print ("Your comparation is over.")
         print("it's spend {}".format(time5))
+
+
+
+    run_end = time.time()
+    global_time = run_end - run_start
+    print("End. \nIt took : {} sec".format(global_time))
