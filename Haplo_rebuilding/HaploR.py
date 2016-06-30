@@ -106,9 +106,9 @@ if __name__ == "__main__":
 
     """For each genotype, recovering the number of markers: Hmz, Htz and index them"""
     for geno in lst_of_geno_object :
-        geno.index_htz_markers_in_seq = geno.position_htz_markers()
-        geno.nb_htz_markers = geno.have_nb_htz_markers()
-        geno.nb_hmz_markers = geno.have_nb_hmz_markers()
+        geno.index_htz_markers = geno.position_htz_markers()
+        geno.htz_nb_of_markers = geno.have_nb_of_htz_markers()
+        geno.hmz_nb_of_markers = geno.have_nb_of_hmz_markers()
 
 
 

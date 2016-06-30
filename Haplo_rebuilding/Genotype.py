@@ -41,9 +41,9 @@ class Genotype(Haplotype):
 		#Haplotype legacy of class
 		Haplotype.__init__(self, name, sequence, markers)
 		#Genotype specific to class
-		self._nb_hmz_markers = 0
-		self._nb_htz_markers = 0
-		self._index_htz_markers_in_seq = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
+		self._hmz_nb_of_markers = 0
+		self._htz_nb_of_markers = 0
+		self._index_htz_markers = [] #liste des positions Htz dans seq du genotype (rend plus rapide la comparaison entre haplo possiblement combiné pour donner seq du génotype)
 		
 		#supp
 		self._similar_haplotype = [] #une liste de sequences (eux même des liste de caractères)					 # = half_similarity hérité de Haplotype
@@ -65,17 +65,17 @@ class Genotype(Haplotype):
 	#ACCESSEURS#
 	############
 
-	def _get_nb_hmz_markers(self):
+	def _get_hmz_nb_of_markers(self):
 		"""Return the attribute that contains the number of Hmz markers"""
-		return self._nb_hmz_markers
+		return self._hmz_nb_of_markers
 
-	def _get_nb_htz_markers(self):
+	def _get_htz_nb_of_markers(self):
 		"""Return the attribute that contains the number of Htz markers"""
-		return self._nb_htz_markers
+		return self._htz_nb_of_markers
 
-	def _get_index_htz_markers_in_seq(self):
+	def _get_index_htz_markers(self):
 		"""Return the attribute that contains a list with the indexs of Hmz markers"""
-		return self._index_htz_markers_in_seq
+		return self._index_htz_markers
 	
 	#supp
 	def _get_similar_haplotype(self):
@@ -125,32 +125,32 @@ class Genotype(Haplotype):
 	#MUTATEURS#
 	###########
 
-	def _set_nb_hmz_markers(self, nb_hmz_markers):
+	def _set_hmz_nb_of_markers(self, hmz_nb_markers):
 		"""Changes the number of Hmz markers in genotype
 
 		Named parameters :
-		nb_hmz_markers -- a int (default = 0)
+		hmz_nb_markers -- a int (default = 0)
 
 		"""
-		self._nb_hmz_markers = nb_hmz_markers
+		self._hmz_nb_of_markers = hmz_nb_markers
 
-	def _set_nb_htz_markers(self, nb_htz_markers):
+	def _set_htz_nb_of_markers(self, htz_nb_markers):
 		"""Changes the number of Htz markers in genotype
 
 		Named parameters :
-		nb_htz_markers -- a int (default = 0)
+		htz_nb_markers -- a int (default = 0)
 
 		"""
-		self._nb_htz_markers = nb_htz_markers
+		self._htz_nb_of_markers = htz_nb_markers
 
-	def _set_index_htz_markers_in_seq(self, index_htz_markers):
+	def _set_index_htz_markers(self, index_htz_markers):
 		"""Changes the list of Htz markers indexs in genotype
 
 		Named parameters :
 		index_htz_markers -- a list (empty by default)
 
 		"""
-		self._index_htz_markers_in_seq = index_htz_markers
+		self._index_htz_markers = index_htz_markers
 
 	#supp	
 	def _set_similar_haplotype(self, similar_haplotype):
@@ -234,9 +234,9 @@ class Genotype(Haplotype):
 	#PROPERTIES#
 	############
 
-	nb_hmz_markers = property(_get_nb_hmz_markers, _set_nb_hmz_markers)
-	nb_htz_markers = property(_get_nb_htz_markers, _set_nb_htz_markers)
-	index_htz_markers_in_seq = property(_get_index_htz_markers_in_seq, _set_index_htz_markers_in_seq)
+	hmz_nb_of_markers = property(_get_hmz_nb_of_markers, _set_hmz_nb_of_markers)
+	htz_nb_of_markers = property(_get_htz_nb_of_markers, _set_htz_nb_of_markers)
+	index_htz_markers = property(_get_index_htz_markers, _set_index_htz_markers)
 	
 	#supp
 	similar_haplotype = property(_get_similar_haplotype, _set_similar_haplotype) #va disparait pour être remplacer par la methode que je vais faire dans la class Haplotype
@@ -268,19 +268,19 @@ class Genotype(Haplotype):
 				pass
 		return position_htz_markers
 
-	def have_nb_htz_markers(self):
+	def have_nb_of_htz_markers(self):
 		"""Return the number of Htz markers by checking the length of the list
 		recovering by the function position_htz_markers()
 
 		"""
-		return len(self._index_htz_markers_in_seq)
+		return len(self._index_htz_markers)
 
-	def have_nb_hmz_markers(self):
+	def have_nb_of_hmz_markers(self):
 		"""Return the number of Hmz markers by subtracting the total number of markers (_nbmarkers)
-		with the number of Htz markers (find with have_nb_htz_markers())
+		with the number of Htz markers (find with have_nb_of_htz_markers())
 
 		"""
-		return self._nbmarkers - self._nb_htz_markers 
+		return self._nbmarkers - self._htz_nb_of_markers
 
 
 
@@ -291,8 +291,8 @@ class Genotype(Haplotype):
 		Which, if they are assembled, explain the observed genotype.
 
 		"""
-		#Use of the index_htz_markers_in_seq
-		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers_in_seq list
+		#Use of the index_htz_markers
+		#Take care !!! unknow markers '--' considered like Htz markers in the index_htz_markers list
 		lstZip = []
 		lst_good_combinaison = []
 		#I only combine the haplotype with 
@@ -301,7 +301,7 @@ class Genotype(Haplotype):
 				lst_combinaison = []
 				lstZip = list(zip(haplo1.sequence, haplo2.sequence, self.sequence))
 				count_bad_combinaison = 0
-				for val_index in self.index_htz_markers_in_seq :
+				for val_index in self.index_htz_markers :
 					#we only considered the real htz markers ('A/G')
 					if len(lstZip[val_index][2]) == 3 : 
 						tmp_bases_combine = lstZip[val_index][0] + "/" + lstZip[val_index][1]
