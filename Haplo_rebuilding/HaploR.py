@@ -30,11 +30,13 @@ if __name__ == "__main__":
     #from Object import ClassName, function ...
     from Haplotype import Haplotype
     from Genotype import Genotype
+    from Candidat import Candidat
+    from FastPhase import FastPhase
     from used_function import *
     #import used_function as usf
  
     # Parse arguments, use file docstring as a parameter definition
-    arguments = docopt(__doc__, version='Haplotype rebuilding 0.3')
+    arguments = docopt(__doc__, version='Haplotype rebuilding 0.4')
     print (arguments)
 
     haplotype_file = arguments["--ih"]
@@ -56,7 +58,7 @@ if __name__ == "__main__":
     #     '--version': False}
 
 
-    #http://sametmax.com/path-py-plus-en-detail/
+    #info on docopt package : http://sametmax.com/path-py-plus-en-detail/
 
 
 
@@ -72,10 +74,9 @@ if __name__ == "__main__":
 
 
     if threshold != '0' :
-        print ("\nYou use the threshold option")
+        print ("\nYou use the threshold option, threshold = {}".format(threshold))
 
-
-
+    #Output file creat (with -o <prefix> option)
     dirname = output
 
     try:
@@ -88,25 +89,26 @@ if __name__ == "__main__":
             # There was an error on creation, so make sure we know about it
             raise
 
-    #############
-    ##FIRST RUN##
-    #############
-    run1_start = time.time()
-    print ("\nFirst run start")
 
-    """Construction of the Haplotype object list"""
+
+    ###########
+    ## START ##
+    ###########
+
+    run1_start = time.time()
+    print ("\nCreating instances : Haplotype & Genotype")
+
+    """Construction of the Haplotype & Genotype objects lists"""
+    #Haplotype objects list
     lst_of_haplo_object = read_input_file(haplotype_file, Haplotype, "\t")
-    #print ("Haplotype number :",len(lst_of_haplo_object))
-    """Construction of the Genotype object list"""
+    #Genotype objects list
     lst_of_geno_object = read_input_file(genootype_file, Genotype, "\t")
-    #print ("Genotype number :",len(lst_of_geno_object))
 
     """For each genotype, recovering the number of markers: Hmz, Htz and index them"""
     for geno in lst_of_geno_object :
         geno.index_htz_markers_in_seq = geno.position_htz_markers()
         geno.nb_htz_markers = geno.have_nb_htz_markers()
         geno.nb_hmz_markers = geno.have_nb_hmz_markers()
-        #print ("There is {} Hmz and {} Htz markers".format(geno.nb_hmz_markers, geno.nb_htz_markers))
 
 
 
